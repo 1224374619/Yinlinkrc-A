@@ -27,8 +27,8 @@
         <el-form-item label="企业类别" prop="enterpriseForm">
           <el-cascader
             style="width:240px"
-            :props="props"
-            :options="industryList"
+            :props="prop"
+            :options="list"
             v-model="companyInfo.enterpriseForm"
             placeholder="请选择所属行业"
           ></el-cascader>
@@ -38,6 +38,8 @@
             class="upload"
             :action="uploadCompanyFile"
             :file-list="tempFile"
+            :data="uploadData"
+            :headers="myHeaders"
             :on-success="dealWithUploadLicense"
             :with-credentials="true"
             list-type="picture"
@@ -118,8 +120,8 @@
         <el-form-item label="企业 LOGO" prop="file">
           <el-upload
             class="avatar-upload"
-            :action="uploadUrl"
-            :data="uploadData"
+            :action="uploadCompanyFile"
+            :data="uploadDatas"
             :headers="myHeaders"
             style="margin-left:0px"
             :show-file-list="false"
@@ -159,7 +161,7 @@
           </el-dialog>-->
         </el-form-item>
         <div class="operations">
-          <el-button type="primary" class="main" @click="addCompany">保存</el-button>
+          <el-button type="primary" class="main" @click="addCompany('companyInfo')">保存</el-button>
           <el-button @click="clearAndReload">取消</el-button>
         </div>
       </el-form>
@@ -171,19 +173,30 @@ let token = Cookies.get("token");
 import Cookies from "js-cookie";
 import industry from "../assets/industry.json";
 import city from "../assets/city.json";
+import list from "../assets/list.json";
 import option from "../assets/option.json";
+import timeUtil from "../timeUtil.js";
 export default {
   data() {
     return {
       cityList: [],
+      list: [],
       industryList: [],
       optionList: [],
       myHeaders: { "Auth-Token": token },
       uploadData: {
+        label: "company-license"
+      },
+      uploadDatas: {
         label: "company-logo"
       },
       props: {
         value: "tag",
+        label: "tag",
+        children: "children"
+      },
+      prop: {
+        value: "code",
         label: "tag",
         children: "children"
       },
@@ -284,53 +297,85 @@ export default {
         file: [
           { required: true, message: "请上传证件原件照片", trigger: "blur" }
         ]
-      }
+      },
+      imageUrl: "",
+      file: "",
+      files: ""
     };
   },
   methods: {
-    addCompany() {
-      console.log(this.companyInfo.city);
-      let params = {
-        companyAddressBody: {
-          city: this.companyInfo.city[1],
-          detail: null,
-          district: this.companyInfo.city[2],
-          province: this.companyInfo.city[0]
-        },
-        description: this.companyInfo.detail,
-        fullName: this.companyInfo.fullName,
-        industryCode: null,
-        industryFirst: this.companyInfo.industry[0],
-        industrySecondary: this.companyInfo.industry[1],
-        logo: null,
-        nature: this.companyInfo.nature,
-        natureCode: null,
-        shortName: this.companyInfo.shortName,
-        size: this.companyInfo.size,
-        sizeCode: null,
-
-        cert: null,
-        enterpriseForm: this.companyInfo.industry[1],
-        enterpriseFormCode: null,
-        registeredAddress: this.companyInfo.registeredAddress,
-        uniformSocialCreditCode: this.companyInfo.uniformSocialCreditCode,
-      };
-      this.$http
-        .post("/business-core/companyes", params)
-        .then(res => {
-          let response = res.data.data;
-          if (res.data.code == "200") {
-            this.enterpriseInfoEditMode = true;
-          } else {
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
+    addCompany(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          let params = {
+            companyBody: {
+              companyAddressBody: {
+                city: this.companyInfo.city[1],
+                detail: this.companyInfo.detail,
+                district: this.companyInfo.city[2],
+                province: this.companyInfo.city[0]
+              },
+              description: this.companyInfo.detail,
+              fullName: this.companyInfo.fullName,
+              industryCode: null,
+              industryFirst: this.companyInfo.industry[0],
+              industrySecondary: this.companyInfo.industry[1],
+              logo: this.files ? this.files : null,
+              nature: this.companyInfo.nature,
+              natureCode: null,
+              shortName: this.companyInfo.shortName,
+              size: this.companyInfo.size,
+              sizeCode: null
+            },
+            companyCertBody: {
+              cert: this.file ? this.file : null,
+              enterpriseForm: timeUtil.CodeToTag(
+                [
+                  this.companyInfo.enterpriseForm[0],
+                  this.companyInfo.enterpriseForm[1]
+                ],
+                this.list
+              )[1],
+              enterpriseFormCode: this.companyInfo.enterpriseForm[1],
+              registeredAddress: this.companyInfo.registeredAddress,
+              uniformSocialCreditCode: this.companyInfo.uniformSocialCreditCode
+            }
+          };
+          this.$http
+            .post("/business-core/companyes", params)
+            .then(res => {
+              let response = res.data.data;
+              if (res.data.code == "200") {
+                this.enterpriseInfoEditMode = true;
+              } else {
+              }
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw);
+      this.file = res.data;
+    },
+    dealWithUploadLicense(res, file) {
+      // this.imageUrl = URL.createObjectURL(file.raw);
+      this.files = res.data;
+    }
+  },
+  computed: {
+    uploadCompanyFile() {
+      return "/api/file-service/files/upload";
     }
   },
   created() {
     this.cityList = city.data;
+    this.list = list.data;
     this.industryList = industry.data;
     this.optionList = option.data;
   }

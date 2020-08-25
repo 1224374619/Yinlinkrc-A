@@ -16,8 +16,10 @@ module.exports = {
         open: true,
         proxy: {
             '/api': {
-                target: 'https://www.yinlinkrc.com/api/v1',// target host
-                // target: 'http://192.168.1.108:8081', // target host
+                // target: 'https://www.yinlinkrc.com/api/v1',// target host
+                // target: 'https://www.yinlinkrc.com/api/v1',// target host
+                // target: 'https://www.yinlinkrc.com/api/v2', // target host
+                target: 'http://192.168.1.108:8081', // target host
                 ws: true, // proxy websockets
                 changeOrigin: true, // needed for virtual hosted sites
                 pathRewrite: {  

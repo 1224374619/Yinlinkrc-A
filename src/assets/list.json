@@ -1,0 +1,129 @@
+{
+  "success": true,
+  "code": "200",
+  "message": "请求成功",
+  "data": [
+    {
+      "code": 100,
+      "tag": "境内企业",
+      "licence": "",
+      "specification": "",
+      "parent": 0,
+      "children": [
+        {
+          "code": 101,
+          "tag": "有营业执照企业",
+          "licence": "[营业执照]",
+          "specification": "",
+          "parent": 0,
+          "children": null
+        },
+        {
+          "code": 102,
+          "tag": "事业单位",
+          "licence": "[事业单位法人证]  ",
+          "specification": "正、副本均可",
+          "parent": 0,
+          "children": null
+        },
+        {
+          "code": 103,
+          "tag": "国家机关/园区",
+          "licence": "[机关单位法人证书]或[上级单位批复成立的红头文件]",
+          "specification": "成立1年以内的单位，可提供\r\n[组织机构代码证]作为替代证照",
+          "parent": 0,
+          "children": null
+        },
+        {
+          "code": 104,
+          "tag": "医院类单位",
+          "licence": "[营业执照]或[医疗机构执业许可证及加盖企业公章的年检页]",
+          "specification": "如经营时间少于1年，可不提供年检页",
+          "parent": 0,
+          "children": null
+        },
+        {
+          "code": 105,
+          "tag": "学校类单位",
+          "licence": "[办学许可证]或[民办非企业单位登记证书及加盖企业公章的年检页]",
+          "specification": "如企业名称在工商网无检素结果，客户需同时提供上述双证,数据审核专员将就信息匹配度进行证照审核",
+          "parent": 0,
+          "children": null
+        },
+        {
+          "code": 106,
+          "tag": "律师事务所",
+          "licence": "[律师事务所执业许可证]副本，包括[政府印章证明页、法人页及加盖公章年检页]",
+          "specification": "如经营时间少于1年.可不提供年检页",
+          "parent": 0,
+          "children": null
+        },
+        {
+          "code": 107,
+          "tag": "社会团体",
+          "licence": "[社会团体法人登记证书及加盖公章年检页]",
+          "specification": "如经营时间少于1年.可不提供年检页",
+          "parent": 0,
+          "children": null
+        },
+        {
+          "code": 108,
+          "tag": "报刊或出版社",
+          "licence": "[法人登记证或许可证]",
+          "specification": "",
+          "parent": 0,
+          "children": null
+        },
+        {
+          "code": 109,
+          "tag": "银行",
+          "licence": "[营业执照]或[银监会批复文件]",
+          "specification": "",
+          "parent": 0,
+          "children": null
+        },
+        {
+          "code": 110,
+          "tag": "保险个人",
+          "licence": "[营业执照+OA签报或员工工牌+工号查询后的在职认证界面截屏]或[营业执照+保险职业代码证+保监会网站核准后的员工任职企业界面截屏]",
+          "specification": "保险职业代码证须提供正、反两面清晰拍照",
+          "parent": 0,
+          "children": null
+        }
+      ]
+    },
+    {
+      "code": 200,
+      "tag": "境外企业",
+      "licence": "",
+      "specification": "",
+      "parent": 0,
+      "children": [
+        {
+          "code": 201,
+          "tag": "港澳企业",
+          "licence": "[公司注册证书]、[商业登记证]",
+          "specification": "香港无线公司可仅提供商业登记证",
+          "parent": 0,
+          "children": null
+        },
+        {
+          "code": 202,
+          "tag": "台湾企业",
+          "licence": "[政府盈利事业登记证]或[变更登记证]",
+          "specification": "[政府盈利事业登记证]或(变更登记证]，台湾证件因严格按年度进行年检.如不是最新年检过的的政府营利事业登记证，需驳回提供最新的有效证照。",
+          "parent": 0,
+          "children": null
+        }
+      ]
+    },
+    {
+      "code": 300,
+      "tag": "外国企业",
+      "licence": "[营业执照]、[使领馆证明]",
+      "specification": "a. [营业执照]翻译件雾加盖单位公章\r\nb.如该公司所在国家未与我国建立外交\r\n或外交已终止，其主体资格证明或身份\r\n证明应经所在地公证机构公证后，交由\r\n其他与我国建交的第三国大使馆认证。",
+      "parent": 0,
+      "children": []
+    }
+  ]
+}

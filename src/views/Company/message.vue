@@ -21,14 +21,10 @@
       </div>
     </el-dialog>
     <div class="body">
-      <div class="head">
+      <!-- <div class="head">
         <p>企业信息完整度</p>
-        <el-progress
-          :text-inside="true"
-          :stroke-width="15"
-          percentage="0"
-        ></el-progress>
-      </div>
+        <el-progress :text-inside="true" :stroke-width="15" percentage="0"></el-progress>
+      </div>-->
       <div class="form">
         <p class="header">
           <span class="title">基本信息</span>
@@ -71,7 +67,7 @@
             <li>
               <span>企业 LOGO：</span>
               <span>
-                <img class="logo" v-if="companyInfo.logoUrl" />
+                <img class="logo" :src="this.companyInfo.logoUrl" />
               </span>
             </li>
           </ul>
@@ -84,7 +80,7 @@
           label-width="140px"
           v-else
         >
-          <el-form-item label="企业名称">
+          <el-form-item label="企业名称" prop="fullName">
             <span>{{ companyInfo.fullName }}</span>
           </el-form-item>
           <el-form-item label="企业简称" prop="shortName">
@@ -127,7 +123,7 @@
               :options="cityList"
             ></el-cascader>
           </el-form-item>
-          <el-form-item label="企业地址" prop="detail">
+          <el-form-item label="企业地址" prop="city">
             <el-input
               type="textarea"
               style="width:500px;margin:20px 0 0 0"
@@ -136,18 +132,6 @@
               placeholder="请输入内容"
             ></el-input>
           </el-form-item>
-          <!-- <el-form-item label="具体地点">
-            <el-input
-              style="margin-right: 10px;width:240px"
-              placeholder="请输入公司所在经度"
-              v-model="companyInfo.address.latitude"
-            ></el-input>
-            <el-input
-              placeholder="请输入公司所在纬度"
-              style="width:240px"
-              v-model="companyInfo.address.longitude"
-            ></el-input>
-          </el-form-item>-->
           <el-form-item label="企业介绍" prop="description">
             <el-input
               style="width:500px"
@@ -168,7 +152,11 @@
               :on-success="handleAvatarSuccess"
             >
               <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-              <i v-else style="border:1px solid #dcdfe6;margin:0 200px 0 0" class="el-icon-plus avatar-uploader-icon"></i>
+              <i
+                v-else
+                style="border:1px solid #dcdfe6;margin:0 200px 0 0"
+                class="el-icon-plus avatar-uploader-icon"
+              ></i>
               <div class="el-upload__tip">支持图片格式：png、jpg、jpeg，最大不超过 3M。</div>
               <div class="el-upload__tip">为了尽快通过审核，请上传真实合法且清晰的执照图片。</div>
             </el-upload>
@@ -214,45 +202,43 @@
           <ul>
             <li>
               <span>企业名称：</span>
-              <span class="spanSecond">{{ 1 }}</span>
+              <span class="spanSecond">{{this.companyName}}</span>
             </li>
             <li>
               <span>企业注册地：</span>
-              <span class="spanSecond">{{ 2 }}</span>
+              <span class="spanSecond">{{ this.registeredAddress}}</span>
             </li>
             <li>
               <span>统一社会信用代码：</span>
-              <span class="spanSecond">{{ 3 }}</span>
+              <span class="spanSecond">{{ this.uniformSocialCreditCode}}</span>
             </li>
             <li>
               <span>企业类别：</span>
-              <span class="spanSecond">13</span>
+              <span class="spanSecond">{{ this.enterpriseForm}}</span>
             </li>
             <li>
               <span>证件原件照片：</span>
-              <!-- <span><img :src="companyInfo.audit.licenseUrl.accessUrl" /></span> -->
+              <span>
+                <img />
+              </span>
             </li>
           </ul>
         </div>
         <el-form
           class="form-container"
-          ref="form"
+          ref="companyInfo"
           :rules="auditInfoFormRules"
-          :model="companyInfo.audit"
+          :model="companyInfo"
           label-width="140px"
           v-else
         >
           <el-form-item label="企业名称" prop="companyName">
-            <el-input
-              style="width:240px"
-              v-model="companyInfo.audit.companyName"
-              placeholder="企业名称"
-            ></el-input>
+            <span style="width:240px">{{companyInfo.companyName}}</span>
           </el-form-item>
           <el-form-item label="企业注册地" prop="registeredAddress">
             <el-input
               style="width:240px"
-              v-model="companyInfo.audit.registeredAddress"
+              v-model="companyInfo.registeredAddress"
               placeholder="请输入企业注册地（省份、城市）"
             ></el-input>
           </el-form-item>
@@ -260,25 +246,28 @@
             <el-input
               style="width:240px"
               maxlength="18"
-              v-model="companyInfo.audit.uniformSocialCreditCode"
+              v-model="companyInfo.uniformSocialCreditCode"
               placeholder="请输入与企业证件材料一致的代码"
             ></el-input>
           </el-form-item>
           <el-form-item label="企业类别" prop="enterpriseForm">
             <el-cascader
               style="width:240px"
-              :options="enterpriseTypes"
-              v-model="companyInfo.audit.enterpriseForm"
+              :props="props"
+              :options="list"
+              v-model="companyInfo.enterpriseForm"
               placeholder="请选择企业类型"
             ></el-cascader>
           </el-form-item>
           <el-form-item label="上传证件原件照片" prop="file">
             <el-upload
               class="upload"
-              :action="uploadCompanyFile"
+              :action="uploadUrl"
               :file-list="auditTempFile"
               :on-success="dealWithUploadLicense"
               :with-credentials="true"
+              :data="uploadDatas"
+              :headers="myHeaders"
               :limit="1"
               list-type="picture"
             >
@@ -292,7 +281,7 @@
             </el-upload>
           </el-form-item>
           <div class="operations">
-            <el-button type="primary" class="main" @click="onSubmitAuditInfo">保存</el-button>
+            <el-button type="primary" class="main" @click="updateCompanyVerify('companyInfo')">保存</el-button>
             <el-button @click="clearAndReload">取消</el-button>
           </div>
         </el-form>
@@ -306,6 +295,8 @@ import Cookies from "js-cookie";
 import industry from "../../assets/industry.json";
 import city from "../../assets/city.json";
 import option from "../../assets/option.json";
+import list from "../../assets/list.json";
+import timeUtil from "../../timeUtil.js";
 export default {
   name: "home",
   data() {
@@ -314,6 +305,10 @@ export default {
       uploadData: {
         label: "company-logo"
       },
+      uploadDatas: {
+        label: "company-license"
+      },
+      list: [],
       lOGOUploadModalVisible: false,
       centerDialogVisible: false,
       enterpriseInfoEditMode: true,
@@ -323,6 +318,7 @@ export default {
         label: "tag",
         children: "children"
       },
+
       imgSrc: "",
       cityList: [],
       industryList: [],
@@ -339,15 +335,12 @@ export default {
         logoUrl: "",
         city: [],
         description: "",
-        audit: {
-          companyName: "",
-          enterpriseForm: "",
-          licenseUrl: {
-            accessUrl: ""
-          },
-          registeredAddress: "",
-          uniformSocialCreditCode: ""
-        }
+
+        companyName: "",
+        enterpriseForm: "",
+        accessUrl: "",
+        registeredAddress: "",
+        uniformSocialCreditCode: ""
       },
       optionsNature: [
         {
@@ -372,6 +365,12 @@ export default {
         }
       ],
       companyInfoFormRules: {
+        fullName: [
+          { required: true, message: "请输入公司全称", trigger: "blur" }
+        ],
+        shortName: [
+          { required: true, message: "请输入公司简称", trigger: "blur" }
+        ],
         size: [{ required: true, message: "请选择企业规模", trigger: "blur" }],
         nature: [
           { required: true, message: "请选择企业性质", trigger: "blur" }
@@ -379,22 +378,39 @@ export default {
         industry: [
           { required: true, message: "请选择所属行业", trigger: "blur" }
         ],
-        "address.province": [
-          { required: true, message: "请选择企业地址", trigger: "blur" }
-        ],
+        city: [{ required: true, message: "请选择企业地址", trigger: "blur" }],
         description: [
           { required: true, message: "请输入企业介绍", trigger: "blur" }
-        ]
-      }
+        ],
+        file: [{ required: true, message: "请上传公司照片", trigger: "blur" }]
+      },
+      companyId: "",
+      imageUrl: "",
+      file: "",
+      files: "",
+      companyName: "",
+      enterpriseForm: "",
+      accessUrl: "",
+      registeredAddress: "",
+      uniformSocialCreditCode: ""
     };
   },
   methods: {
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw);
+      this.file = res.data;
+    },
+    dealWithUploadLicense(res, file) {
+      // this.imageUrl = URL.createObjectURL(file.raw);
+      this.files = res.data;
+    },
     //获取公司简讯
     brief() {
       this.$http
         .get("/business-core/companyes/brief")
         .then(res => {
           if (res.data.code == "200") {
+            this.companyId = res.data.data.id;
           } else {
           }
         })
@@ -420,6 +436,8 @@ export default {
               response.address.district
             ];
             this.companyInfo.detail = response.address.detail;
+            this.companyInfo.logoUrl = response.logo.accessUrl;
+            this.imageUrl = response.logo.accessUrl;
           } else {
           }
         })
@@ -427,24 +445,77 @@ export default {
           console.log(error);
         });
     },
+    //获取公司审核信息
+    companyVerify() {
+      this.$http
+        .get("/business-core/companyes/cert")
+        .then(res => {
+          let response = res.data.data;
+          if (res.data.code == "200") {
+            (this.companyName = response.companyName),
+              (this.enterpriseForm = response.enterpriseForm),
+              (this.registeredAddress = response.registeredAddress),
+              (this.uniformSocialCreditCode = response.uniformSocialCreditCode);
+            // this.companyInfo.accessUrl = response.accessUrl
+          } else {
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    //更新公司审核信息
+    updateCompanyVerify(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          let params = {
+            cert: this.files ? this.files : null,
+            enterpriseForm: this.companyInfo.enterpriseForm[1],
+            // fullName: this.companyInfo.companyName,
+            enterpriseFormCode: null,
+            registeredAddress: this.companyInfo.registeredAddress,
+            uniformSocialCreditCode: this.companyInfo.uniformSocialCreditCode
+          };
+          this.$http
+            .put("/business-core/companyes/cert", params)
+            .then(res => {
+              let response = res.data.data;
+              if (res.data.code == "200") {
+                this.enterpriseRegisterInfoEditMode = true;
+                this.companyVerify();
+                this.$message({
+                  message: res.data.message,
+                  type: "success"
+                });
+              } else {
+              }
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
     //更新公司
     updateCompany() {
       let params = {
         addressId: 130206,
-        cert: null,
         companyAddressBody: {
           city: this.companyInfo.city[1],
           detail: this.companyInfo.detail,
           district: this.companyInfo.city[2],
           province: this.companyInfo.city[0]
         },
-        companyId: 155,
+        companyId: this.companyId,
         description: this.companyInfo.detail,
         fullName: this.companyInfo.fullName,
         industryCode: null,
         industryFirst: this.companyInfo.industry[0],
         industrySecondary: this.companyInfo.industry[1],
-        logo: null,
+        logo: this.file ? this.file : null,
         nature: this.companyInfo.nature,
         natureCode: null,
         shortName: this.companyInfo.shortName,
@@ -457,6 +528,11 @@ export default {
           let response = res.data.data;
           if (res.data.code == "200") {
             this.enterpriseInfoEditMode = true;
+            this.companyDetail();
+            this.$message({
+              message: res.data.message,
+              type: "success"
+            });
           } else {
           }
         })
@@ -465,7 +541,6 @@ export default {
         });
     },
     editEnterpriseRegisterInfo() {
-      console.log("1313");
       this.enterpriseInfoEditMode = false;
       // if (this.enterpriseInfoEditMode) {
       //   this.$notify({
@@ -479,6 +554,11 @@ export default {
     },
     editEnterpriseInfo() {
       this.enterpriseRegisterInfoEditMode = false;
+      this.companyInfo.companyName = this.companyName;
+      this.companyInfo.enterpriseForm = this.enterpriseForm;
+      this.companyInfo.registeredAddress = this.registeredAddress;
+      this.companyInfo.uniformSocialCreditCode = this.uniformSocialCreditCode;
+      // this.companyInfo.companyName = this.companyName
       // if (this.enterpriseRegisterInfoEditMode) {
       //   this.$notify({
       //     title: "警告",
@@ -492,15 +572,17 @@ export default {
   },
   computed: {
     uploadUrl() {
-      return '/file-service/files/upload';
+      return "/api/file-service/files/upload";
     }
   },
   created() {
     this.cityList = city.data;
     this.industryList = industry.data;
     this.optionList = option.data;
+    this.list = list.data;
     this.brief();
     this.companyDetail();
+    this.companyVerify();
   }
 };
 </script>
