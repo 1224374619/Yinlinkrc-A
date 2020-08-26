@@ -133,12 +133,12 @@
                   type="text"
                   size="small"
                 >下线</el-button>
-                <el-button
+                <!-- <el-button
                   style="color:#FF7152"
                   @click="handleClick(scope.row)"
                   type="text"
                   size="small"
-                >刷新排名</el-button>
+                >刷新排名</el-button> -->
               </template>
             </el-table-column>
           </el-table>
@@ -163,7 +163,11 @@
             </el-table-column>
             <el-table-column prop="jobType" label="职位性质" show-overflow-tooltip></el-table-column>
             <el-table-column prop="city" label="地区" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="createdTime" label="保存时间" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="createdTime" label="保存时间" show-overflow-tooltip>
+              <template slot-scope="scope">
+                <span>{{scope.row.createdTime|formatDate}}</span>
+              </template>
+            </el-table-column>
             <el-table-column prop="managerName" label="负责HR" show-overflow-tooltip></el-table-column>
             <el-table-column prop="name" label="操作" width="90">
               <template slot-scope="scope">
@@ -242,7 +246,11 @@
             <el-table-column prop="positionName" label="职位名称" show-overflow-tooltip></el-table-column>
             <el-table-column prop="jobType" label="职位性质" show-overflow-tooltip></el-table-column>
             <el-table-column prop="city" label="地区" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="createdTime" label="保存时间" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="createdTime" label="保存时间" show-overflow-tooltip>
+              <template slot-scope="scope">
+                <span>{{scope.row.createdTime|formatDate}}</span>
+              </template>
+            </el-table-column>
             <el-table-column prop="managerName" label="负责HR" show-overflow-tooltip></el-table-column>
             <el-table-column prop="comment" label="未通过原因" show-overflow-tooltip></el-table-column>
             <el-table-column label="操作" width="180">
@@ -259,12 +267,12 @@
                   type="text"
                   size="small"
                 >编辑</el-button>
-                <el-button
+                <!-- <el-button
                   style="color:#FF7152"
                   @click="onlines(scope.row)"
                   type="text"
                   size="small"
-                >上线</el-button>
+                >上线</el-button> -->
                 <el-button
                   style="color:#FF7152"
                   @click="deletes(scope.row)"
@@ -316,12 +324,12 @@
                   type="text"
                   size="small"
                 >编辑</el-button>
-                <el-button
+                <!-- <el-button
                   style="color:#FF7152"
                   @click="onlines(scope.row)"
                   type="text"
                   size="small"
-                >上线</el-button>
+                >上线</el-button> -->
                 <el-button
                   style="color:#FF7152"
                   @click="deletes(scope.row)"
@@ -601,7 +609,7 @@ export default {
       } else if (tab.paneName === "third") {
         this.processedState = "AUDITING";
       } else if (tab.paneName === "fourth") {
-        this.processedState = "AUDIT_FAILED";
+        this.processedState = "AUDIT_FAIL";
       } else {
         this.processedState = "OFFLINE";
       }

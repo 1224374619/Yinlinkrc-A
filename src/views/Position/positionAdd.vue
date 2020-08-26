@@ -4,6 +4,36 @@
       <div class="asp-form">
         <div class="asp-table">
           <el-dialog
+            title
+            :visible.sync="centerDialogVisiblesStatus"
+            :show-close="false"
+            width="35%"
+            center
+          >
+            <div style="text-align:center">
+              <div class="loading">
+                <i style="font-size:60px;color: #fabb14;" class="el-icon-warning"></i>
+              </div>
+              <div class="loading-texts">
+                对不起，您的企业信息正在审核中，
+                暂时不能发布岗位，待审核通过后恢复。
+                待企业审核通过后即可被查看
+              </div>
+              <div style="text-align:center">
+                <el-button
+                  style="width:100px;height:40px;line-height:0px;margin:15px 0 0 0"
+                  plain
+                  @click="centerDialogVisiblesStatus = false"
+                >取消</el-button>
+                <el-button
+                  style="width:100px;height:40px;line-height:0px;margin:15px 0 0 20px"
+                  type="primary"
+                  @click="centerDialogVisiblesStatus = false"
+                >确定</el-button>
+              </div>
+            </div>
+          </el-dialog>
+          <el-dialog
             title="新增地址"
             :visible.sync="centerDialogVisible"
             :show-close="false"
@@ -198,7 +228,7 @@
                 ></el-input>
               </el-form-item>
               <el-form-item label="负责HR" prop="HR">
-                <el-select v-model="ruleForm.HR" placeholder="请选择责HR">
+                <el-select style="width:240px" v-model="ruleForm.HR" placeholder="请选择责HR">
                   <el-option
                     v-for="item in HRlist"
                     :key="item.id"
@@ -224,10 +254,10 @@
                 <el-button style="margin:0 0 0 20px" @click.prevent="removeDomain(domain)">删除</el-button>
               </el-form-item>
               <el-form-item label="上线时间" prop="onlineTime">
-                <el-date-picker v-model="ruleForm.onlineTime" type="date" placeholder="选择日期"></el-date-picker>
+                <el-date-picker style="width:240px" v-model="ruleForm.onlineTime" type="date" placeholder="选择日期"></el-date-picker>
               </el-form-item>
               <el-form-item label="下线时间" prop="offlineTime">
-                <el-date-picker v-model="ruleForm.offlineTime" type="date" placeholder="选择日期"></el-date-picker>
+                <el-date-picker style="width:240px" v-model="ruleForm.offlineTime" type="date" placeholder="选择日期"></el-date-picker>
               </el-form-item>
               <!-- <el-form-item label="上线日常">
                 <span style="width:240px">13天</span>
@@ -286,6 +316,7 @@ export default {
       },
       centerDialogVisible: false,
       centerDialogVisibles: false,
+      centerDialogVisiblesStatus:false,
       propsTwo: {
         value: "code",
         label: "tag",
@@ -459,7 +490,8 @@ export default {
           { required: true, message: "请输入详细地址", trigger: "blur" }
         ]
       },
-      id: ""
+      id: "",
+      status: ""
     };
   },
   methods: {
@@ -570,199 +602,224 @@ export default {
           console.log(error);
         });
     },
+    //公司状态
+    state() {
+      this.$http
+        .get("/business-core/companyes/state")
+        .then(res => {
+          if (res.data.code == "200") {
+            this.status = res.data.data;
+          } else {
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     //发布
     submitForm(formName) {
-      this.$refs[formName].validate(valid => {
-        console.log(this.ruleForm.salary);
-        let degreeName;
-        switch (this.ruleForm.degree) {
-          case "0":
-            degreeName = "初中及以下";
-            break;
-          case "1":
-            degreeName = "中专/中技";
-            break;
-          case "2":
-            degreeName = "高中";
-            break;
-          case "3":
-            degreeName = "大专";
-            break;
-          case "4":
-            degreeName = "本科";
-            break;
-          case "5":
-            degreeName = "硕士";
-            break;
-          case "6":
-            degreeName = "博士";
-            break;
-        }
-        let natureName;
-        switch (this.ruleForm.nature) {
-          case "0":
-            natureName = "全职";
-            break;
-          case "1":
-            natureName = "兼职";
-            break;
-          case "2":
-            natureName = "实习";
-            break;
-        }
-        let salaryMin;
-        let salaryMax;
-        switch (this.ruleForm.salary) {
-          case "0":
-            salaryMin = 0;
-            salaryMax = 1;
-            break;
-          case "1":
-            salaryMin = 1;
-            salaryMax = 2;
-            break;
-          case "2":
-            salaryMin = 2;
-            salaryMax = 4;
-            break;
-          case "3":
-            salaryMin = 4;
-            salaryMax = 6;
-            break;
-          case "4":
-            salaryMin = 6;
-            salaryMax = 8;
-            break;
-          case "5":
-            salaryMin = 8;
-            salaryMax = 10;
-            break;
-          case "6":
-            salaryMin = 10;
-            salaryMax = 15;
-            break;
-          case "7":
-            salaryMin = 15;
-            salaryMax = 25;
-            break;
-          case "8":
-            salaryMin = 25;
-            salaryMax = 35;
-            break;
-          case "9":
-            salaryMin = 35;
-            salaryMax = null;
-            break;
-        }
-        let workAgeMin;
-        let workAgeMax;
-        switch (this.ruleForm.workYear) {
-          case "0":
-            workAgeMin = 0;
-            workAgeMax = 0;
-            break;
-          case "1":
-            workAgeMin = 1;
-            workAgeMax = 3;
-            break;
-          case "2":
-            workAgeMin = 3;
-            workAgeMax = 5;
-            break;
-          case "3":
-            workAgeMin = 5;
-            workAgeMax = 10;
-            break;
-          case "4":
-            workAgeMin = 10;
-            workAgeMax = null;
-            break;
-          default:
-            workAgeMin = null;
-            workAgeMax = null;
-            break;
-        }
-        let logoutTime = this.ruleForm.onlineTime.getTime();
-        let publishedTime = this.ruleForm.offlineTime.getTime();
-        if (valid) {
-          let params = {
-            addressId: this.ruleForm.workCity,
-            catalogCode: this.ruleForm.positionCatalog,
-            catalogFirst: CodeToTag(
-              [
-                parseInt(
-                  (parseInt(this.ruleForm.positionCatalog / 100) * 100) / 10000
-                ) * 10000,
-                parseInt(this.ruleForm.positionCatalog / 100) * 100,
-                this.ruleForm.positionCatalog
-              ],
-              this.positionCatalogList
-            )[0],
-            catalogSecondary: CodeToTag(
-              [
-                parseInt(
-                  (parseInt(this.ruleForm.positionCatalog / 100) * 100) / 10000
-                ) * 10000,
-                parseInt(this.ruleForm.positionCatalog / 100) * 100,
-                this.ruleForm.positionCatalog
-              ],
-              this.positionCatalogList
-            )[1],
-            catalogThird: CodeToTag(
-              [
-                parseInt(
-                  (parseInt(this.ruleForm.positionCatalog / 100) * 100) / 10000
-                ) * 10000,
-                parseInt(this.ruleForm.positionCatalog / 100) * 100,
-                this.ruleForm.positionCatalog
-              ],
-              this.positionCatalogList
-            )[2],
-            companyId: this.companyId,
-            degreeMin: degreeName,
-            degreeMinCode: this.ruleForm.degree,
-            description: this.ruleForm.positionCatalogDetail,
-            email: null,
-            isGraduate: true,
-            jobType: natureName,
-            jobTypeCode: this.ruleForm.nature,
-            managerId: this.ruleForm.HR,
-            positionName: this.ruleForm.positionName,
-            proxyEmail: this.ruleForm.email,
-            requirement: this.ruleForm.JobSearch,
-            salaryMax: salaryMax,
-            salaryMin: salaryMin,
-            published: true,
-            sourceType: null,
-            sourceUrl: null,
-            workAgeMax: workAgeMax,
-            workAgeMin: workAgeMin,
-            offlineTime: logoutTime,
-            publishedTime: publishedTime
-          };
-          this.$http
-            .post("/business-core/positions", params)
-            .then(res => {
-              if (res.data.code == "200") {
-                this.$router.push({
-                  path: "/position/info"});
-              } else {
-              }
-            })
-            .catch(error => {
-              console.log(error);
-            });
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
+      if (this.status === "ONLINE") {
+        this.$refs[formName].validate(valid => {
+          let degreeName;
+          switch (this.ruleForm.degree) {
+            case "0":
+              degreeName = "初中及以下";
+              break;
+            case "1":
+              degreeName = "中专/中技";
+              break;
+            case "2":
+              degreeName = "高中";
+              break;
+            case "3":
+              degreeName = "大专";
+              break;
+            case "4":
+              degreeName = "本科";
+              break;
+            case "5":
+              degreeName = "硕士";
+              break;
+            case "6":
+              degreeName = "博士";
+              break;
+          }
+          let natureName;
+          switch (this.ruleForm.nature) {
+            case "0":
+              natureName = "全职";
+              break;
+            case "1":
+              natureName = "兼职";
+              break;
+            case "2":
+              natureName = "实习";
+              break;
+          }
+          let salaryMin;
+          let salaryMax;
+          switch (this.ruleForm.salary) {
+            case "0":
+              salaryMin = 0;
+              salaryMax = 1;
+              break;
+            case "1":
+              salaryMin = 1;
+              salaryMax = 2;
+              break;
+            case "2":
+              salaryMin = 2;
+              salaryMax = 4;
+              break;
+            case "3":
+              salaryMin = 4;
+              salaryMax = 6;
+              break;
+            case "4":
+              salaryMin = 6;
+              salaryMax = 8;
+              break;
+            case "5":
+              salaryMin = 8;
+              salaryMax = 10;
+              break;
+            case "6":
+              salaryMin = 10;
+              salaryMax = 15;
+              break;
+            case "7":
+              salaryMin = 15;
+              salaryMax = 25;
+              break;
+            case "8":
+              salaryMin = 25;
+              salaryMax = 35;
+              break;
+            case "9":
+              salaryMin = 35;
+              salaryMax = null;
+              break;
+          }
+          let workAgeMin;
+          let workAgeMax;
+          switch (this.ruleForm.workYear) {
+            case "0":
+              workAgeMin = 0;
+              workAgeMax = 0;
+              break;
+            case "1":
+              workAgeMin = 1;
+              workAgeMax = 3;
+              break;
+            case "2":
+              workAgeMin = 3;
+              workAgeMax = 5;
+              break;
+            case "3":
+              workAgeMin = 5;
+              workAgeMax = 10;
+              break;
+            case "4":
+              workAgeMin = 10;
+              workAgeMax = null;
+              break;
+            default:
+              workAgeMin = null;
+              workAgeMax = null;
+              break;
+          }
+          let logoutTime = this.ruleForm.onlineTime.getTime();
+          let publishedTime = this.ruleForm.offlineTime.getTime();
+          console.log(this.ruleForm.workCity)
+          if (valid) {
+            let params = {
+              addressId: this.ruleForm.workCity,
+              catalogCode: this.ruleForm.positionCatalog,
+              catalogFirst: CodeToTag(
+                [
+                  parseInt(
+                    (parseInt(this.ruleForm.positionCatalog / 100) * 100) /
+                      10000
+                  ) * 10000,
+                  parseInt(this.ruleForm.positionCatalog / 100) * 100,
+                  this.ruleForm.positionCatalog
+                ],
+                this.positionCatalogList
+              )[0],
+              catalogSecondary: CodeToTag(
+                [
+                  parseInt(
+                    (parseInt(this.ruleForm.positionCatalog / 100) * 100) /
+                      10000
+                  ) * 10000,
+                  parseInt(this.ruleForm.positionCatalog / 100) * 100,
+                  this.ruleForm.positionCatalog
+                ],
+                this.positionCatalogList
+              )[1],
+              catalogThird: CodeToTag(
+                [
+                  parseInt(
+                    (parseInt(this.ruleForm.positionCatalog / 100) * 100) /
+                      10000
+                  ) * 10000,
+                  parseInt(this.ruleForm.positionCatalog / 100) * 100,
+                  this.ruleForm.positionCatalog
+                ],
+                this.positionCatalogList
+              )[2],
+              companyId: this.companyId,
+              degreeMin: degreeName,
+              degreeMinCode: this.ruleForm.degree,
+              description: this.ruleForm.positionCatalogDetail,
+              email: this.ruleForm.email,
+              isGraduate: true,
+              jobType: natureName,
+              jobTypeCode: this.ruleForm.nature,
+              managerId: this.ruleForm.HR,
+              positionName: this.ruleForm.positionName,
+              proxyEmail: this.ruleForm.email,
+              requirement: this.ruleForm.JobSearch,
+              salaryMax: salaryMax,
+              salaryMin: salaryMin,
+              published: true,
+              sourceType: null,
+              sourceUrl: null,
+              workAgeMax: workAgeMax,
+              workAgeMin: workAgeMin,
+              offlineTime: logoutTime,
+              publishedTime: publishedTime
+            };
+            this.$http
+              .post("/business-core/positions", params)
+              .then(res => {
+                if (res.data.code == "200") {
+                  this.$message({
+                  message: res.data.message,
+                  type: "success"
+                });
+                  this.$router.push({
+                    path: "/position/info"
+                  });
+                } else {
+                }
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          } else {
+            console.log("error submit!!");
+            return false;
+          }
+        });
+      } else {
+        this.centerDialogVisiblesStatus = true
+      }
     },
     //重置
     resetForm(formName) {
       this.ruleForm.desc = "";
       this.$refs[formName].resetFields();
-      
     },
     removeDomain(item) {
       var index = this.ruleForm.domains.indexOf(item);
@@ -785,10 +842,18 @@ export default {
     this.cityList = city.data;
     this.ListHR();
     this.brief();
+    this.state();
   }
 };
 </script>
 <style>
+.loading-texts {
+  font-family: PingFangSC-Regular;
+  color: #999999 100%;
+  font-size: 18px;
+  width: 80%;
+  margin: 10px auto 30px;
+}
 .asp-content {
   width: 100%;
   background: #ffffff;

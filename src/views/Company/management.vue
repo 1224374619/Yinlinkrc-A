@@ -123,7 +123,7 @@
             <el-input placeholder="请选择" suffix-icon="el-icon-search" v-model="formInline.keyword"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button style="margin:0 0 0 445px" plain @click="account">查询</el-button>
+            <el-button style="margin:0 0 0 745px" plain @click="account">查询</el-button>
             <el-button type="primary" @click="addUesr">新增</el-button>
           </el-form-item>
         </el-form>
@@ -287,10 +287,12 @@ export default {
             this.account()
             this.DialogVisible = false
           } else {
+          
           }
         })
         .catch(error => {
-          console.log(error);
+          console.log(error)
+          // this.$message.error(res.data.message);
         });
     },
     //用户管理列表

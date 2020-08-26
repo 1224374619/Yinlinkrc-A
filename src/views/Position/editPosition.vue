@@ -824,8 +824,11 @@ export default {
           this.$http
             .put(`/business-core/positions/${this.positionID}`, params)
             .then(res => {
-              if (res.data.code == 200) {
-                console.log("success");
+              if (res.data.code == "200") {
+                this.$message({
+                  message: res.data.message,
+                  type: "success"
+                });
               } else {
               }
             })

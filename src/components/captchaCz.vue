@@ -6,19 +6,19 @@
 </template>
 
 <script>
-const captchaLabel = '获取验证码';
+const captchaLabel = "获取验证码";
 const countNumber = 60;
 
 export default {
-  name: 'captcha',
-  props:['fromData'],
+  name: "captcha",
+  props: ["fromData"],
   data() {
     return {
       frozen: false,
       counter: countNumber,
-      captchaInput: '',
-      captchaStatusText: captchaLabel,
-    }
+      captchaInput: "",
+      captchaStatusText: captchaLabel
+    };
   },
   methods: {
     getCaptcha() {
@@ -32,27 +32,46 @@ export default {
           this.frozen = false;
         }
       }, 1000);
-      this.$locals.post("/business-user/account/phone/vcode", {
-        phone: this.fromData
-      });
-      
+      this.$locals
+        .post("/business-user/account/phone/vcode", {
+          phone: this.fromData
+        })
+        .then(res => {
+          if (res.data.code == "200") {
+          } else {
+            this.$message({
+            message: res.data.message,
+            type: "error"
+          });
+          }
+        })
+        .catch(error => {
+          this.$message({
+            message: error.response.data.message,
+            type: "error"
+          });
+        });
     }
   },
   watch: {
     captchaInput() {
-      this.$emit('input', this.captchaInput);
+      this.$emit("input", this.captchaInput);
     }
   }
-}
+};
 </script>
 
 <style lang="stylus" scoped>
-.captcha
-  .input
-    width 135px
-    height 43px
-  .btn
-    width 125px
-    height 40px
-    margin 0 0 2px 10px
+.captcha {
+  .input {
+    width: 135px;
+    height: 43px;
+  }
+
+  .btn {
+    width: 125px;
+    height: 40px;
+    margin: 0 0 2px 10px;
+  }
+}
 </style>

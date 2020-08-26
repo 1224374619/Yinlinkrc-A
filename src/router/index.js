@@ -81,7 +81,7 @@ let routes = [{
     {
         path: '/enterpriseAudit',
         component: enterpriseAudit,
-        name: '',
+        name: 'enterpriseAudit',
     },
     {
         path: '/tidings',
@@ -217,11 +217,7 @@ let routes = [{
             path: '/company/message',
             component: message,
             name: '企业信息管理'
-        }, {
-            path: '/company/management',
-            component: management,
-            name: '用户管理'
-        }]
+        }, ]
     },
     {
         path: '/company',

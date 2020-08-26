@@ -123,7 +123,7 @@
               :options="cityList"
             ></el-cascader>
           </el-form-item>
-          <el-form-item label="企业地址" prop="city">
+          <el-form-item label="企业地址" prop="detail">
             <el-input
               type="textarea"
               style="width:500px;margin:20px 0 0 0"
@@ -141,7 +141,7 @@
               v-model="companyInfo.description"
             ></el-input>
           </el-form-item>
-          <el-form-item label="企业 LOGO" prop="file">
+          <el-form-item label="企业 LOGO">
             <el-upload
               class="avatar-upload"
               :action="uploadUrl"
@@ -185,8 +185,8 @@
             </el-dialog>-->
           </el-form-item>
           <div class="operations">
-            <el-button type="primary" class="main" @click="updateCompany">保存</el-button>
-            <el-button @click="clearAndReload">取消</el-button>
+            <el-button type="primary" class="main" @click="updateCompany('companyInfo')">保存</el-button>
+            <el-button @click="clearAndReloads">取消</el-button>
           </div>
         </el-form>
         <span class="line"></span>
@@ -219,26 +219,26 @@
             <li>
               <span>证件原件照片：</span>
               <span>
-                <img />
+                <img class="logo" :src="this.accessUrl" />
               </span>
             </li>
           </ul>
         </div>
         <el-form
           class="form-container"
-          ref="companyInfo"
+          ref="companyInfos"
           :rules="auditInfoFormRules"
-          :model="companyInfo"
+          :model="companyInfos"
           label-width="140px"
           v-else
         >
           <el-form-item label="企业名称" prop="companyName">
-            <span style="width:240px">{{companyInfo.companyName}}</span>
+            <span style="width:240px">{{companyInfos.companyName}}</span>
           </el-form-item>
           <el-form-item label="企业注册地" prop="registeredAddress">
             <el-input
               style="width:240px"
-              v-model="companyInfo.registeredAddress"
+              v-model="companyInfos.registeredAddress"
               placeholder="请输入企业注册地（省份、城市）"
             ></el-input>
           </el-form-item>
@@ -246,7 +246,7 @@
             <el-input
               style="width:240px"
               maxlength="18"
-              v-model="companyInfo.uniformSocialCreditCode"
+              v-model="companyInfos.uniformSocialCreditCode"
               placeholder="请输入与企业证件材料一致的代码"
             ></el-input>
           </el-form-item>
@@ -255,7 +255,7 @@
               style="width:240px"
               :props="props"
               :options="list"
-              v-model="companyInfo.enterpriseForm"
+              v-model="companyInfos.enterpriseForm"
               placeholder="请选择企业类型"
             ></el-cascader>
           </el-form-item>
@@ -281,7 +281,7 @@
             </el-upload>
           </el-form-item>
           <div class="operations">
-            <el-button type="primary" class="main" @click="updateCompanyVerify('companyInfo')">保存</el-button>
+            <el-button type="primary" class="main" @click="updateCompanyVerify('companyInfos')">保存</el-button>
             <el-button @click="clearAndReload">取消</el-button>
           </div>
         </el-form>
@@ -334,8 +334,9 @@ export default {
         addressId: "",
         logoUrl: "",
         city: [],
-        description: "",
-
+        description: ""
+      },
+      companyInfos: {
         companyName: "",
         enterpriseForm: "",
         accessUrl: "",
@@ -379,6 +380,7 @@ export default {
           { required: true, message: "请选择所属行业", trigger: "blur" }
         ],
         city: [{ required: true, message: "请选择企业地址", trigger: "blur" }],
+        detail: [{ required: true, message: "请填写企业地址", trigger: "blur" }],
         description: [
           { required: true, message: "请输入企业介绍", trigger: "blur" }
         ],
@@ -392,7 +394,7 @@ export default {
       enterpriseForm: "",
       accessUrl: "",
       registeredAddress: "",
-      uniformSocialCreditCode: ""
+      uniformSocialCreditCode: "",
     };
   },
   methods: {
@@ -456,7 +458,7 @@ export default {
               (this.enterpriseForm = response.enterpriseForm),
               (this.registeredAddress = response.registeredAddress),
               (this.uniformSocialCreditCode = response.uniformSocialCreditCode);
-            // this.companyInfo.accessUrl = response.accessUrl
+            this.accessUrl = response.cert.accessUrl;
           } else {
           }
         })
@@ -470,11 +472,10 @@ export default {
         if (valid) {
           let params = {
             cert: this.files ? this.files : null,
-            enterpriseForm: this.companyInfo.enterpriseForm[1],
-            // fullName: this.companyInfo.companyName,
+            enterpriseForm: this.companyInfos.enterpriseForm[1],
             enterpriseFormCode: null,
-            registeredAddress: this.companyInfo.registeredAddress,
-            uniformSocialCreditCode: this.companyInfo.uniformSocialCreditCode
+            registeredAddress: this.companyInfos.registeredAddress,
+            uniformSocialCreditCode: this.companyInfos.uniformSocialCreditCode
           };
           this.$http
             .put("/business-core/companyes/cert", params)
@@ -500,45 +501,52 @@ export default {
       });
     },
     //更新公司
-    updateCompany() {
-      let params = {
-        addressId: 130206,
-        companyAddressBody: {
-          city: this.companyInfo.city[1],
-          detail: this.companyInfo.detail,
-          district: this.companyInfo.city[2],
-          province: this.companyInfo.city[0]
-        },
-        companyId: this.companyId,
-        description: this.companyInfo.detail,
-        fullName: this.companyInfo.fullName,
-        industryCode: null,
-        industryFirst: this.companyInfo.industry[0],
-        industrySecondary: this.companyInfo.industry[1],
-        logo: this.file ? this.file : null,
-        nature: this.companyInfo.nature,
-        natureCode: null,
-        shortName: this.companyInfo.shortName,
-        size: this.companyInfo.size,
-        sizeCode: null
-      };
-      this.$http
-        .put("/business-core/companyes", params)
-        .then(res => {
-          let response = res.data.data;
-          if (res.data.code == "200") {
-            this.enterpriseInfoEditMode = true;
-            this.companyDetail();
-            this.$message({
-              message: res.data.message,
-              type: "success"
+    updateCompany(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          let params = {
+            addressId: 130206,
+            companyAddressBody: {
+              city: this.companyInfo.city[1],
+              detail: this.companyInfo.detail,
+              district: this.companyInfo.city[2],
+              province: this.companyInfo.city[0]
+            },
+            companyId: this.companyId,
+            description: this.companyInfo.description,
+            fullName: this.companyInfo.fullName,
+            industryCode: null,
+            industryFirst: this.companyInfo.industry[0],
+            industrySecondary: this.companyInfo.industry[1],
+            logo: this.file ? this.file : null,
+            nature: this.companyInfo.nature,
+            natureCode: null,
+            shortName: this.companyInfo.shortName,
+            size: this.companyInfo.size,
+            sizeCode: null
+          };
+          this.$http
+            .put("/business-core/companyes", params)
+            .then(res => {
+              let response = res.data.data;
+              if (res.data.code == "200") {
+                this.enterpriseInfoEditMode = true;
+                this.companyDetail();
+                this.$message({
+                  message: res.data.message,
+                  type: "success"
+                });
+              } else {
+              }
+            })
+            .catch(error => {
+              console.log(error);
             });
-          } else {
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     },
     editEnterpriseRegisterInfo() {
       this.enterpriseInfoEditMode = false;
@@ -554,10 +562,10 @@ export default {
     },
     editEnterpriseInfo() {
       this.enterpriseRegisterInfoEditMode = false;
-      this.companyInfo.companyName = this.companyName;
-      this.companyInfo.enterpriseForm = this.enterpriseForm;
-      this.companyInfo.registeredAddress = this.registeredAddress;
-      this.companyInfo.uniformSocialCreditCode = this.uniformSocialCreditCode;
+      this.companyInfos.companyName = this.companyName;
+      this.companyInfos.enterpriseForm = this.enterpriseForm;
+      this.companyInfos.registeredAddress = this.registeredAddress;
+      this.companyInfos.uniformSocialCreditCode = this.uniformSocialCreditCode;
       // this.companyInfo.companyName = this.companyName
       // if (this.enterpriseRegisterInfoEditMode) {
       //   this.$notify({
@@ -568,7 +576,13 @@ export default {
       // } else {
       //   this.enterpriseRegisterInfoEditMode = false;
       // }
-    }
+    },
+    clearAndReload( ) {
+      this.enterpriseRegisterInfoEditMode = true;
+    },
+    clearAndReloads( ) {
+      this.enterpriseInfoEditMode = true;
+    },
   },
   computed: {
     uploadUrl() {

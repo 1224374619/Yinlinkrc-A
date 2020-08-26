@@ -91,9 +91,11 @@ export default {
             agree:true,password:this.form.password, phone:this.form.tel, vcode:this.form.captcha
           }
           this.$locals.put('/business-user/account/password',params).then(res => {
-            if (res.data.code == 200) {
+            if (res.data.code == "200") {
               this.$store.commit("LOGOUT");
               this.$router.push({path: "/resetresult"});
+            }else {
+              console.log('1313')
             }
           }).catch(error => {
             this.$message({

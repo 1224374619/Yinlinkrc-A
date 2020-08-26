@@ -103,7 +103,7 @@ export default {
     return {
       form: {
         tel: 15516946795,
-        password: 123456
+        password: "123456"
       },
       show: {
         old: false,
@@ -150,10 +150,11 @@ export default {
             })
             .then(res => {
               if (res.request.status == 200) {
+                this.state()
                 let token = res.headers["auth-token"];
                 Cookies.set("token", token);
                 this.companyDetail()
-                this.$router.push({ path: "/home" });
+                // this.$router.push({ path: "/home" });
               } else {
                 return false;
               }
@@ -168,6 +169,25 @@ export default {
           return false;
         }
       });
+    },
+    //当前用户信息
+    state() {
+      this.$http
+        .get("/business-core/companyAccounts/user")
+        .then(res => {
+          if (res.data.code == "200") {
+            Cookies.set("status", res.data.data.details.companyId);
+            if (res.data.data.details.companyId === 0) {
+              this.$router.push({ path: "/enterpriseAudit" });
+            }else {
+              this.$router.push({ path: "/home" });
+            }
+          } else {
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     //公司详情
     companyDetail() {

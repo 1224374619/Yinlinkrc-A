@@ -12,8 +12,12 @@ import store from './store';
 import scroll from 'vue-seamless-scroll'
 // import Cookies from 'js-cookie'
 import Moment from 'moment'
-import {Message} from 'element-ui'
-import {CodeToTag} from './cookie';
+import {
+  Message
+} from 'element-ui'
+import {
+  CodeToTag
+} from './cookie';
 import cookie from 'vue-cookie';
 import Cookies from 'js-cookie'
 import 'babel-polyfill';
@@ -38,7 +42,7 @@ import vuescroll from 'vuescroll';
 Vue.use(ElementUI);
 // Vue.prototype.$Cookies=Cookies;
 Vue.prototype.$moment = Moment;
-Vue.prototype.$qs = qs;   //qs全局挂载在vue实例上
+Vue.prototype.$qs = qs; //qs全局挂载在vue实例上
 Vue.prototype.$message = Message
 Vue.prototype.$cookie = cookie;
 Vue.prototype.$CodeToTag = {
@@ -46,26 +50,24 @@ Vue.prototype.$CodeToTag = {
 }
 
 // 定义全局时间戳过滤器
-Vue.filter('formatDate', function(value) {
-  var timestamp = (new Date()).getTime()-24*60*60*1000
-  var timestampOne = (new Date()).getTime()-48*60*60*1000
-  if(value > timestamp) {
-    return Moment(value).format('今天'+'HH:mm');
-  }
-  else if(value > timestampOne && value < timestamp) {
-    return Moment(value).format('昨天'+'HH:mm');
-  }
-  else{
+Vue.filter('formatDate', function (value) {
+  var timestamp = (new Date()).getTime() - 24 * 60 * 60 * 1000
+  var timestampOne = (new Date()).getTime() - 48 * 60 * 60 * 1000
+  if (value > timestamp) {
+    return Moment(value).format('今天' + 'HH:mm');
+  } else if (value > timestampOne && value < timestamp) {
+    return Moment(value).format('昨天' + 'HH:mm');
+  } else {
     return Moment(value).format('YYYY/MM/DD');
   }
 });
-Vue.filter('formatDateOne', function(value) {
+Vue.filter('formatDateOne', function (value) {
   return Moment(value).format('YYYY-MM-DD')
 })
-Vue.filter('formatDateTwo', function(value) {
+Vue.filter('formatDateTwo', function (value) {
   return Moment(value).format('YYYY-MM-DD HH:mm')
 })
-Vue.filter('formatDateThree', function(value) {
+Vue.filter('formatDateThree', function (value) {
   return Moment(value).format('YYYY-MM-DD HH:mm')
 })
 Vue.config.productionTip = false;
@@ -82,14 +84,50 @@ const router = new VueRouter({
   routes
 })
 
- // 注册全局钩子用来拦截导航
- router.beforeEach((to, from, next) => {
+// 注册全局钩子用来拦截导航
+router.beforeEach((to, from, next) => {
   const token = Cookies.get('token')
-  if (to.name === 'login' || to.name === 'register') {
+  const status = Cookies.get('status')
+  if (to.name === 'login' || to.name === 'register' || to.name === 'resetpassword') {
     store.state.hasLogin = false
-  }else {
+  } else {
     store.state.hasLogin = true
   }
+  // console.log(to.path)
+  // if (to.name === 'home') {
+  //   if (status === "0") {
+  //     next({
+  //       path: '/enterpriseAudit'
+  //     })
+  //   } else {
+  //     next()
+  //   }
+  // } else if (to.path === '/resume/info') {
+  //   if (status === "0") {
+  //     next({
+  //       path: '/enterpriseAudit'
+  //     })
+  //   } else {
+  //     next()
+  //   }
+  // } else if (to.path === '/position/info') {
+  //   if (status === "0") {
+  //     next({
+  //       path: '/enterpriseAudit'
+  //     })
+  //   } else {
+  //     next()
+  //   }
+  // } else if (to.path === '/company/message') {
+  //   if (status === "0") {
+  //     next({
+  //       path: '/enterpriseAudit'
+  //     })
+  //   } else {
+  //     next()
+  //   }
+  // }
+
   if (to.meta.requireAuth) { // 判断该路由是否需要登录权限
     if (token) { // 通过vuex state获取当前的token是否存在
       next()

@@ -4,9 +4,14 @@
       <div>简历详情</div>
     </div>
     <div class="resume-seconds">
-      <div class="resume">
+      <div class="resume" v-if="this.resumeDeta.base !== underfined">
         <div class="block">
-          <el-avatar style="border-radius:50px" shape="square" :size="100" :src="squareUrl"></el-avatar>
+          <el-avatar
+            style="border-radius:50px"
+            shape="square"
+            :size="100"
+            :src="resumeDeta.base.avatarUrl"
+          ></el-avatar>
         </div>
         <div class="infor">
           <div style="font-size:20px;margin:0 0 0 10px;color:#373737">{{resumeDeta.base.fullName}}</div>
@@ -34,23 +39,26 @@
           </div>
         </div>
       </div>
-      <div class="line"></div>
+      <div class="resume" v-else>
+       <div class="title" style="margin-bottom:10px">基本信息</div>
+      </div>
       <div class="jotension">
         <div class="title">求职意向</div>
-        <div class="jotension-content">
-          <div>职位类型：{{resumeDeta.target.positionCatalogs[0].third}}</div>
-          <div>工作城市：{{resumeDeta.target.cities[0].province}}</div>
-        </div>
-        <div class="jotension-content">
-          <div>企业行业：{{resumeDeta.target.industries[0].secondary}}</div>
-          <div style>薪资范围：{{resumeDeta.target.salaryMin}}-{{resumeDeta.target.salaryMax}}k</div>
-        </div>
-        <div class="jotension-content">
-          <div>求职状态：{{resumeDeta.target.jobSearchStatus}}</div>
-          <div style>工作类型：{{resumeDeta.target.jobType}}</div>
+        <div v-if="this.resumeDeta.target !== underfined">
+          <div class="jotension-content">
+            <div>职位类型：{{resumeDeta.target.positionCatalogs[0].third}}</div>
+            <div>工作城市：{{resumeDeta.target.cities[0].province}}</div>
+          </div>
+          <div class="jotension-content">
+            <div>企业行业：{{resumeDeta.target.industries[0].secondary}}</div>
+            <div style>薪资范围：{{resumeDeta.target.salaryMin}}-{{resumeDeta.target.salaryMax}}k</div>
+          </div>
+          <div class="jotension-content">
+            <div>求职状态：{{resumeDeta.target.jobSearchStatus}}</div>
+            <div style>工作类型：{{resumeDeta.target.jobType}}</div>
+          </div>
         </div>
       </div>
-      <div class="line"></div>
       <div class="jotension">
         <div class="title">教育经历</div>
         <div v-for="(item,index) in resumeDeta.eduXps" :key="index">
@@ -127,7 +135,7 @@
       </div>
       <div class="jotension">
         <div class="title">自我评价</div>
-        <div class="train-content">
+        <div class="train-content" v-if="this.resumeDeta.evaluation !== underfined">
           <div style="width:700px;">{{resumeDeta.evaluation.content}}</div>
         </div>
       </div>
@@ -199,7 +207,7 @@ export default {
           timestamp: "2018-04-11"
         }
       ],
-      arrResume: [],
+      arrResume: []
     };
   },
   methods: {
@@ -370,13 +378,13 @@ export default {
     this.processedState = this.$route.query.processedState;
     if (this.resumeId) {
       this.resumeDetail();
-      this.arrResume.push(this.resumeId)
+      this.arrResume.push(this.resumeId);
     } else if (this.resumeIds) {
       this.resumeDetails();
-      this.arrResume.push(this.resumeIds)
+      this.arrResume.push(this.resumeIds);
     } else {
       this.resumeDetailes();
-      this.arrResume.push(this.resumeIdes)
+      this.arrResume.push(this.resumeIdes);
     }
   },
   filters: {

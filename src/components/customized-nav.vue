@@ -5,17 +5,37 @@
         <img style="height:40px" @click="gotoHomeUI" :src="require('../assets/images/logo.png')" />
         <!-- <span v-if="!ctlHideMenus" style="margin:5px 0 0 27px;color:#327cf3;">上海<i class="el-icon-caret-bottom"></i></span> -->
         <div class="menu">
-          <div class="group" v-if="!ctlHideMenus">
-            <router-link to="/home" index="1">
+          <div class="group" v-if="this.status === 0">
+            <!-- <router-link :to="{path: '/home' }" index="1">
               <span>首页</span>
             </router-link>
-            <router-link to="/resume" index="2">
+
+            <router-link :to="{path: '/resume' }" index="2">
               <span>简历管理</span>
             </router-link>
-            <router-link style="margin:0 0 0 20px" to="/enterpriseAudit" index="4">
+
+            <router-link :to="{path: '/position' }" index="3">
               <span>职位管理</span>
             </router-link>
-            <router-link style="margin:0 0 0 40px" to="/company" index="5">
+
+            <router-link :to="{path: '/company' }" index="4">
+              <span>企业中心</span>
+            </router-link> -->
+          </div>
+          <div class="group" v-else>
+            <router-link :to="{path: '/home' }" index="1">
+              <span>首页</span>
+            </router-link>
+
+            <router-link :to="{path: '/resume' }" index="2">
+              <span>简历管理</span>
+            </router-link>
+
+            <router-link :to="{path: '/position' }" index="3">
+              <span>职位管理</span>
+            </router-link>
+
+            <router-link :to="{path: '/company' }" index="4">
               <span>企业中心</span>
             </router-link>
           </div>
@@ -53,12 +73,14 @@
                     >{{item.releaseTime|formatDate}}</span>
                   </div>
                 </div>
-                <div style="border: 1px solid rgba(244, 244, 244, 1);box-shadow: 0px 2px 10px 0px rgba(245, 245, 245, 1);height:60px">
+                <div
+                  style="border: 1px solid rgba(244, 244, 244, 1);box-shadow: 0px 2px 10px 0px rgba(245, 245, 245, 1);height:60px"
+                >
                   <el-button style="margin:7px 38%" @click="chorusle" type="primary">全部标为已读</el-button>
                   <!-- <span
                     style="font-size:14px;color:#373737;margin:0 auto;line-height:50px;cursor:pointer;border:1px solid red;width:100px"
                     
-                  >全部标为已读</span> -->
+                  >全部标为已读</span>-->
                 </div>
               </el-dropdown-menu>
             </el-dropdown>
@@ -102,9 +124,10 @@ export default {
   data() {
     return {
       tok: this.$store.state.token,
-      value: "",
       token: "",
-      notificationlist: []
+      value: "",
+      notificationlist: [],
+      status: ""
     };
   },
   computed: mapState({
@@ -120,7 +143,6 @@ export default {
         }, 1);
       }, 5000);
     },
-
     //消息click
     NewsDetail() {
       this.$router.push({ path: "/NewsDetail" });
@@ -177,6 +199,25 @@ export default {
     personal() {
       this.$router.push({ path: "/personal" });
     },
+    //当前用户信息
+    state() {
+      this.$http
+        .get("/business-core/companyAccounts/user")
+        .then(res => {
+          if (res.data.code == "200") {
+            this.status = res.data.data.details.companyId;
+            // if (res.data.data.details.companyId === 0) {
+            //   this.$router.push({ path: "/enterpriseAudit" });
+            // }else {
+            //   this.$router.push({ path: "/home" });
+            // }
+          } else {
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     //用户通知
     notification() {
       let params = {
@@ -191,14 +232,14 @@ export default {
         .then(res => {
           if (res.data.code == "200") {
             this.notificationlist = res.data.data.list;
-            this.value = res.data.data.total
+            this.value = res.data.data.total;
           } else {
           }
         })
         .catch(error => {
           console.log(error);
         });
-    },
+    }
     // //获取简历简讯
     // brief() {
     //   // const token = this.$store.state.token
@@ -223,6 +264,7 @@ export default {
     // this.initList();
     this.fullName = window.sessionStorage.getItem("username");
     this.notification();
+    this.state();
     // this.brief();
   }
 };

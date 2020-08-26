@@ -345,8 +345,8 @@ export default {
             .post("/business-core/companyes", params)
             .then(res => {
               let response = res.data.data;
-              if (res.data.code == "200") {
-                this.enterpriseInfoEditMode = true;
+              if (res.data.code == "201") {
+                this.$router.push({ path: "/home" });
               } else {
               }
             })
@@ -392,8 +392,9 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: white;
+  
   margin: 96px 0 10px 0;
+  background #ffffff
 
   .form {
     padding: 20px;

@@ -84,6 +84,9 @@ export default {
     };
   },
   methods: {
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
     //修改密码
     updatePassword() {
       let params = {
