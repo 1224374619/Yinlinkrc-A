@@ -1,5 +1,45 @@
 <template>
   <div class="enterprise-info-update-container">
+    <el-dialog title :visible.sync="centerDialogVisible" :show-close="false" width="25%" center>
+      <div style="text-align:center">
+        <div class="loading">
+          <i style="font-size:60px;color: #fabb14;" class="el-icon-warning"></i>
+        </div>
+        <div class="loading-texts">请查看是否填写完整的公司审核信息</div>
+        <div style="text-align:center">
+          <el-button
+            style="width:100px;height:40px;line-height:0px;margin:35px 0 0 0"
+            type="primary"
+            @click="keep"
+          >确定</el-button>
+          <el-button
+            style="width:100px;height:40px;line-height:0px;margin:35px 0 0 20px"
+            plain
+            @click="centerDialogVisible = false"
+          >取消</el-button>
+        </div>
+      </div>
+    </el-dialog>
+    <el-dialog title :visible.sync="centerDialogVisibles" :show-close="false" width="25%" center>
+      <div style="text-align:center">
+        <div class="loading">
+          <i style="font-size:60px;color: #fabb14;" class="el-icon-warning"></i>
+        </div>
+        <div class="loading-texts">请查看是否填写完整的个人基本信息</div>
+        <div style="text-align:center">
+          <el-button
+            style="width:100px;height:40px;line-height:0px;margin:35px 0 0 0"
+            type="primary"
+            @click="keep"
+          >确定</el-button>
+          <el-button
+            style="width:100px;height:40px;line-height:0px;margin:35px 0 0 20px"
+            plain
+            @click="centerDialogVisibles = false"
+          >取消</el-button>
+        </div>
+      </div>
+    </el-dialog>
     <div class="form">
       <el-form
         class="form-container"
@@ -165,6 +205,50 @@
           <el-button @click="clearAndReload">取消</el-button>
         </div>
       </el-form>
+      <div style="border:1px solid #F1F1F1;width:100%;margin:30px 0 50px 0"></div>
+      <el-form
+        :model="ruleForm"
+        :rules="rules"
+        ref="ruleForm"
+        label-width="140px"
+        class="demo-ruleForm"
+      >
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="ruleForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="职位" prop="position">
+          <el-input v-model="ruleForm.position"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="ruleForm.email"></el-input>
+        </el-form-item>
+        <el-form-item label="用户头像" prop="filees">
+          <el-upload
+            class="avatar-upload"
+            :action="uploadCompanyFile"
+            :data="uploadDatas"
+            :headers="myHeaders"
+            style="margin-left:0px"
+            :show-file-list="false"
+            :on-success="handleAvatar"
+          >
+            <img v-if="imageUrles" :src="imageUrles" class="avatar" />
+            <i
+              v-else
+              style="border:1px solid #dcdfe6;margin:0 200px 0 0"
+              class="el-icon-plus avatar-uploader-icon"
+            ></i>
+            <div class="el-upload__tip">支持图片格式：png、jpg、jpeg，最大不超过 3M。</div>
+            <div class="el-upload__tip">为了尽快通过审核，请上传真实合法且清晰的执照图片。</div>
+          </el-upload>
+        </el-form-item>
+        <el-form-item>
+          <div class="operations">
+            <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
+            <el-button @click="resetForm('ruleForm')">重置</el-button>
+          </div>
+        </el-form-item>
+      </el-form>
     </div>
   </div>
 </template>
@@ -179,6 +263,8 @@ import timeUtil from "../timeUtil.js";
 export default {
   data() {
     return {
+      centerDialogVisible: false,
+      centerDialogVisibles: false,
       cityList: [],
       list: [],
       industryList: [],
@@ -298,12 +384,65 @@ export default {
           { required: true, message: "请上传证件原件照片", trigger: "blur" }
         ]
       },
+      rules: {
+        name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
+        email: [
+          { required: true, message: "请填写邮箱", trigger: "change" },
+          {
+            pattern: /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+\.)+(com|cn|net|com.cn|com.tw|com.hk)$/,
+            message: "邮箱格式错误",
+            trigger: ["change", "blur"]
+          }
+        ],
+        position: [{ required: true, message: "请输入职位", trigger: "blur" }],
+        file: [{ required: true, message: "请上传头像", trigger: "blur" }]
+      },
+      ruleForm: {
+        name: "",
+        email: "",
+        position: ""
+      },
       imageUrl: "",
+      imageUrles: "",
       file: "",
-      files: ""
+      files: "",
+      filees: ""
     };
   },
   methods: {
+    keep() {
+      this.$router.push({ path: "/home" });
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          let params = {
+            avatar: this.filees,
+            email: this.ruleForm.email,
+            position: this.ruleForm.position,
+            realName: this.ruleForm.name
+          };
+          this.$http
+            .post("/business-core/companyAccounts/cmpanyAdmin", params)
+            .then(res => {
+              let response = res.data.data;
+              if (res.data.code == "200") {
+                 this.$router.push({ path: "/home" });
+              } else {
+              }
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
     addCompany(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -345,9 +484,13 @@ export default {
             .post("/business-core/companyes", params)
             .then(res => {
               let response = res.data.data;
-              if (res.data.code == "201") {
-                this.$router.push({ path: "/home" });
+              if (res.data.code == "200") {
+                this.$message({
+                  message: res.data.message,
+                  type: "success"
+                });
               } else {
+
               }
             })
             .catch(error => {
@@ -362,6 +505,10 @@ export default {
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
       this.file = res.data;
+    },
+    handleAvatar(res, file) {
+      this.imageUrles = URL.createObjectURL(file.raw);
+      this.filees = res.data;
     },
     dealWithUploadLicense(res, file) {
       // this.imageUrl = URL.createObjectURL(file.raw);
@@ -392,9 +539,8 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  
   margin: 96px 0 10px 0;
-  background #ffffff
+  background: #ffffff;
 
   .form {
     padding: 20px;

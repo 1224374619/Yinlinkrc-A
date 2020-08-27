@@ -471,7 +471,12 @@ export default {
         ],
         HR: [{ required: true, message: "请填写负责HR", trigger: "change" }],
         email: [
-          { required: true, message: "请填写投递邮箱", trigger: "change" }
+          { required: true, message: "请填写邮箱", trigger: "change" },
+          {
+            pattern: /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+\.)+(com|cn|net|com.cn|com.tw|com.hk)$/,
+            message: "邮箱格式错误",
+            trigger: ["change", "blur"]
+          }
         ],
         onlineTime: [
           { required: true, message: "请选择上线时间", trigger: "change" }

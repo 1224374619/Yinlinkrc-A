@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <el-dialog title :visible.sync="centerDialogVisible" :show-close="false" width="25%" center>
+    <!-- <el-dialog title :visible.sync="centerDialogVisible" :show-close="false" width="25%" center>
       <div style="text-align:center">
         <div class="loading">
           <i style="font-size:60px;color: #fabb14;" class="el-icon-warning"></i>
@@ -15,7 +15,7 @@
           >新增岗位</el-button>
         </div>
       </div>
-    </el-dialog>
+    </el-dialog> -->
     <!-- <el-dialog title :visible.sync="centerDialogVisibles" :show-close="false" width="25%" center>
       <div style="text-align:center">
         <div class="loading">
