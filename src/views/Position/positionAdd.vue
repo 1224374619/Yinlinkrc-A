@@ -352,26 +352,22 @@ export default {
         },
         {
           value: "5",
-          label: "6K-8K"
-        },
-        {
-          value: "6",
           label: "8K-10K"
         },
         {
-          value: "7",
+          value: "6",
           label: "10K-15K"
         },
         {
-          value: "8",
+          value: "7",
           label: "15K-25K"
         },
         {
-          value: "9",
+          value: "8",
           label: "25K-35K"
         },
         {
-          value: "10",
+          value: "9",
           label: "35K以上"
         }
       ],

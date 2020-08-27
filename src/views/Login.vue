@@ -102,8 +102,8 @@ export default {
   data() {
     return {
       form: {
-        tel: 15516946795,
-        password: "123456"
+        tel: 17638154180,
+        password: "q123456"
       },
       show: {
         old: false,

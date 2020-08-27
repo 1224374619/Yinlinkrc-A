@@ -666,7 +666,7 @@ export default {
               workCity: response.addressId,
               positionCatalogDetail: response.description,
               JobSearch: response.requirement,
-              HR: response.manager,
+              HR: response.managerId,
               email: response.email,
               onlineTime: response.publishedTime,
               offlineTime: response.offlineTime
@@ -682,6 +682,7 @@ export default {
     },
     //发布
     submitForm(formName) {
+      console.log(this.ruleForm.HR)
       this.$refs[formName].validate(valid => {
         console.log(this.ruleForm.onlineTime);
         let degreeName;
@@ -829,6 +830,9 @@ export default {
                   message: res.data.message,
                   type: "success"
                 });
+                this.$router.push({
+                    path: "/position/info"
+                  });
               } else {
               }
             })

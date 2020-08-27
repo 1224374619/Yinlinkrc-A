@@ -20,7 +20,7 @@
 
             <router-link :to="{path: '/company' }" index="4">
               <span>企业中心</span>
-            </router-link> -->
+            </router-link>-->
           </div>
           <div class="group" v-else>
             <router-link :to="{path: '/home' }" index="1">
@@ -95,8 +95,22 @@
               />
               <img style="margin:10px 0 0 0;height:47px;width:47px" v-else :src="this.avatarUrl" />
               <el-dropdown-menu slot="dropdown" style="font-size:14px">
-                <el-dropdown-item id="personals" @click.native="contact">联系我们</el-dropdown-item>
                 <el-dropdown-item
+                  id="personals"
+                  v-if="this.status === 0"
+                  disabled
+                  @click.native="contact"
+                >联系我们</el-dropdown-item>
+                <el-dropdown-item id="personals" v-else disabled @click.native="contact">联系我们</el-dropdown-item>
+                <el-dropdown-item
+                  id="personals"
+                  v-if="this.status === 0"
+                  disabled
+                  style="margin:5px 0 0 0"
+                  @click.native="account"
+                >账号设置</el-dropdown-item>
+                <el-dropdown-item
+                  v-else
                   id="personals"
                   style="margin:5px 0 0 0"
                   @click.native="account"
@@ -179,7 +193,10 @@ export default {
         });
     },
     gotoHomeUI() {
-      this.$router.push({ path: "/" });
+      if (this.status === 0) {
+      } else {
+        this.$router.push({ path: "/" });
+      }
     },
     gotoLoginUI() {
       this.$router.push({ name: "login" });
