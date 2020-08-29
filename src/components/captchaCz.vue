@@ -69,9 +69,12 @@ export default {
   }
 
   .btn {
-    width: 125px;
-    height: 40px;
-    margin: 0 0 2px 10px;
+    width 150px
+    height 40px
+    margin 0 0 2px 10px
+    font-size 16px
+    color #327cf3
+    border 1px solid #327cf3
   }
 }
 </style>

@@ -4,6 +4,7 @@ import Vue from 'vue';
 import axios from "axios";
 import queryString from 'querystring'
 import store from '../store/index'
+import router from '../router/index.js'
 import Cookies from 'js-cookie'
 
 // application/x-www-from-urlencode mime
@@ -30,10 +31,20 @@ _axios.interceptors.request.use(
         let token = Cookies.get('token')
         if (token) {
             config.headers['Auth-Token'] = token;
+        } else {
+            
+            router.push({
+
+                path:"/login",
+        
+                // querry:{redirect:router.currentRoute.fullPath}//从哪个页面跳转
+        
+              })
         }
         return config
     },
     function (error) {
+        
         Promise.reject(error)
     })
 
@@ -48,7 +59,7 @@ const instance = axios.create({
 })
 Vue.prototype.$_http = instance;
 const locals = axios.create({
-    baseURL: '/api/v2/', 
+    baseURL: '/api/v2/',
     // headers:{'Auth-Token':store.state.token === ''?'':store.state.token},
     timeout: 60 * 1000, // Timeout
     withCredentials: true, // Check cross-site Access-Control

@@ -51,9 +51,9 @@
         <p class="header">
           <span>企业资质审核</span>
         </p>
-        <el-form-item label="企业名称" prop="companyName">
+        <!-- <el-form-item label="企业名称" prop="companyName">
           <el-input v-model="companyInfo.companyName" placeholder="请输入与企业证件材料一致的全称"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="企业注册地" prop="registeredAddress">
           <el-input v-model="companyInfo.registeredAddress" placeholder="请输入企业注册地（省份、城市）"></el-input>
         </el-form-item>
@@ -139,10 +139,10 @@
             :options="cityList"
           ></el-cascader>
         </el-form-item>
-        <el-form-item label="企业地址" prop="city">
+        <el-form-item label="企业详细地址" prop="city">
           <el-input
             type="textarea"
-            style="width:500px;margin:20px 0 0 0"
+            style="width:500px;margin:0 0 0 0"
             :rows="4"
             v-model="companyInfo.detail"
             placeholder="请输入内容"
@@ -213,6 +213,9 @@
         label-width="140px"
         class="demo-ruleForm"
       >
+       <p class="header">
+          <span>企业基本信息审核</span>
+        </p>
         <el-form-item label="姓名" prop="name">
           <el-input v-model="ruleForm.name"></el-input>
         </el-form-item>
@@ -428,11 +431,22 @@ export default {
               let response = res.data.data;
               if (res.data.code == "200") {
                  this.$router.push({ path: "/home" });
+                 this.$message({
+                  message: '基本信息已提交审核，请耐心等待',
+                  type: "success"
+                });
               } else {
+                this.$message({
+                  message: res.data.message,
+                  type: "error"
+                });
               }
             })
             .catch(error => {
-              console.log(error);
+               this.$message({
+                  message: '服务器内部运行失败',
+                  type: "error"
+                });
             });
         } else {
           console.log("error submit!!");
@@ -486,15 +500,21 @@ export default {
               let response = res.data.data;
               if (res.data.code == "200") {
                 this.$message({
-                  message: res.data.message,
+                  message: '企业资质已提交审核，请耐心等待',
                   type: "success"
                 });
               } else {
-
+                 this.$message({
+                  message: res.data.message,
+                  type: "error"
+                });
               }
             })
             .catch(error => {
-              console.log(error);
+               this.$message({
+                  message: '服务器内部运行失败',
+                  type: "error"
+                });
             });
         } else {
           console.log("error submit!!");
@@ -517,7 +537,7 @@ export default {
   },
   computed: {
     uploadCompanyFile() {
-      return "/api/file-service/files/upload";
+      return "/api/v2/file-service/files/upload";
     }
   },
   created() {

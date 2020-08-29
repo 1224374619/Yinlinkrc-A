@@ -87,8 +87,8 @@
                 </span>
               </div>
               <div class="noti-content">
-                我是文案我是文案我是文案我是文案文案我是文案我是文案文...
-                <span class="more">详情 &gt;</span>
+                敬请期待
+                <!-- <span class="more">详情 &gt;</span> -->
               </div>
             </div>
             <div class="notification">
@@ -99,8 +99,8 @@
                 </span>
               </div>
               <div class="noti-content">
-                我是文案我是文案我是文案我是文案文案我是文案我是文案文...
-                <span class="more">详情 &gt;</span>
+                敬请期待
+                <!-- <span class="more">详情 &gt;</span> -->
               </div>
             </div>
           </div>

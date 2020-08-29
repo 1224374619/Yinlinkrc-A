@@ -118,7 +118,7 @@ export default {
         if (valid) {
           this.$locals.post('/business-user/account/register',{phone:this.form.tel,password:this.form.password,vcode:this.form.captcha,agree:true}).then(res => {
           if (res.data.code == "201") {
-            // this.open2();
+            this.open2();
             this.$router.push({ path: '/login' });
           }
         }).catch(error =>{

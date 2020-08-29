@@ -1,6 +1,6 @@
 <template>
   <div class="captcha">
-    <el-input class="input" type="captcha" v-model="captchaInput" placeholder="请输入验证码"></el-input>
+    <el-input class="input" type="captcha" v-model="captchaInput" placeholder="验证码"></el-input>
     <el-button class="btn" @click="getCaptcha" :disabled="frozen">{{ captchaStatusText }}</el-button>
   </div>
 </template>
@@ -56,9 +56,9 @@ export default {
       color #cbcbcb 
       font-size 14px 
   .btn
-    width 117px
+    width 150px
     height 40px
-    margin 0 0 2px 20px
+    margin 0 0 2px 10px
     font-size 16px
     color #327cf3
     border 1px solid #327cf3

@@ -38,7 +38,10 @@ let routes = [{
         children: [{
             path: '/home',
             name: 'home',
-            component: Home
+            component: Home,
+            meta: {
+                requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
+            }
         }, ]
         // hidden: true
     },
@@ -82,12 +85,18 @@ let routes = [{
         path: '/enterpriseAudit',
         component: enterpriseAudit,
         name: 'enterpriseAudit',
+        meta: {
+            requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
+        }
     },
     {
         path: '/tidings',
         component: tidings,
         name: '',
-        hidden: true
+        hidden: true,
+        meta: {
+            requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
+        }
     },
     {
         path: '/resume',
@@ -95,6 +104,9 @@ let routes = [{
         iconCls: 'el-icon-user',
         name: '简历总览',
         redirect: '/resume/info',
+        meta: {
+            requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
+        },
         item: 2,
         children: [{
             path: '/resume/info',
@@ -115,6 +127,9 @@ let routes = [{
         name: '平台人才库',
         item: 2,
         redirect: '/resume/talent',
+        meta: {
+            requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
+        },
         iconCls: 'el-icon-document-copy',
         children: [{
                 path: '/resume/talent',
@@ -136,6 +151,9 @@ let routes = [{
         component: resume,
         name: '企业人才库',
         item: 2,
+        meta: {
+            requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
+        },
         redirect: '/resume/company',
         iconCls: 'el-icon-document-copy',
         children: [{
@@ -160,6 +178,9 @@ let routes = [{
         name: '职位总览',
         redirect: '/position/info',
         item: 1,
+        meta: {
+            requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
+        },
         children: [{
             path: '/position/info',
             iconCls: 'el-icon-tickets',
@@ -185,6 +206,9 @@ let routes = [{
         name: '',
         iconCls: 'el-icon-circle-plus',
         item: 1,
+        meta: {
+            requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
+        },
         leaf: true, //只有一个节点
         children: [{
             path: '/position/add',
@@ -198,6 +222,9 @@ let routes = [{
         iconCls: 'el-icon-delete',
         name: '',
         item: 1,
+        meta: {
+            requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
+        },
         leaf: true, //只有一个节点
         children: [{
             path: '/position/depot',
@@ -211,6 +238,9 @@ let routes = [{
         iconCls: 'el-icon-office-building',
         name: '',
         item: 3,
+        meta: {
+            requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
+        },
         redirect: '/company/message',
         leaf: true, //只有一个节点
         children: [{
@@ -225,6 +255,9 @@ let routes = [{
         iconCls: 'el-icon-coordinate',
         name: '',
         item: 3,
+        meta: {
+            requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
+        },
         redirect: '/company/message',
         leaf: true, //只有一个节点
         children: [{
@@ -239,6 +272,9 @@ let routes = [{
         iconCls: 'el-icon-document-copy',
         name: '',
         item: 4,
+        meta: {
+            requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
+        },
         redirect: '/contactus/companyDetail',
         leaf: true, //只有一个节点
         children: [{
@@ -253,6 +289,9 @@ let routes = [{
         iconCls: 'el-icon-document-copy',
         name: '',
         item: 4,
+        meta: {
+            requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
+        },
         redirect: '/contactus/contact',
         leaf: true, //只有一个节点
         children: [{
@@ -267,6 +306,9 @@ let routes = [{
         iconCls: 'el-icon-document-copy',
         name: '',
         item: 5,
+        meta: {
+            requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
+        },
         redirect: '/account/base',
         leaf: true, //只有一个节点
         children: [{
@@ -281,6 +323,9 @@ let routes = [{
         iconCls: 'el-icon-document-copy',
         name: '',
         item: 5,
+        meta: {
+            requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
+        },
         redirect: '/account/repassword',
         leaf: true, //只有一个节点
         children: [{
