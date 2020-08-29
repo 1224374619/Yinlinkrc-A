@@ -39,7 +39,7 @@ export default {
 html, body {
   margin: 0;   
   height: 100%;
-  background-color: #f0f0f0
+  background-color: #ffffff
 }
 #app {
   height:100%;

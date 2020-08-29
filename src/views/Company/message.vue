@@ -586,7 +586,7 @@ export default {
   },
   computed: {
     uploadUrl() {
-      return "/api/file-service/files/upload";
+      return "/api/v2/file-service/files/upload";
     }
   },
   created() {

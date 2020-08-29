@@ -229,7 +229,7 @@
           <el-upload
             class="avatar-upload"
             :action="uploadCompanyFile"
-            :data="uploadDatas"
+            :data="uploadDataavatar"
             :headers="myHeaders"
             style="margin-left:0px"
             :show-file-list="false"
@@ -278,6 +278,9 @@ export default {
       },
       uploadDatas: {
         label: "company-logo"
+      },
+      uploadDataavatar: {
+        label: "company-account-avatar"
       },
       props: {
         value: "tag",
@@ -430,7 +433,7 @@ export default {
             .then(res => {
               let response = res.data.data;
               if (res.data.code == "200") {
-                 this.$router.push({ path: "/home" });
+                 this.$router.push({ path: "/login" });
                  this.$message({
                   message: '基本信息已提交审核，请耐心等待',
                   type: "success"
@@ -444,7 +447,7 @@ export default {
             })
             .catch(error => {
                this.$message({
-                  message: '服务器内部运行失败',
+                  message: error.response.data.message,
                   type: "error"
                 });
             });
@@ -473,7 +476,7 @@ export default {
               industryCode: null,
               industryFirst: this.companyInfo.industry[0],
               industrySecondary: this.companyInfo.industry[1],
-              logo: this.files ? this.files : null,
+              logo: this.file ? this.file : null,
               nature: this.companyInfo.nature,
               natureCode: null,
               shortName: this.companyInfo.shortName,
@@ -481,7 +484,7 @@ export default {
               sizeCode: null
             },
             companyCertBody: {
-              cert: this.file ? this.file : null,
+              cert: this.files ? this.files : null,
               enterpriseForm: timeUtil.CodeToTag(
                 [
                   this.companyInfo.enterpriseForm[0],
@@ -511,8 +514,9 @@ export default {
               }
             })
             .catch(error => {
+              
                this.$message({
-                  message: '服务器内部运行失败',
+                  message: error.response.data.message,
                   type: "error"
                 });
             });

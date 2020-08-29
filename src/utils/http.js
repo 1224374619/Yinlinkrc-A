@@ -33,13 +33,7 @@ _axios.interceptors.request.use(
             config.headers['Auth-Token'] = token;
         } else {
             
-            router.push({
-
-                path:"/login",
-        
-                // querry:{redirect:router.currentRoute.fullPath}//从哪个页面跳转
-        
-              })
+            router.replace('/');
         }
         return config
     },

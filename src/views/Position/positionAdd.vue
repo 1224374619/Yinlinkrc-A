@@ -254,10 +254,22 @@
                 <el-button style="margin:0 0 0 20px" @click.prevent="removeDomain(domain)">删除</el-button>
               </el-form-item>
               <el-form-item label="上线时间" prop="onlineTime">
-                <el-date-picker style="width:240px" v-model="ruleForm.onlineTime" type="date" placeholder="选择日期"></el-date-picker>
+                <el-date-picker
+                  style="width:240px"
+                  :picker-options="expireTimeOption"
+                  v-model="ruleForm.onlineTime"
+                  type="date"
+                  placeholder="选择日期"
+                ></el-date-picker>
               </el-form-item>
               <el-form-item label="下线时间" prop="offlineTime">
-                <el-date-picker style="width:240px" v-model="ruleForm.offlineTime" type="date" placeholder="选择日期"></el-date-picker>
+                <el-date-picker
+                  style="width:240px"
+                  :picker-options="expireTimeOption"
+                  v-model="ruleForm.offlineTime"
+                  type="date"
+                  placeholder="选择日期"
+                ></el-date-picker>
               </el-form-item>
               <!-- <el-form-item label="上线日常">
                 <span style="width:240px">13天</span>
@@ -280,6 +292,12 @@ import { CodeToTag } from "../../cookie.js";
 export default {
   data() {
     return {
+      expireTimeOption: {
+        disabledDate(date) {
+          //disabledDate 文档上：设置禁用状态，参数为当前日期，要求返回 Boolean
+          return date.getTime() < Date.now() - 24 * 60 * 60 * 1000;
+        }
+      },
       ruleForm: {
         positionName: "",
         nature: "",
@@ -316,7 +334,7 @@ export default {
       },
       centerDialogVisible: false,
       centerDialogVisibles: false,
-      centerDialogVisiblesStatus:false,
+      centerDialogVisiblesStatus: false,
       propsTwo: {
         value: "code",
         label: "tag",
@@ -731,7 +749,7 @@ export default {
           }
           let logoutTime = this.ruleForm.onlineTime.getTime();
           let publishedTime = this.ruleForm.offlineTime.getTime();
-          console.log(this.ruleForm.workCity)
+          console.log(this.ruleForm.workCity);
           if (valid) {
             let params = {
               addressId: this.ruleForm.workCity,
@@ -796,9 +814,9 @@ export default {
               .then(res => {
                 if (res.data.code == "200") {
                   this.$message({
-                  message: res.data.message,
-                  type: "success"
-                });
+                    message: res.data.message,
+                    type: "success"
+                  });
                   this.$router.push({
                     path: "/position/info"
                   });
@@ -814,7 +832,7 @@ export default {
           }
         });
       } else {
-        this.centerDialogVisiblesStatus = true
+        this.centerDialogVisiblesStatus = true;
       }
     },
     //重置
