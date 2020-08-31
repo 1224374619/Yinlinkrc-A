@@ -1,6 +1,8 @@
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Home from '../views/Home.vue'
+// import Router from 'vue-router'
+// import Vue from 'vue'
 import resume from '../views/Resume/resume.vue'
 import position from '../views/Position/position.vue'
 import resumeInfo from '../views/Resume/resumeInfo.vue'
@@ -29,6 +31,8 @@ import base from '../views/Account/base.vue'
 import repassword from '../views/Account/repassword.vue'
 import resetpassword from '../views/ResetPassword.vue'
 import resetresult from '../views/ResetResult.vue'
+// Vue.use(Router);
+// const router = new Router({})
 let routes = [{
         path: '/',
         component: Home,
@@ -39,9 +43,9 @@ let routes = [{
             path: '/home',
             name: 'home',
             component: Home,
-            meta: {
-                requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
-            }
+            // meta: {
+            //     requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
+            // }
         }, ]
         // hidden: true
     },

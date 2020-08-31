@@ -149,6 +149,7 @@ export default {
               password: this.form.password
             })
             .then(res => {
+              console.log(res.request.status)
               if (res.request.status == 200) {
                 this.state()
                 let token = res.headers["auth-token"];
@@ -192,7 +193,7 @@ export default {
     //公司详情
     companyDetail() {
       this.$http
-        .get("/business-core/company/brief")
+        .get("/business-core/companyes/brief")
         .then(res => {
           if (res.data.code == "200") {
             console.log(res)

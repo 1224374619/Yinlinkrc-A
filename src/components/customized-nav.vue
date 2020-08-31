@@ -88,12 +88,12 @@
               style="line-height:65px;color:#373737;margin:0 20px 0 0;font-size:18px;"
             >{{$store.state.user === null?this.fullName:$store.state.user}}</span>
             <el-dropdown placement="bottom-start" class="ada">
-              <img
+              <!-- <img
                 style="margin:10px 0 0 0;height:47px;width:47px"
                 v-if="this.avatarUrl === ''"
                 :src="require('../assets/images/156.png')"
-              />
-              <img style="margin:10px 0 0 0;height:47px;width:47px" v-else :src="this.avatarUrl" />
+              /> -->
+              <img style="margin:10px 0 0 0;height:47px;width:47px"  :src="this.avatarUrl" />
               <el-dropdown-menu slot="dropdown" style="font-size:14px">
                 <el-dropdown-item
                   id="personals"
@@ -141,7 +141,9 @@ export default {
       token: "",
       value: "",
       notificationlist: [],
-      status: ""
+      status: "",
+      avatarUrl:'',
+      fullName:''
     };
   },
   computed: mapState({
@@ -256,19 +258,19 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    },
+    //获取简历简讯
+    brief() {
+      // const token = this.$store.state.token
+      this.$http.get("/business-core/companyes/brief").then(res => {
+        if (res.data.code == "200") {
+          // this.defaultResumeId = res.data.data.defaultResumeId;
+          this.fullName = res.data.data.fullName;
+          this.avatarUrl = res.data.data.logoUrl;
+        }
+      })
+      .catch(error => {});
     }
-    // //获取简历简讯
-    // brief() {
-    //   // const token = this.$store.state.token
-    //   this.$http.get("/business-user/account").then(res => {
-    //     if (res.data.code == 200) {
-    //       // this.defaultResumeId = res.data.data.defaultResumeId;
-    //       // this.fullName = res.data.data.base.fullName;
-    //       // this.avatarUrl = res.data.data.avatarUrl;
-    //     }
-    //   });
-    //   // .catch(error => {});
-    // }
   },
   //监听执行
   watch: {
@@ -282,7 +284,7 @@ export default {
     this.fullName = window.sessionStorage.getItem("username");
     this.notification();
     this.state();
-    // this.brief();
+    this.brief();
   }
 };
 </script>
@@ -330,11 +332,11 @@ nav {
         display: flex;
         height: 100%;
         flex: 1;
-        margin: 0 0 0 124px;
+        margin: 0 0 0 140px;
         font-family: 'PingFangSC-Regular';
 
         a {
-          width: 115px;
+          width: 165px;
           color: #838383;
           text-decoration: none;
           display: flex;

@@ -19,8 +19,15 @@
             <el-form-item label="密码:" prop="password">
               <el-input style="width:240px" placeholder="请输入密码" v-model="ruleForm.password"></el-input>
             </el-form-item>
+            <el-form-item label="职位" prop="position">
+              <el-input style="width:240px" placeholder="请输入职位" v-model="ruleForm.position"></el-input>
+            </el-form-item>
             <el-form-item label="角色:" prop="role">
-              <span>管理员</span>
+              <el-select v-model="ruleForm.role" style="width:240px" placeholder="请选择角色">
+                <el-option label="创建者" value="ROLE_CREATOR"></el-option>
+                <el-option label="普通用户" value="ROLE_USER"></el-option>
+                <el-option label="管理员" value="ROLE_ADMIN"></el-option>
+              </el-select>
             </el-form-item>
           </el-form>
         </div>
@@ -33,7 +40,7 @@
           <el-button
             style="height:40px;line-height:0px;margin:20px 0 0 30px"
             type="primary"
-            @click="addUesrs"
+            @click="addUesrs('ruleForm')"
           >确定</el-button>
         </div>
       </div>
@@ -56,9 +63,13 @@
             </el-form-item>
             <!-- <el-form-item label="密码:" prop="password">
               <el-input style="width:240px" placeholder="请输入密码" v-model="ruleForm.password"></el-input>
-            </el-form-item> -->
-            <el-form-item label="角色:" prop="region">
-              <span>管理员</span>
+            </el-form-item>-->
+            <el-form-item label="角色:" prop="role">
+              <el-select v-model="ruleForms.role" style="width:240px" placeholder="请选择角色">
+                <el-option label="创建者" value="ROLE_CREATOR"></el-option>
+                <el-option label="普通用户" value="ROLE_USER"></el-option>
+                <el-option label="管理员" value="ROLE_ADMIN"></el-option>
+              </el-select>
             </el-form-item>
           </el-form>
         </div>
@@ -201,11 +212,13 @@ export default {
       ruleForm: {
         userName: "",
         phone: "",
-        password: ""
+        password: "",
+        position: ""
       },
       ruleForms: {
         realName: "",
         phone: "",
+        role: ""
       },
       formInline: {
         keyword: ""
@@ -219,7 +232,9 @@ export default {
       rules: {
         userName: [{ required: true, message: "请输入姓名", trigger: "blur" }],
         phone: [{ required: true, validator: checkPhone, trigger: "blur" }],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
+        position: [{ required: true, message: "请输入职位", trigger: "blur" }],
+        role: [{ required: true, message: "请选择角色", trigger: "blur" }]
       },
       rule: {
         realName: [{ required: true, message: "请输入姓名", trigger: "blur" }],
@@ -233,7 +248,7 @@ export default {
       captchaStatusText: "获取验证码",
       frozen: false,
       counter: 60,
-      id:''
+      id: ""
     };
   },
   methods: {
@@ -243,14 +258,14 @@ export default {
         password: null,
         phone: this.ruleForms.phone,
         realName: this.ruleForms.realName,
-        role: "ROLE_ADMIN"
+        role: this.ruleForms.role
       };
       this.$http
         .put(`/business-user/admin/account/${this.id}`, params)
         .then(res => {
           if (res.data.code == "200") {
-            this.account()
-            this.DialogVisibleEdit = false
+            this.account();
+            this.DialogVisibleEdit = false;
           } else {
           }
         })
@@ -264,7 +279,7 @@ export default {
         .delete(`/business-user/admin/account/${tab.id}`)
         .then(res => {
           if (res.data.code == "204") {
-            this.account()
+            this.account();
           } else {
           }
         })
@@ -273,27 +288,34 @@ export default {
         });
     },
     //新增用户
-    addUesrs() {
-      let params = {
-        password: this.ruleForm.password,
-        phone: this.ruleForm.phone,
-        realName: this.ruleForm.userName,
-        role: "ROLE_ADMIN"
-      };
-      this.$http
-        .post("/business-user/admin/account", params)
-        .then(res => {
-          if (res.data.code == "201") {
-            this.account()
-            this.DialogVisible = false
-          } else {
-          
-          }
-        })
-        .catch(error => {
-          console.log(error)
-          // this.$message.error(res.data.message);
-        });
+    addUesrs(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          let params = {
+            password: this.ruleForm.password,
+            phone: this.ruleForm.phone,
+            realName: this.ruleForm.userName,
+            position: this.ruleForm.position,
+            role: this.ruleForm.role
+          };
+          this.$http
+            .post("/business-user/admin/account", params)
+            .then(res => {
+              if (res.data.code == "201") {
+                this.account();
+                this.DialogVisible = false;
+              } else {
+              }
+            })
+            .catch(error => {
+              console.log(error);
+              // this.$message.error(res.data.message);
+            });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     },
     //用户管理列表
     account() {
@@ -331,58 +353,59 @@ export default {
     },
     handleClickEdit(tab) {
       this.DialogVisibleEdit = true;
-      this.ruleForms.realName = tab.realName
-      this.ruleForms.phone = tab.phone
-      this.id = tab.id
+      this.ruleForms.realName = tab.realName;
+      this.ruleForms.phone = tab.phone;
+      this.ruleForms.role = tab.role;
+      this.id = tab.id;
     },
-    getCaptcha() {
-      let that = this;
-      const captchaLabel = "获取验证码";
-      const countNumber = 60;
-      this.setData({
-        frozen: true
-      });
-      if (this.data.getInput) {
-        wx.request({
-          url: app.config.socketHost + "/account/phone/vcode", // 拼接接口地址(前面为公共部分)
-          method: "post",
-          data: {
-            phone: that.data.getInput
-          },
-          header: {
-            "content-type": "application/json"
-          },
-          success(res) {
-            if (res.data.code === 400) {
-              $Toast({
-                content: res.data.message,
-                type: "warning"
-              });
-            } else {
-              const handler = setInterval(() => {
-                that.setData({
-                  captchaStatusText: `${captchaLabel}(${--that.data.counter}s)`
-                });
-                // this.data.captchaStatusText = `${captchaLabel}(${--this.data.counter}s)`;
-                if (that.data.counter === 0) {
-                  clearInterval(handler);
-                  that.setData({
-                    counter: countNumber,
-                    captchaStatusText: captchaLabel,
-                    frozen: false
-                  });
-                }
-              }, 1000);
-            }
-          }
-        });
-      } else {
-        $Toast({
-          content: "请输入正确的手机号",
-          type: "warning"
-        });
-      }
-    },
+    // getCaptcha() {
+    //   let that = this;
+    //   const captchaLabel = "获取验证码";
+    //   const countNumber = 60;
+    //   this.setData({
+    //     frozen: true
+    //   });
+    //   if (this.data.getInput) {
+    //     wx.request({
+    //       url: app.config.socketHost + "/account/phone/vcode", // 拼接接口地址(前面为公共部分)
+    //       method: "post",
+    //       data: {
+    //         phone: that.data.getInput
+    //       },
+    //       header: {
+    //         "content-type": "application/json"
+    //       },
+    //       success(res) {
+    //         if (res.data.code === 400) {
+    //           $Toast({
+    //             content: res.data.message,
+    //             type: "warning"
+    //           });
+    //         } else {
+    //           const handler = setInterval(() => {
+    //             that.setData({
+    //               captchaStatusText: `${captchaLabel}(${--that.data.counter}s)`
+    //             });
+    //             // this.data.captchaStatusText = `${captchaLabel}(${--this.data.counter}s)`;
+    //             if (that.data.counter === 0) {
+    //               clearInterval(handler);
+    //               that.setData({
+    //                 counter: countNumber,
+    //                 captchaStatusText: captchaLabel,
+    //                 frozen: false
+    //               });
+    //             }
+    //           }, 1000);
+    //         }
+    //       }
+    //     });
+    //   } else {
+    //     $Toast({
+    //       content: "请输入正确的手机号",
+    //       type: "warning"
+    //     });
+    //   }
+    // },
     handleClickPower() {
       this.DialogVisiblePower = true;
     }
