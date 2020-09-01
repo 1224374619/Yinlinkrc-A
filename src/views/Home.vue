@@ -113,7 +113,7 @@
           <div class="right-second">
             <div class="enterprise">
               <div class="enter-head">
-                <img src />
+                <img :src="squareUrl" />
                 <div>
                   <span>企业信息完整度</span>
                   <el-progress status="exception" :percentage="companyDetails.completedPercent"></el-progress>
@@ -125,6 +125,11 @@
                   <span class="tag">{{ }}</span>
                 </p>
                 <p>企业简称：{{companyDetails.shortName}}</p>
+                <p v-if="this.status === 'ONLINE'">企业审核：审核已通过</p>
+                <p v-else-if="this.status === 'AUDIT_FAIL'">企业审核：审核未通过</p>
+                <p v-else-if="this.status === 'AUDITING'">企业审核：审核中</p>
+                <p v-else-if="this.status === 'OFFLINE'">企业审核：已下线</p>
+                <p v-else>企业审核：未知</p>
               </div>
             </div>
           </div>
@@ -152,7 +157,8 @@ export default {
         shortName: "",
         completedPercent: "",
         logoUrl: ""
-      }
+      },
+      status: ""
     };
   },
   methods: {
@@ -164,9 +170,38 @@ export default {
     },
     //更多职位
     morePosition() {
-       this.$router.push({
+      this.$router.push({
         path: "/position/info"
       });
+    },
+    //公司状态
+    state() {
+      this.$http
+        .get("/business-core/companyes/state")
+        .then(res => {
+          if (res.data.code == "200") {
+            this.status = res.data.data;
+          } else {
+          }
+        })
+        .catch(error => {
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
+        });
     },
     //简历看板
     resumeBoard() {
@@ -181,7 +216,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //职位看板
@@ -200,7 +250,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //公司简历简讯
@@ -211,11 +276,30 @@ export default {
           if (res.data.code == "200") {
             this.companyID = res.data.data.id;
             this.companyDetails = res.data.data;
+            this.squareUrl = res.data.data.logoUrl;
+            this.positionBoard();
+            this.resumeBoard();
+            this.state()
           } else {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     }
     // //公司详情
@@ -233,8 +317,6 @@ export default {
     // },
   },
   created() {
-    this.positionBoard();
-    this.resumeBoard();
     this.companyBrief();
   }
 };
@@ -359,7 +441,7 @@ export default {
       .right-second {
         width: 280px;
         height: auto;
-        border:1px solid red;
+        border: 1px solid red;
         background: #ffffff;
         border: 1px solid rgba(244, 244, 244, 1);
         box-shadow: 0px 2px 10px 0px rgba(245, 245, 245, 1);

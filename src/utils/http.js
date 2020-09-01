@@ -6,9 +6,7 @@ import queryString from 'querystring'
 import store from '../store/index'
 import router from '../router'
 import Cookies from 'js-cookie'
-import {
-    Message
-} from 'element-ui';
+
 
 // application/x-www-from-urlencode mime
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
@@ -19,7 +17,7 @@ import {
 let config = {
     //判断当前开发环境，切换代理配置
     // baseURL: process.env.NODE_ENV === 'production' ? '/api/v1/' : '/api/',
-    baseURL: '/api/',
+    baseURL: '/api/v2/',
     // headers: {
     //     'Auth-Token': token
     // },
@@ -45,7 +43,7 @@ _axios.interceptors.request.use(
 // /api/v1/consumer-user
 const instance = axios.create({
     // baseURL: process.env.NODE_ENV === 'production' ? '/api/v1/consumer-user' : '/api/',
-    baseURL: '/api/',
+    baseURL: '/api/v2/',
     headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
     },
@@ -53,7 +51,7 @@ const instance = axios.create({
 })
 Vue.prototype.$_http = instance;
 const locals = axios.create({
-    baseURL: '/api/',
+    baseURL: '/api/v2/',
     // headers:{'Auth-Token':store.state.token === ''?'':store.state.token},
     timeout: 60 * 1000, // Timeout
     withCredentials: true, // Check cross-site Access-Control

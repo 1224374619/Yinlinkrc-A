@@ -70,11 +70,11 @@
             </el-table-column>
             <el-table-column label="上线时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.onlineTime|formatDate}}</span>
+                <span>{{scope.row.onlineTime|formatDateOne}}</span>
               </template></el-table-column>
             <el-table-column  label="下线时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.offlineTime|formatDate}}</span>
+                <span>{{scope.row.offlineTime|formatDateOne}}</span>
               </template></el-table-column>
             </el-table-column>
             <el-table-column prop="city" label="地区" show-overflow-tooltip></el-table-column>
@@ -120,12 +120,12 @@
             </el-table-column>
             <el-table-column  label="上线时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.onlineTime|formatDate}}</span>
+                <span>{{scope.row.onlineTime|formatDateOne}}</span>
               </template>
             </el-table-column>
             <el-table-column  label="下线时间" show-overflow-tooltip>
                <template slot-scope="scope">
-                <span>{{scope.row.offlineTime|formatDate}}</span>
+                <span>{{scope.row.offlineTime|formatDateOne}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="city" label="地区" show-overflow-tooltip></el-table-column>
@@ -202,7 +202,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //已上线
@@ -226,7 +241,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //已下线
@@ -251,7 +281,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //跳转
@@ -288,7 +333,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     handleCurrentChange(val) {
@@ -312,7 +372,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //已下线分页
@@ -338,7 +413,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     handleCurrentChangeOff(val) {
@@ -362,7 +452,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //搜索

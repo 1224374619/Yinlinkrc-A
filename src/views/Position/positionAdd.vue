@@ -124,9 +124,9 @@
               </el-form-item>
               <el-form-item label="工作性质" prop="nature">
                 <el-select style="width:240px" v-model="ruleForm.nature" placeholder="工作性质">
-                  <el-option label="全职" value="1"></el-option>
-                  <el-option label="兼职" value="2"></el-option>
-                  <el-option label="实习" value="3"></el-option>
+                  <el-option label="全职" value="0"></el-option>
+                  <el-option label="兼职" value="1"></el-option>
+                  <el-option label="实习" value="2"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="职位分类" prop="positionCatalog">
@@ -295,7 +295,7 @@ export default {
       expireTimeOption: {
         disabledDate(date) {
           //disabledDate 文档上：设置禁用状态，参数为当前日期，要求返回 Boolean
-          return date.getTime() < Date.now() - 24 * 60 * 60 * 1000;
+          return date.getTime() < Date.now();
         }
       },
       ruleForm: {
@@ -533,7 +533,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //新增公司地址
@@ -554,7 +569,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //编辑公司地址
@@ -575,7 +605,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //列出公司下所有地址
@@ -589,7 +634,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //获取公司简讯
@@ -604,7 +664,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //获取公司HR
@@ -618,7 +693,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //公司状态
@@ -632,7 +722,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //发布
@@ -747,8 +852,8 @@ export default {
               workAgeMax = null;
               break;
           }
-          let logoutTime = this.ruleForm.onlineTime.getTime();
-          let publishedTime = this.ruleForm.offlineTime.getTime();
+          let logoutTime = this.ruleForm.offlineTime.getTime();
+          let publishedTime = this.ruleForm.onlineTime.getTime();
           console.log(this.ruleForm.workCity);
           if (valid) {
             let params = {
@@ -824,8 +929,23 @@ export default {
                 }
               })
               .catch(error => {
-                console.log(error);
-              });
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
+        });
           } else {
             console.log("error submit!!");
             return false;

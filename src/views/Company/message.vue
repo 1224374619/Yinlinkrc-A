@@ -380,7 +380,9 @@ export default {
           { required: true, message: "请选择所属行业", trigger: "blur" }
         ],
         city: [{ required: true, message: "请选择企业地址", trigger: "blur" }],
-        detail: [{ required: true, message: "请填写企业地址", trigger: "blur" }],
+        detail: [
+          { required: true, message: "请填写企业地址", trigger: "blur" }
+        ],
         description: [
           { required: true, message: "请输入企业介绍", trigger: "blur" }
         ],
@@ -394,7 +396,7 @@ export default {
       enterpriseForm: "",
       accessUrl: "",
       registeredAddress: "",
-      uniformSocialCreditCode: "",
+      uniformSocialCreditCode: ""
     };
   },
   methods: {
@@ -417,8 +419,23 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
-        });
+              if (error.response.status === 404) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "页面丢失，请重新加载"
+                });
+              } else if (error.response.status === 403) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "登陆超时，请重新登录"
+                });
+              } else {
+                this.$notify.error({
+                  title: "错误",
+                  message: error.response.data.message
+                });
+              }
+            });
     },
     //获取公司详情
     companyDetail() {
@@ -444,8 +461,23 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
-        });
+              if (error.response.status === 404) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "页面丢失，请重新加载"
+                });
+              } else if (error.response.status === 403) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "登陆超时，请重新登录"
+                });
+              } else {
+                this.$notify.error({
+                  title: "错误",
+                  message: error.response.data.message
+                });
+              }
+            });
     },
     //获取公司审核信息
     companyVerify() {
@@ -463,8 +495,23 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
-        });
+              if (error.response.status === 404) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "页面丢失，请重新加载"
+                });
+              } else if (error.response.status === 403) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "登陆超时，请重新登录"
+                });
+              } else {
+                this.$notify.error({
+                  title: "错误",
+                  message: error.response.data.message
+                });
+              }
+            });
     },
     //更新公司审核信息
     updateCompanyVerify(formName) {
@@ -492,7 +539,22 @@ export default {
               }
             })
             .catch(error => {
-              console.log(error);
+              if (error.response.status === 404) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "页面丢失，请重新加载"
+                });
+              } else if (error.response.status === 403) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "登陆超时，请重新登录"
+                });
+              } else {
+                this.$notify.error({
+                  title: "错误",
+                  message: error.response.data.message
+                });
+              }
             });
         } else {
           console.log("error submit!!");
@@ -540,7 +602,22 @@ export default {
               }
             })
             .catch(error => {
-              console.log(error);
+              if (error.response.status === 404) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "页面丢失，请重新加载"
+                });
+              } else if (error.response.status === 403) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "登陆超时，请重新登录"
+                });
+              } else {
+                this.$notify.error({
+                  title: "错误",
+                  message: error.response.data.message
+                });
+              }
             });
         } else {
           console.log("error submit!!");
@@ -577,12 +654,12 @@ export default {
       //   this.enterpriseRegisterInfoEditMode = false;
       // }
     },
-    clearAndReload( ) {
+    clearAndReload() {
       this.enterpriseRegisterInfoEditMode = true;
     },
-    clearAndReloads( ) {
+    clearAndReloads() {
       this.enterpriseInfoEditMode = true;
-    },
+    }
   },
   computed: {
     uploadUrl() {

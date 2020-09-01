@@ -112,7 +112,7 @@
             <el-table-column prop="positionName" label="职位名称" show-overflow-tooltip></el-table-column>
             <el-table-column label="下线时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.offlineTime|formatDate}}</span>
+                <span>{{scope.row.offlineTime|formatDateOne}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="jobType" label="职位性质" show-overflow-tooltip></el-table-column>
@@ -158,14 +158,14 @@
             <el-table-column prop="positionName" label="职位名称" show-overflow-tooltip></el-table-column>
             <el-table-column prop="publishedTime" label="上线时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.publishedTime|formatDate}}</span>
+                <span>{{scope.row.publishedTime|formatDateOne}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="jobType" label="职位性质" show-overflow-tooltip></el-table-column>
             <el-table-column prop="city" label="地区" show-overflow-tooltip></el-table-column>
             <el-table-column prop="createdTime" label="保存时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.createdTime|formatDate}}</span>
+                <span>{{scope.row.createdTime|formatDateOne}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="managerName" label="负责HR" show-overflow-tooltip></el-table-column>
@@ -202,14 +202,14 @@
             <el-table-column prop="positionName" label="职位名称" show-overflow-tooltip></el-table-column>
             <el-table-column label="上线时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.publishedTime|formatDate}}</span>
+                <span>{{scope.row.publishedTime|formatDateOne}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="jobType" label="职位性质" show-overflow-tooltip></el-table-column>
             <el-table-column prop="city" label="地区" show-overflow-tooltip></el-table-column>
             <el-table-column label="保存时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.createdTime|formatDate}}</span>
+                <span>{{scope.row.createdTime|formatDateOne}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="managerName" label="负责HR" show-overflow-tooltip></el-table-column>
@@ -248,7 +248,7 @@
             <el-table-column prop="city" label="地区" show-overflow-tooltip></el-table-column>
             <el-table-column prop="createdTime" label="保存时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.createdTime|formatDate}}</span>
+                <span>{{scope.row.createdTime|formatDateOne}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="managerName" label="负责HR" show-overflow-tooltip></el-table-column>
@@ -298,12 +298,12 @@
             <el-table-column prop="positionName" label="职位名称" show-overflow-tooltip></el-table-column>
             <el-table-column label="上线时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.publishedTime|formatDate}}</span>
+                <span>{{scope.row.publishedTime|formatDateOne}}</span>
               </template>
             </el-table-column>
             <el-table-column label="下线时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.offlineTime|formatDate}}</span>
+                <span>{{scope.row.offlineTime|formatDateOne}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="jobType" label="职位性质" show-overflow-tooltip></el-table-column>
@@ -392,34 +392,6 @@ export default {
       formInline: {
         positionName: ""
       },
-      options: [
-        {
-          label: "热门城市",
-          options: [
-            {
-              value: "Shanghai",
-              label: "上海"
-            },
-            {
-              value: "Beijing",
-              label: "北京"
-            }
-          ]
-        },
-        {
-          label: "热门城市",
-          options: [
-            {
-              value: "Shanghai",
-              label: "上海"
-            },
-            {
-              value: "Beijing",
-              label: "北京"
-            }
-          ]
-        }
-      ],
       offlineStartTime: "",
       offlineEndTime: "",
       onlineStartTime: "",
@@ -442,7 +414,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //重置
@@ -494,7 +481,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //删除
@@ -508,7 +510,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //下线
@@ -524,7 +541,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //已上线
@@ -582,7 +614,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //tab
@@ -656,7 +703,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //已上线分页
@@ -681,7 +743,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     resumeDetail() {

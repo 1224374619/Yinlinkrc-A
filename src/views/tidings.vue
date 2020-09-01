@@ -29,7 +29,7 @@
               </el-table-column>
               <el-table-column prop="releaseTime" label="接收时间">
                 <template slot-scope="scope">
-                  <span>{{scope.row.releaseTime|formatDate}}</span>
+                  <span>{{scope.row.releaseTime|formatDateOne}}</span>
                 </template>
               </el-table-column>
             </el-table>
@@ -57,7 +57,7 @@
               </el-table-column>
               <el-table-column prop="releaseTime" label="接收时间">
                 <template slot-scope="scope">
-                  <span>{{scope.row.releaseTime|formatDate}}</span>
+                  <span>{{scope.row.releaseTime|formatDateOne}}</span>
                 </template>
               </el-table-column>
             </el-table>
@@ -104,7 +104,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
    //跳转
@@ -137,7 +152,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     handleSizeChange(val) {

@@ -146,7 +146,7 @@
         <!-- <el-table-column prop="role" label="权限" show-overflow-tooltip></el-table-column> -->
         <el-table-column label="注册时间" show-overflow-tooltip>
           <template slot-scope="scope">
-            <span>{{scope.row.createdTime|formatDate}}</span>
+            <span>{{scope.row.createdTime|formatDateOne}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="address" label="操作" width="120">
@@ -270,8 +270,23 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
-        });
+              if (error.response.status === 404) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "页面丢失，请重新加载"
+                });
+              } else if (error.response.status === 403) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "登陆超时，请重新登录"
+                });
+              } else {
+                this.$notify.error({
+                  title: "错误",
+                  message: error.response.data.message
+                });
+              }
+            });
     },
     //删除用户
     deleteUser(tab) {
@@ -284,8 +299,23 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
-        });
+              if (error.response.status === 404) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "页面丢失，请重新加载"
+                });
+              } else if (error.response.status === 403) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "登陆超时，请重新登录"
+                });
+              } else {
+                this.$notify.error({
+                  title: "错误",
+                  message: error.response.data.message
+                });
+              }
+            });
     },
     //新增用户
     addUesrs(formName) {
@@ -308,8 +338,22 @@ export default {
               }
             })
             .catch(error => {
-              console.log(error);
-              // this.$message.error(res.data.message);
+              if (error.response.status === 404) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "页面丢失，请重新加载"
+                });
+              } else if (error.response.status === 403) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "登陆超时，请重新登录"
+                });
+              } else {
+                this.$notify.error({
+                  title: "错误",
+                  message: error.response.data.message
+                });
+              }
             });
         } else {
           console.log("error submit!!");
@@ -336,8 +380,23 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
-        });
+              if (error.response.status === 404) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "页面丢失，请重新加载"
+                });
+              } else if (error.response.status === 403) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "登陆超时，请重新登录"
+                });
+              } else {
+                this.$notify.error({
+                  title: "错误",
+                  message: error.response.data.message
+                });
+              }
+            });
     },
     handleSizeChange(val) {
       this.page.pageSize = val;

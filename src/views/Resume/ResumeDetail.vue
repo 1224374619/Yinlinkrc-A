@@ -64,7 +64,7 @@
         <div v-for="(item,index) in resumeDeta.eduXps" :key="index">
           <div class="jotension-content">
             <div>{{item.school}}</div>
-            <div>{{item.beginTime|formatDate}}-{{item.endTime|formatDate}}</div>
+            <div>{{item.beginTime|formatDateOne}}-{{item.endTime|formatDateOne}}</div>
           </div>
           <div class="jotension-content">
             <div>{{item.major}} | {{item.degree}} | {{ item.isUnified ? '统招' : '非统招'}}</div>
@@ -76,7 +76,7 @@
         <div v-for="(item,index) in resumeDeta.workXps" :key="index">
           <div class="jotension-content">
             <div>{{item.company}}</div>
-            <div>{{item.beginTime|formatDate}}-{{item.endTime|formatDate}}</div>
+            <div>{{item.beginTime|formatDateOne}}-{{item.endTime|formatDateOne}}</div>
           </div>
           <div class="jotension-content">
             <div>{{item.position}} | {{item.salaryBeforeTax}}k</div>
@@ -91,7 +91,7 @@
         <div v-for="(item,index) in resumeDeta.projects" :key="index">
           <div class="jotension-content">
             <div>{{item.project}} | {{item.company}}</div>
-            <div>{{item.beginTime|formatDate}}-{{item.endTime|formatDate}}</div>
+            <div>{{item.beginTime|formatDateOne}}-{{item.endTime|formatDateOne}}</div>
           </div>
           <div class="jotension-content">
             <div>个人职责：{{item.duty}}</div>
@@ -106,7 +106,7 @@
         <div class="train-content" v-for="(item,index) in resumeDeta.trainings" :key="index">
           <div>{{item.lesson}}</div>
           <div>{{item.institution}}</div>
-          <div style="margin:0 0 0 300px">{{item.beginTime|formatDate}}-{{item.endTime|formatDate}}</div>
+          <div style="margin:0 0 0 300px">{{item.beginTime|formatDateOne}}-{{item.endTime|formatDateOne}}</div>
         </div>
       </div>
       <div class="jotension">
@@ -121,7 +121,7 @@
           <div>{{item.skill}}</div>
           <div>{{item.level|level}}</div>
           <!-- <div>证书附件，点击查看大图</div> -->
-          <!-- <div>{{item.beginTime|formatDate}}-{{item.endTime|formatDate}}</div> -->
+          <!-- <div>{{item.beginTime|formatDateOne}}-{{item.endTime|formatDateOne}}</div> -->
         </div>
       </div>
       <div class="jotension">
@@ -130,7 +130,7 @@
           <div>{{item.award}}</div>
           <!-- <div>{{item.}}</div>
           <div>证书附件，点击查看大图</div>-->
-          <div>{{item.acquiredTime|formatDate}}</div>
+          <div>{{item.acquiredTime|formatDateOne}}</div>
         </div>
       </div>
       <div class="jotension">
@@ -252,7 +252,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //不合格
@@ -269,7 +284,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //录用
@@ -286,7 +316,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //通知面试/笔试
@@ -303,7 +348,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //确认入职
@@ -320,7 +380,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //返回
@@ -338,7 +413,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     resumeDetails() {
@@ -352,7 +442,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     resumeDetailes() {
@@ -366,7 +471,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     }
   },

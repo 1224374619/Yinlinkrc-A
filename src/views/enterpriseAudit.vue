@@ -446,11 +446,23 @@ export default {
               }
             })
             .catch(error => {
-               this.$message({
-                  message: error.response.data.message,
-                  type: "error"
-                });
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
             });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
+        });
         } else {
           console.log("error submit!!");
           return false;
@@ -514,12 +526,23 @@ export default {
               }
             })
             .catch(error => {
-              
-               this.$message({
-                  message: error.response.data.message,
-                  type: "error"
-                });
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
             });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
+        });
         } else {
           console.log("error submit!!");
           return false;

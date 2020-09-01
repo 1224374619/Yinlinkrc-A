@@ -1,5 +1,5 @@
 <template>
-  <div class="container" style = 'background:#ffffff'> 
+  <div class="container" style="background:#ffffff">
     <el-dialog title="更换头像" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
       <div style="margin:-20px 0 0 0">上传头像：</div>
       <div style="margin: 20px auto;width:100%">
@@ -68,7 +68,7 @@
         <el-form-item label="邮箱账号" prop="email">
           <el-input style="width:240px" v-model="ruleForms.email"></el-input>
         </el-form-item>
-         <el-form-item label="验证码" prop="vcode">
+        <el-form-item label="验证码" prop="vcode">
           <el-input
             style="width:240px;margin:0 20px 0 0"
             placeholder="请输入验证码"
@@ -195,7 +195,7 @@ export default {
             trigger: ["change", "blur"]
           }
         ],
-        vcode: [{ required: true, message: "请输入验证码", trigger: "blur" }],
+        vcode: [{ required: true, message: "请输入验证码", trigger: "blur" }]
       },
       formDate: {}
     };
@@ -228,9 +228,28 @@ export default {
           this.frozen = false;
         }
       }, 1000);
-      this.$locals.post("/business-user/account/phone/vcode", {
-        phone: this.formDate.phone
-      });
+      this.$locals
+        .post("/business-user/account/phone/vcode", {
+          phone: this.formDate.phone
+        })
+        .catch(error => {
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
+        });
     },
     //修改手机号
     updatePhone() {
@@ -249,7 +268,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //修改邮箱
@@ -268,7 +302,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //图片上传
@@ -287,8 +336,23 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
-        });
+              if (error.response.status === 404) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "页面丢失，请重新加载"
+                });
+              } else if (error.response.status === 403) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "登陆超时，请重新登录"
+                });
+              } else {
+                this.$notify.error({
+                  title: "错误",
+                  message: error.response.data.message
+                });
+              }
+            });
     },
     avatar() {
       this.dialogVisible = true;

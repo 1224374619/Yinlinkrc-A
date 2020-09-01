@@ -7,7 +7,7 @@
         <div class="logo">
           <img
             style="height:40px;margin:57px 0 0 0"
-            @click="gotoHomeUI"
+            
             :src="require('../assets/images/logo.png')"
           />
         </div>
@@ -178,6 +178,7 @@ export default {
         .then(res => {
           if (res.data.code == "200") {
             Cookies.set("status", res.data.data.details.companyId);
+            console.log()
             if (res.data.data.details.companyId === 0) {
               this.$router.push({ path: "/enterpriseAudit" });
             }else {
@@ -187,7 +188,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //公司详情
@@ -201,12 +217,28 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$message({
+              message: "页面丢失，请重新加载",
+              type: "error"
+            });
+          } else if (error.response.status === 403) {
+            this.$message({
+              message: "登陆超时，请重新登录",
+              type: "error"
+            });
+            this.$router.push({ path: "/login" });
+          } else {
+            this.$message({
+              message: error.response.data.message,
+              type: "error"
+            });
+          }
         });
     },
-    gotoHomeUI() {
-      this.$router.push({ path: "/" });
-    },
+    // gotoHomeUI() {
+    //   this.$router.push({ path: "/" });
+    // },
     gotoRegisterUI() {
       this.$router.push({ path: "register" });
     },

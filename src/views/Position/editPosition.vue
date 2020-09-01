@@ -476,8 +476,8 @@ export default {
         ]
       },
       id: "",
-      publishedTime:'',
-      logoutTime:''
+      publishedTime: "",
+      logoutTime: ""
     };
   },
   methods: {
@@ -500,7 +500,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //新增公司地址
@@ -521,7 +536,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //编辑公司地址
@@ -542,7 +572,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //列出公司下所有地址
@@ -556,7 +601,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //获取公司简讯
@@ -571,7 +631,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //获取公司HR
@@ -585,7 +660,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     online() {
@@ -671,18 +761,33 @@ export default {
               onlineTime: response.publishedTime,
               offlineTime: response.offlineTime
             };
-            this.logoutTime = response.publishedTime
-            this.publishedTime = response.offlineTime
+            this.logoutTime = response.publishedTime;
+            this.publishedTime = response.offlineTime;
           } else {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //发布
     submitForm(formName) {
-      console.log(this.ruleForm.HR)
+      console.log(this.ruleForm.HR);
       this.$refs[formName].validate(valid => {
         console.log(this.ruleForm.onlineTime);
         let degreeName;
@@ -831,13 +936,28 @@ export default {
                   type: "success"
                 });
                 this.$router.push({
-                    path: "/position/info"
-                  });
+                  path: "/position/info"
+                });
               } else {
               }
             })
             .catch(error => {
-              console.log(error);
+              if (error.response.status === 404) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "页面丢失，请重新加载"
+                });
+              } else if (error.response.status === 403) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "登陆超时，请重新登录"
+                });
+              } else {
+                this.$notify.error({
+                  title: "错误",
+                  message: error.response.data.message
+                });
+              }
             });
         } else {
           console.log("error submit!!");

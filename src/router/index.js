@@ -43,9 +43,9 @@ let routes = [{
             path: '/home',
             name: 'home',
             component: Home,
-            // meta: {
-            //     requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
-            // }
+            meta: {
+                requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
+            }
         }, ]
         // hidden: true
     },

@@ -115,7 +115,7 @@
         </el-table-column>
         <el-table-column label="投递时间" width="95" show-overflow-tooltip>
           <template slot-scope="scope">
-            <span>{{scope.row.submittedTime|formatDate}}</span>
+            <span>{{scope.row.submittedTime|formatDateOne}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="name" label="操作" width="90">
@@ -286,7 +286,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //列表
@@ -369,7 +384,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //查看

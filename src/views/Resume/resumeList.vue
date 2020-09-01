@@ -136,7 +136,7 @@
       </div>
     </el-dialog>-->
     <div class="resume-nav">
-      <div style="width:150px;">{{positionDetail.positionName.substring(0,9)}}</div>
+      <div style="width:150px;">{{positionDetail.positionName.substring(0,7)}}</div>
       <div style="margin:0 0 0 20px;width:100%;">{{positionDetail.description.substring(0,60)}}</div>
     </div>
     <div class="resume-seconds">
@@ -232,7 +232,7 @@
             </el-table-column>
             <el-table-column label="投递时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.submittedTime|formatDate}}</span>
+                <span>{{scope.row.submittedTime|formatDateOne}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="name" label="操作" width="220">
@@ -271,12 +271,12 @@
             </el-table-column>
             <el-table-column label="投递时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.submittedTime|formatDate}}</span>
+                <span>{{scope.row.submittedTime|formatDateOne}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="address" label="操作时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.operatorTime|formatDate}}</span>
+                <span>{{scope.row.operatorTime|formatDateOne}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="operatorName" label="操作员" show-overflow-tooltip></el-table-column>
@@ -316,12 +316,12 @@
             </el-table-column>
             <el-table-column label="投递时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.submittedTime|formatDate}}</span>
+                <span>{{scope.row.submittedTime|formatDateOne}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="address" label="操作时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.operatorTime|formatDate}}</span>
+                <span>{{scope.row.operatorTime|formatDateOne}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="operatorName" label="操作员" show-overflow-tooltip></el-table-column>
@@ -361,7 +361,7 @@
             </el-table-column>
             <el-table-column label="投递时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.submittedTime|formatDate}}</span>
+                <span>{{scope.row.submittedTime|formatDateOne}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="name" label="操作">
@@ -408,7 +408,7 @@
             </el-table-column>
             <el-table-column label="投递时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.submittedTime|formatDate}}</span>
+                <span>{{scope.row.submittedTime|formatDateOne}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="name" label="操作" width="220">
@@ -459,12 +459,12 @@
             </el-table-column>
             <el-table-column label="投递时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.submittedTime|formatDate}}</span>
+                <span>{{scope.row.submittedTime|formatDateOne}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="address" label="操作时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.operatorTime|formatDate}}</span>
+                <span>{{scope.row.operatorTime|formatDateOne}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="operatorName" label="操作员" show-overflow-tooltip></el-table-column>
@@ -516,12 +516,12 @@
             </el-table-column>
             <el-table-column label="投递时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.submittedTime|formatDate}}</span>
+                <span>{{scope.row.submittedTime|formatDateOne}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="address" label="操作时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.operatorTime|formatDate}}</span>
+                <span>{{scope.row.operatorTime|formatDateOne}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="operatorName" label="操作员" show-overflow-tooltip></el-table-column>
@@ -567,7 +567,7 @@
             </el-table-column>
             <el-table-column label="投递时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.submittedTime|formatDate}}</span>
+                <span>{{scope.row.submittedTime|formatDateOne}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="name" label="操作">
@@ -606,12 +606,12 @@
             </el-table-column>
             <el-table-column label="投递时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.submittedTime|formatDate}}</span>
+                <span>{{scope.row.submittedTime|formatDateOne}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="address" label="操作时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.operatorTime|formatDate}}</span>
+                <span>{{scope.row.operatorTime|formatDateOne}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="operatorName" label="操作员" show-overflow-tooltip></el-table-column>
@@ -720,32 +720,6 @@ export default {
         time: [],
         completedPercent: ""
       },
-      cities: [
-        {
-          value: "Beijing",
-          label: "北京"
-        },
-        {
-          value: "Shanghai",
-          label: "上海"
-        },
-        {
-          value: "Nanjing",
-          label: "南京"
-        },
-        {
-          value: "Chengdu",
-          label: "成都"
-        },
-        {
-          value: "Shenzhen",
-          label: "深圳"
-        },
-        {
-          value: "Guangzhou",
-          label: "广州"
-        }
-      ],
       options: [
         {
           label: "离职",
@@ -861,7 +835,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //不合格
@@ -948,13 +937,43 @@ export default {
                 }
               })
               .catch(error => {
-                console.log(error);
-              });
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
+        });
           } else {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //录用
@@ -1041,13 +1060,43 @@ export default {
                 }
               })
               .catch(error => {
-                console.log(error);
-              });
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
+        });
           } else {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //通知面试/笔试
@@ -1135,13 +1184,43 @@ export default {
                 }
               })
               .catch(error => {
-                console.log(error);
-              });
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
+        });
           } else {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //确认入职
@@ -1228,13 +1307,43 @@ export default {
                 }
               })
               .catch(error => {
-                console.log(error);
-              });
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
+        });
           } else {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //查看
@@ -1256,6 +1365,7 @@ export default {
     //重置
     resetForm() {
       this.form = {};
+      this.formInline.state = "";
     },
     //查询
     onSubmit() {
@@ -1333,7 +1443,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //职位详情
@@ -1348,7 +1473,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //待处理
@@ -1379,7 +1519,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //tab
@@ -1528,7 +1683,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //tab 下线
@@ -1659,7 +1829,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     checkForm() {
@@ -1733,7 +1918,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     handleCurrentChangeFirst(val) {
@@ -1802,7 +2002,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //处理中分页
@@ -1873,7 +2088,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     handleCurrentChangeSecond(val) {
@@ -1942,7 +2172,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //录用分页
@@ -2013,7 +2258,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     handleCurrentChangeThird(val) {
@@ -2082,7 +2342,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //不合格分页
@@ -2153,7 +2428,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     handleCurrentChangeFourth(val) {
@@ -2222,7 +2512,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //已入职分页
@@ -2293,7 +2598,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     },
     handleCurrentChangeFifth(val) {
@@ -2362,7 +2682,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$message({
+              message: "页面丢失，请重新加载",
+              type: "error"
+            });
+          } else if (error.response.status === 403) {
+            this.$message({
+              message: "登陆超时，请重新登录",
+              type: "error"
+            });
+          } else {
+            this.$message({
+              message: error.response.data.message,
+              type: "error"
+            });
+          }
         });
     }
   },
@@ -2496,7 +2831,7 @@ export default {
 
   .tab-operations {
     position: absolute;
-    z-index:999;
+    z-index: 999;
     margin: 7px 0 0 840px;
     font-family: PingFangSC-Regular;
   }

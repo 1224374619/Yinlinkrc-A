@@ -41,10 +41,10 @@
                 <span class="value">{{ ruleForm.email}}</span>
               </el-form-item>
               <el-form-item label="上线时间">
-                <span class="value">{{ ruleForm.publishedTime|formatDate }}</span>
+                <span class="value">{{ ruleForm.publishedTime|formatDateOne }}</span>
               </el-form-item>
               <el-form-item label="下线时间">
-                <span class="value">{{ ruleForm.offlineTime|formatDate}}</span>
+                <span class="value">{{ ruleForm.offlineTime|formatDateOne}}</span>
               </el-form-item>
               <el-form-item class="operations">
                 <el-button @click="back">返回</el-button>
@@ -111,7 +111,22 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
         });
     }
   },

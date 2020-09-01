@@ -104,7 +104,7 @@
         <el-table-column prop="city" label="地区" show-overflow-tooltip></el-table-column>
         <el-table-column label="删除时间" show-overflow-tooltip>
           <template slot-scope="scope">
-            <span>{{scope.row.recyclCountdownTime|formatDate}}</span>
+            <span>{{scope.row.recyclCountdownTime|formatDateOne}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="managerName" label="负责HR" show-overflow-tooltip></el-table-column>
@@ -242,8 +242,23 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
-        });
+              if (error.response.status === 404) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "页面丢失，请重新加载"
+                });
+              } else if (error.response.status === 403) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "登陆超时，请重新登录"
+                });
+              } else {
+                this.$notify.error({
+                  title: "错误",
+                  message: error.response.data.message
+                });
+              }
+            });
     },
     //列表
     platform() {
@@ -298,8 +313,23 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
-        });
+              if (error.response.status === 404) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "页面丢失，请重新加载"
+                });
+              } else if (error.response.status === 403) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "登陆超时，请重新登录"
+                });
+              } else {
+                this.$notify.error({
+                  title: "错误",
+                  message: error.response.data.message
+                });
+              }
+            });
     },
     //重置
     back() {
@@ -337,8 +367,23 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
-        });
+              if (error.response.status === 404) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "页面丢失，请重新加载"
+                });
+              } else if (error.response.status === 403) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "登陆超时，请重新登录"
+                });
+              } else {
+                this.$notify.error({
+                  title: "错误",
+                  message: error.response.data.message
+                });
+              }
+            });
     },
     //删除
     deletes(tab) {
@@ -352,8 +397,23 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
-        });
+              if (error.response.status === 404) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "页面丢失，请重新加载"
+                });
+              } else if (error.response.status === 403) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "登陆超时，请重新登录"
+                });
+              } else {
+                this.$notify.error({
+                  title: "错误",
+                  message: error.response.data.message
+                });
+              }
+            });
     },
     //职位看板
     positionBoard() {
@@ -367,8 +427,23 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
-        });
+              if (error.response.status === 404) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "页面丢失，请重新加载"
+                });
+              } else if (error.response.status === 403) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "登陆超时，请重新登录"
+                });
+              } else {
+                this.$notify.error({
+                  title: "错误",
+                  message: error.response.data.message
+                });
+              }
+            });
     },
     handleSizeChange(val) {
       this.page.pageSize = val;
