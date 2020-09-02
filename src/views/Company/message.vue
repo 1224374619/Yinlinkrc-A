@@ -341,7 +341,7 @@ export default {
         enterpriseForm: "",
         accessUrl: "",
         registeredAddress: "",
-        uniformSocialCreditCode: ""
+        uniformSocialCreditCode: "",
       },
       optionsNature: [
         {
@@ -457,6 +457,8 @@ export default {
             this.companyInfo.detail = response.address.detail;
             this.companyInfo.logoUrl = response.logo.accessUrl;
             this.imageUrl = response.logo.accessUrl;
+            this.companyInfo.addressId = response.addressId;
+            this
           } else {
           }
         })
@@ -567,7 +569,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           let params = {
-            addressId: 130206,
+            addressId: this.companyInfo.addressId,
             companyAddressBody: {
               city: this.companyInfo.city[1],
               detail: this.companyInfo.detail,

@@ -324,12 +324,12 @@
                   type="text"
                   size="small"
                 >编辑</el-button>
-                <!-- <el-button
+                <el-button
                   style="color:#FF7152"
                   @click="onlines(scope.row)"
                   type="text"
                   size="small"
-                >上线</el-button> -->
+                >上线</el-button>
                 <el-button
                   style="color:#FF7152"
                   @click="deletes(scope.row)"

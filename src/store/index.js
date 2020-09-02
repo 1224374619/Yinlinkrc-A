@@ -8,6 +8,7 @@ export default new Vuex.Store({
   state: {
     companyID:'',
     hasLogin:true,
+    hasLogins:true,
     user: window.sessionStorage.getItem('username'),
     token: '',
     username: window.sessionStorage.getItem('user'),

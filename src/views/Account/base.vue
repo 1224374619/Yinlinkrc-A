@@ -5,13 +5,14 @@
       <div style="margin: 20px auto;width:100%">
         <el-upload
           class="avatar-uploaders"
-          action="https://jsonplaceholder.typicode.com/posts/"
+          :action="uploadCompanyFile"
+          :data="uploadDatas"
+          :headers="myHeaders"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload"
         >
-          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          <i class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -89,15 +90,16 @@
       <div>
         <el-upload
           class="avatar-uploader"
-          :action="uploadUrl"
+          :action="uploadCompanyFile"
+          :data="uploadDatas"
+          :headers="myHeaders"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
         >
           <img v-if="imageUrl" :src="imageUrl" class="avatar" />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        <div @click="avatar" style="font-size:14px;color:#ff7152;margin:10px 0 0 65px">更换头像</div>
+        <!-- <div @click="avatar" style="font-size:14px;color:#ff7152;margin:10px 0 0 65px">更换头像</div> -->
       </div>
       <div class="right">
         <div style="text-align:right;margin:0 0 0 30px">
@@ -134,6 +136,8 @@
 </template>
 
 <script>
+let token = Cookies.get("token");
+import Cookies from "js-cookie";
 const captchaLabel = "获取验证码";
 const countNumber = 60;
 export default {
@@ -157,6 +161,11 @@ export default {
       }, 100);
     };
     return {
+      myHeaders: { "Auth-Token": token },
+      uploadDatas: {
+        label: "company-account-avatar"
+      },
+
       frozen: false,
       counter: countNumber,
       captchaInput: "",
@@ -173,6 +182,8 @@ export default {
       ruleForms: {
         email: ""
       },
+      imageUrl: "",
+      file:"",
       rules: {
         vcode: [{ required: true, message: "请输入验证码", trigger: "blur" }],
         password: [{ required: true, message: "请输入密码", trigger: "blur" }],
@@ -322,8 +333,10 @@ export default {
     },
     //图片上传
     handleAvatarSuccess(res, file) {
-      console.log(res);
+      console.log(res, file);
+      this.file = res.data;
       this.imageUrl = URL.createObjectURL(file.raw);
+      this.avatar()
     },
     //获取用户得基本信息
     base() {
@@ -332,30 +345,56 @@ export default {
         .then(res => {
           if (res.data.code == "200") {
             this.formDate = res.data.data;
+            this.imageUrl = res.data.data.avatarUrl
           } else {
           }
         })
         .catch(error => {
-              if (error.response.status === 404) {
-                this.$notify.error({
-                  title: "错误",
-                  message: "页面丢失，请重新加载"
-                });
-              } else if (error.response.status === 403) {
-                this.$notify.error({
-                  title: "错误",
-                  message: "登陆超时，请重新登录"
-                });
-              } else {
-                this.$notify.error({
-                  title: "错误",
-                  message: error.response.data.message
-                });
-              }
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
             });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
+        });
     },
     avatar() {
-      this.dialogVisible = true;
+      let params = this.file
+      this.$http
+        .post("/business-user/account/avatar",params)
+        .then(res => {
+          if (res.data.code == "200") {
+          } else {
+          }
+        })
+        .catch(error => {
+          if (error.response.status === 404) {
+            this.$notify.error({
+              title: "错误",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.error({
+              title: "错误",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: error.response.data.message
+            });
+          }
+        });
     }
   },
   created() {
@@ -364,6 +403,9 @@ export default {
   computed: {
     uploadUrl() {
       return "/business-user/account/avatar";
+    },
+    uploadCompanyFile() {
+      return "/api/v2/file-service/files/upload";
     }
   }
 };

@@ -2,7 +2,7 @@
   <div id="app">
     <customized-nav class="nav" v-if="this.$store.state.hasLogin"/>
     <router-view />
-    <customized-footer v-if="this.$store.state.hasLogin"/>
+    <customized-footer v-if="this.$store.state.hasLogins"/>
   </div>
 </template>
 

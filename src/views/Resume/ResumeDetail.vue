@@ -1,5 +1,20 @@
 <template>
   <div style="margin:96px 0 0 0;">
+    <el-dialog
+      title
+      :show-close="false"
+      :append-to-body="true"
+      :visible.sync="dialogVisible"
+      width="25%"
+      :before-close="handleClose"
+    >
+      <div>
+        <div class="loading">
+          <i style="font-size:60px;color:#20A0ff;" class="el-icon-loading"></i>
+        </div>
+        <div class="loading-text">下载中...</div>
+      </div>
+    </el-dialog>
     <div class="resume-navs">
       <div>简历详情</div>
     </div>
@@ -40,7 +55,7 @@
         </div>
       </div>
       <div class="resume" v-else>
-       <div class="title" style="margin-bottom:10px">基本信息</div>
+        <div class="title" style="margin-bottom:10px">基本信息</div>
       </div>
       <div class="jotension">
         <div class="title">求职意向</div>
@@ -106,7 +121,9 @@
         <div class="train-content" v-for="(item,index) in resumeDeta.trainings" :key="index">
           <div>{{item.lesson}}</div>
           <div>{{item.institution}}</div>
-          <div style="margin:0 0 0 300px">{{item.beginTime|formatDateOne}}-{{item.endTime|formatDateOne}}</div>
+          <div
+            style="margin:0 0 0 300px"
+          >{{item.beginTime|formatDateOne}}-{{item.endTime|formatDateOne}}</div>
         </div>
       </div>
       <div class="jotension">
@@ -168,7 +185,7 @@
         <el-button type="primary" @click="uploadFile">立即下载</el-button>
       </div>
     </div>
-    <div class="resume-nav">
+    <!-- <div class="resume-nav">
       <div>操作日志</div>
     </div>
     <div class="resume-seconds">
@@ -179,7 +196,7 @@
           :timestamp="activity.timestamp"
         >{{activity.content}}</el-timeline-item>
       </el-timeline>
-    </div>
+    </div>-->
   </div>
 </template>
 <script>
@@ -187,6 +204,7 @@ import qs from "qs";
 export default {
   data() {
     return {
+      dialogVisible: false,
       positionId: "",
       resumeId: "",
       resumeIds: "",
@@ -219,11 +237,13 @@ export default {
         { resumeIds: this.arrResume },
         { arrayFormat: "repeat" }
       );
+      this.dialogVisible = true;
       this.$local
         .get("/business-core/resumes/dowload?" + resumeList, {
           responseType: "blob"
         })
         .then(res => {
+          this.dialogVisible = false;
           const disposition = res.headers["content-disposition"];
           let fileName = disposition.substring(
             disposition.indexOf("filename=") + 9,
@@ -252,6 +272,7 @@ export default {
           }
         })
         .catch(error => {
+          this.dialogVisible = false;
           if (error.response.status === 404) {
             this.$notify.error({
               title: "错误",
@@ -666,5 +687,16 @@ export default {
   margin: 0 0 0 100px;
   font-size: 16px;
   color: #373737;
+}
+
+.loading {
+  text-align: center;
+  margin: -20px 0 0 0;
+}
+.loading-text {
+  font-size: 24px;
+  color: #222222;
+  text-align: center;
+  margin: 30px 0 30px 0
 }
 </style>

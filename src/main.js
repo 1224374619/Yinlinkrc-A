@@ -91,9 +91,14 @@ router.beforeEach((to, from, next) => {
   const status = Cookies.get('status')
   if (to.name === 'login' || to.name === 'register' || to.name === 'resetpassword') {
     store.state.hasLogin = false
+    store.state.hasLogins = false
   } else {
     store.state.hasLogin = true
+    store.state.hasLogins = true
   }
+   if (to.name === 'tidings') {
+    store.state.hasLogins = false
+   }
   // console.log(to.path)
   // if (to.name === 'home') {
   //   if (status === "0") {

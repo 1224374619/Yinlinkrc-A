@@ -50,7 +50,7 @@
           </div>
           <div class="user-operations" v-else>
             <el-dropdown trigger="hover" style="margin:0 10px 0 0">
-              <el-badge :value="this.value" class="item" size="mini" style="margin:5px 40px 0 0">
+              <el-badge :value="this.value" class="item" size="mini" style="margin:10px 40px 0 0">
                 <img
                   style="width:22px;height:22px"
                   @click="tidings"
@@ -65,7 +65,6 @@
                     class="badge"
                     v-for="(item,index) in notificationlist"
                     :key="index"
-                    @click="NewsDetail"
                   >
                     <span style="color:#6C6C6C;font-size:14px;margin-left:35px;">{{item.title}}</span>
                     <span
@@ -85,8 +84,8 @@
               </el-dropdown-menu>
             </el-dropdown>
             <span
-              style="line-height:65px;color:#373737;margin:0 20px 0 0;font-size:18px;"
-            >{{$store.state.user === null?this.fullName:$store.state.user}}</span>
+              style="line-height:65px;color:#373737;margin:5px 20px 0 0;font-size:18px;"
+            >{{$store.state.user === null?this.shortName:$store.state.user}}</span>
             <el-dropdown placement="bottom-start" class="ada">
               <!-- <img
                 style="margin:10px 0 0 0;height:47px;width:47px"
@@ -143,7 +142,7 @@ export default {
       notificationlist: [],
       status: "",
       avatarUrl:'',
-      fullName:''
+      shortName:''
     };
   },
   computed: mapState({
@@ -160,9 +159,9 @@ export default {
       }, 5000);
     },
     //消息click
-    NewsDetail() {
-      this.$router.push({ path: "/NewsDetail" });
-    },
+    // NewsDetail() {
+    //   this.$router.push({ path: "/NewsDetail" });
+    // },
     //全部标记
     chorusle() {
       this.$http
@@ -310,7 +309,7 @@ export default {
       this.$http.get("/business-core/companyes/brief").then(res => {
         if (res.data.code == "200") {
           // this.defaultResumeId = res.data.data.defaultResumeId;
-          this.fullName = res.data.data.fullName;
+          this.shortName = res.data.data.shortName;
           this.avatarUrl = res.data.data.logoUrl;
         }
       })

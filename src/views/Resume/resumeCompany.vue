@@ -3,6 +3,21 @@
     <div class="resume-navs">
       <div>企业人才库</div>
     </div>
+    <el-dialog
+      title
+      :show-close="false"
+      :append-to-body="true"
+      :visible.sync="dialogVisible"
+      width="25%"
+      :before-close="handleClose"
+    >
+      <div>
+        <div class="loading">
+          <i style="font-size:60px;color:#20A0ff;" class="el-icon-loading"></i>
+        </div>
+        <div class="loading-text">下载中...</div>
+      </div>
+    </el-dialog>
     <div class="resume-seconds">
       <el-form :inline="true" :model="formInline" label-width="100px" class="demo-form-inline">
         <el-form-item label="关键词">
@@ -153,6 +168,7 @@ export default {
         label: "tag",
         children: "children"
       },
+      dialogVisible:false,
       optionsDegree: [
         {
           value: "0",
@@ -253,11 +269,13 @@ export default {
         { resumeIds: this.arrResume },
         { arrayFormat: "repeat" }
       );
+      this.dialogVisible = true
       this.$local
         .get("/business-core/resumes/dowload?" + resumeList, {
           responseType: "blob"
         })
         .then(res => {
+          this.dialogVisible = false
           const disposition = res.headers["content-disposition"];
           let fileName = disposition.substring(
             disposition.indexOf("filename=") + 9,
@@ -286,6 +304,7 @@ export default {
           }
         })
         .catch(error => {
+          this.dialogVisible = false
           if (error.response.status === 404) {
             this.$notify.error({
               title: "错误",
@@ -502,6 +521,17 @@ export default {
 
 .demo-form-inline {
   margin: 20px 35px 0 20px;
+}
+
+.loading {
+  text-align: center;
+  margin: -20px 0 0 0;
+}
+.loading-text {
+  font-size: 24px;
+  color: #222222;
+  text-align: center;
+  margin: 30px 0 30px 0
 }
 </style>
 

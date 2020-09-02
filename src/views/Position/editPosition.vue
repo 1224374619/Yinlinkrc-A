@@ -289,7 +289,7 @@ export default {
       centerDialogVisible: false,
       centerDialogVisibles: false,
       propsTwo: {
-        value: "tag",
+        value: "code",
         label: "tag",
         children: "children"
       },
@@ -679,10 +679,10 @@ export default {
         });
     },
     online() {
-      this.logoutTime = this.ruleForm.onlineTime.getTime();
+      this.publishedTime = this.ruleForm.onlineTime.getTime();
     },
     offline() {
-      this.publishedTime = this.ruleForm.offlineTime.getTime();
+      this.logoutTime = this.ruleForm.offlineTime.getTime();
     },
     //获取职位详情
     positionDetail() {
@@ -723,6 +723,18 @@ export default {
               salaryName = "9";
               break;
           }
+          // let natureName;
+          // switch (response.jobTypeCode) {
+          //   case "全职":
+          //     natureName = "0";
+          //     break;
+          //   case "兼职":
+          //     natureName = "1";
+          //     break;
+          //   case "实习":
+          //     natureName = "2";
+          //     break;
+          // }
           let workAgeName;
           switch (response.workAgeMin) {
             case 0:
@@ -746,9 +758,11 @@ export default {
               positionName: response.positionName,
               nature: response.jobTypeCode,
               positionCatalog: [
-                response.catalogFirst,
-                response.catalogSecondary,
-                response.catalogThird
+                parseInt(
+                  (parseInt(response.catalogCode / 100) * 100) / 10000
+                ) * 10000,
+                parseInt(response.catalogCode / 100) * 100,
+                response.catalogCode
               ],
               salary: salaryName,
               degree: response.degreeMinCode,
@@ -761,8 +775,8 @@ export default {
               onlineTime: response.publishedTime,
               offlineTime: response.offlineTime
             };
-            this.logoutTime = response.publishedTime;
-            this.publishedTime = response.offlineTime;
+            this.logoutTime = response.offlineTime;
+            this.publishedTime = response.publishedTime;
           } else {
           }
         })
@@ -901,10 +915,43 @@ export default {
         if (valid) {
           let params = {
             addressId: this.ruleForm.workCity,
-            catalogCode: null,
-            catalogFirst: this.ruleForm.positionCatalog[0],
-            catalogSecondary: this.ruleForm.positionCatalog[1],
-            catalogThird: this.ruleForm.positionCatalog[2],
+
+            catalogCode: this.ruleForm.positionCatalog[2],
+            catalogFirst: CodeToTag(
+              [
+                parseInt(
+                  (parseInt(this.ruleForm.positionCatalog[2] / 100) * 100) / 10000
+                ) * 10000,
+                parseInt(this.ruleForm.positionCatalog[2] / 100) * 100,
+                this.ruleForm.positionCatalog[2]
+              ],
+              this.positionCatalogList
+            )[0],
+            catalogSecondary: CodeToTag(
+              [
+                parseInt(
+                  (parseInt(this.ruleForm.positionCatalog[2] / 100) * 100) / 10000
+                ) * 10000,
+                parseInt(this.ruleForm.positionCatalog[2] / 100) * 100,
+                this.ruleForm.positionCatalog[2]
+              ],
+              this.positionCatalogList
+            )[1],
+            catalogThird: CodeToTag(
+              [
+                parseInt(
+                  (parseInt(this.ruleForm.positionCatalog[2] / 100) * 100) / 10000
+                ) * 10000,
+                parseInt(this.ruleForm.positionCatalog[2] / 100) * 100,
+                this.ruleForm.positionCatalog[2]
+              ],
+              this.positionCatalogList
+            )[2],
+
+            // catalogCode: null,
+            // catalogFirst: this.ruleForm.positionCatalog[0],
+            // catalogSecondary: this.ruleForm.positionCatalog[1],
+            // catalogThird: this.ruleForm.positionCatalog[2],
             companyId: this.companyId,
             degreeMin: degreeName,
             degreeMinCode: this.ruleForm.degree,

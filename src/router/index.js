@@ -96,7 +96,7 @@ let routes = [{
     {
         path: '/tidings',
         component: tidings,
-        name: '',
+        name: 'tidings',
         hidden: true,
         meta: {
             requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识

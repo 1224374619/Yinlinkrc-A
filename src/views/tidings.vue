@@ -14,10 +14,10 @@
           v-model="activeName"
           type="card"
           @tab-click="handleClick"
-          style="width:96%;margin:20px auto"
+          style="width:96%;margin:20px auto;"
         >
           <el-tab-pane label="未读消息" name="first">
-            <el-table :data="tableData" style="width: 100%">
+            <el-table :data="tableData" style="width: 100%;height:auto">
               <el-table-column prop="title" label="消息列表">
                 <template slot-scope="scope">
                   <el-collapse v-model="activeNames" @change="handleChange">
@@ -45,7 +45,7 @@
             ></el-pagination>
           </el-tab-pane>
           <el-tab-pane label="已读消息" name="second">
-            <el-table :data="tableData" style="width: 100%">
+            <el-table :data="tableData" style="width: 100%;height:auto">
               <el-table-column prop="title" label="消息列表">
                 <template slot-scope="scope">
                   <el-collapse v-model="activeNames" @change="handleChange">
@@ -188,8 +188,9 @@ export default {
 
 <style lang="stylus" scoped>
 .container {
-  margin: 0 auto 0px;
+  margin: 50px auto ;
   width: 1280px;
+  height 100%
   border: 1px solid #ffffff;
   background: #ffffff;
 

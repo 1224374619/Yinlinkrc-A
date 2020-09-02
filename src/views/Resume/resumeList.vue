@@ -135,6 +135,21 @@
         </el-form>
       </div>
     </el-dialog>-->
+    <el-dialog
+      title
+      :show-close="false"
+      :append-to-body="true"
+      :visible.sync="dialogVisible"
+      width="25%"
+      :before-close="handleClose"
+    >
+      <div>
+        <div class="loading">
+          <i style="font-size:60px;color:#20A0ff;" class="el-icon-loading"></i>
+        </div>
+        <div class="loading-text">下载中...</div>
+      </div>
+    </el-dialog>
     <div class="resume-nav">
       <div style="width:150px;">{{positionDetail.positionName.substring(0,7)}}</div>
       <div style="margin:0 0 0 20px;width:100%;">{{positionDetail.description.substring(0,60)}}</div>
@@ -782,7 +797,8 @@ export default {
       processedState: "",
       multipleSelection: [],
       arrResume: [],
-      multipleSelection: []
+      multipleSelection: [],
+      dialogVisible:false
     };
   },
   methods: {
@@ -802,11 +818,13 @@ export default {
         { resumeIds: this.arrResume },
         { arrayFormat: "repeat" }
       );
+      this.dialogVisible = true
       this.$local
         .get("/business-core/resumes/dowload?" + resumeList, {
           responseType: "blob"
         })
         .then(res => {
+          this.dialogVisible = false
           const disposition = res.headers["content-disposition"];
           let fileName = disposition.substring(
             disposition.indexOf("filename=") + 9,
@@ -835,6 +853,7 @@ export default {
           }
         })
         .catch(error => {
+          this.dialogVisible = false
           if (error.response.status === 404) {
             this.$notify.error({
               title: "错误",
@@ -2785,7 +2804,16 @@ export default {
     }
   }
 }
-
+.loading {
+  text-align: center;
+  margin: -20px 0 0 0;
+}
+.loading-text {
+  font-size: 24px;
+  color: #222222;
+  text-align: center;
+  margin: 30px 0 30px 0
+}
 .resume-second {
   width: 100%;
   height: 80px;

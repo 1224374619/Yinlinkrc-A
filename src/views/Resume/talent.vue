@@ -6,6 +6,21 @@
         <span style="font-size:12px;margin:0 0 0 20px">当前仅支持在线简历</span>
       </div>
     </div>
+    <el-dialog
+      title
+      :show-close="false"
+      :append-to-body="true"
+      :visible.sync="dialogVisible"
+      width="25%"
+      :before-close="handleClose"
+    >
+      <div>
+        <div class="loading">
+          <i style="font-size:60px;color:#20A0ff;" class="el-icon-loading"></i>
+        </div>
+        <div class="loading-text">下载中...</div>
+      </div>
+    </el-dialog>
     <div class="resume-seconds">
       <el-form :inline="true" :model="formInline" label-width="100px" class="demo-form-inline">
         <el-form-item label="意向城市">
@@ -67,7 +82,11 @@
         </el-form-item>
       </el-form>
       <el-button @click="uploadFile" type="text" style="float:right;margin:0 20px 0 0">批量下载简历</el-button>
-      <el-table :data="tableData" style="width: 98%;margin:0 auto" @selection-change="handleSelectionChange">
+      <el-table
+        :data="tableData"
+        style="width: 98%;margin:0 auto"
+        @selection-change="handleSelectionChange"
+      >
         <el-table-column type="selection"></el-table-column>
         <el-table-column prop="fullName" label="姓名"></el-table-column>
         <el-table-column prop="sex" label="性别"></el-table-column>
@@ -135,6 +154,7 @@ export default {
         label: "tag",
         children: "children"
       },
+      dialogVisible:false,
       optionsDegree: [
         {
           value: "0",
@@ -221,9 +241,9 @@ export default {
       });
     },
     //下载
-    upload (tab) {
-      this.arrResume.push(tab.id)
-      this.uploadFile()
+    upload(tab) {
+      this.arrResume.push(tab.id);
+      this.uploadFile();
     },
     uploadFile() {
       let params = {
@@ -233,11 +253,13 @@ export default {
         { resumeIds: this.arrResume },
         { arrayFormat: "repeat" }
       );
+      this.dialogVisible = true
       this.$local
         .get("/business-core/resumes/dowload?" + resumeList, {
           responseType: "blob"
         })
         .then(res => {
+          this.dialogVisible = false
           const disposition = res.headers["content-disposition"];
           let fileName = disposition.substring(
             disposition.indexOf("filename=") + 9,
@@ -266,6 +288,7 @@ export default {
           }
         })
         .catch(error => {
+          this.dialogVisible = false
           if (error.response.status === 404) {
             this.$notify.error({
               title: "错误",
@@ -460,7 +483,16 @@ export default {
     color: #1890FF;
   }
 }
-
+.loading {
+  text-align: center;
+  margin: -20px 0 0 0;
+}
+.loading-text {
+  font-size: 24px;
+  color: #222222;
+  text-align: center;
+  margin: 30px 0 30px 0
+}
 .resume-seconds {
   width: 100%;
   height: auto;
