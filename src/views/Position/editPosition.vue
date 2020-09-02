@@ -1014,8 +1014,7 @@ export default {
     },
     //重置
     resetForm(formName) {
-      this.ruleForm.desc = "";
-      this.$refs[formName].resetFields();
+      this.$router.go(-1);//返回上一层
     },
     removeDomain(item) {
       var index = this.ruleForm.domains.indexOf(item);

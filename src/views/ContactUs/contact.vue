@@ -33,19 +33,19 @@
     </el-dialog>
     <div class="companyDetail">
       <div>
-        <span>公司：13131313131</span>
+        <span>公司：上海银领网络科技有限公司</span>
       </div>
       <div>
-        <span>地址：</span>
+        <span>地址：上海市静安区大众东朔空间1206</span>
       </div>
       <div>
-        <span>邮编：</span>
+        <span>邮编：200436</span>
       </div>
       <div>
-        <span>电话：</span>
+        <span>电话：021 56057115</span>
       </div>
       <div>
-        <span>邮箱：1313131313</span>
+        <span>邮箱：Nicole.yin@yinlinkrc.com</span>
       </div>
       <div style="display: flex;
   flex-direction: row;">
@@ -82,9 +82,7 @@ export default {
           { min: 0, max: 300, message: "长度在 0 到 150 个字", trigger: "blur" }
         ]
       },
-      companyDetail:
-        "阿里巴巴网创立于1999年，总部设在中国上海，员工超过30000人，目前公司已在北京、广州、深圳、成都、杭州、南京、厦门、重庆、青岛、武汉、三亚、南通等95个境内城市，新加坡、首尔、香港等22个境外城市设立分支机构，在中国南通、苏格兰爱丁堡设立服务联络中心。2010年，携程旅行网战略投资台湾易游网和香港永安旅游，实现两岸三地的互通。2014年，投资途风旅行网，将触角延伸及北美洲。",
-      centerDialogVisible: true,
+      centerDialogVisible: false,
       centerDialogVisibles: false
     };
   }

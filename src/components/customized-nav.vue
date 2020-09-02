@@ -60,15 +60,24 @@
               <el-dropdown-menu slot="dropdown" style="width:412px;height:258px;">
                 <div
                   style="width:412px;height:210px;border-bottom:1px solid #fafafa;cursor:default"
+                  v-if="notificationlist.length>5"
                 >
-                  <div
-                    class="badge"
-                    v-for="(item,index) in notificationlist"
-                    :key="index"
-                  >
-                    <span style="color:#6C6C6C;font-size:14px;margin-left:35px;">{{item.title}}</span>
+                  <div class="badge" v-for="(item,index) in notificationlist.slice(0,5)" :key="index">
+                    <span style="color:#6C6C6C;font-size:14px;margin-left:24px;">{{item.title}}</span>
                     <span
-                      style="color:#909090;font-size:12px;margin-right:35px;"
+                      style="color:#909090;font-size:12px;margin-left:35px;"
+                    >{{item.releaseTime|formatDateOne}}</span>
+                  </div>
+                </div>
+
+                <div
+                  style="width:412px;height:210px;border-bottom:1px solid #fafafa;cursor:default"
+                  v-else
+                >
+                  <div class="badge" v-for="(item,index) in notificationlist" :key="index">
+                    <span style="color:#6C6C6C;font-size:14px;margin-left:24px;">{{item.title}}</span>
+                    <span
+                      style="color:#909090;font-size:12px;margin-left:35px;"
                     >{{item.releaseTime|formatDateOne}}</span>
                   </div>
                 </div>
@@ -100,7 +109,7 @@
                   disabled
                   @click.native="contact"
                 >联系我们</el-dropdown-item>
-                <el-dropdown-item id="personals" v-else disabled @click.native="contact">联系我们</el-dropdown-item>
+                <el-dropdown-item id="personals" v-else @click.native="contact">联系我们</el-dropdown-item>
                 <el-dropdown-item
                   id="personals"
                   v-if="this.status === 0"
@@ -165,10 +174,11 @@ export default {
     //全部标记
     chorusle() {
       this.$http
-        .get("/business-notification/message/read")
+        .put("/business-notification/message/read")
         .then(res => {
           if (res.data.code == "200") {
             this.chorus = false;
+            this.notification()
           } else {
           }
         })
