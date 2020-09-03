@@ -295,7 +295,7 @@ export default {
     unfit(tab) {
       this.$http
         .put(
-          `/business-core/position/${this.positionID}/resumes/${tab.id}/unfit`
+          `/business-core/position/${this.positionId}/resumes/${this.resumeId}/unfit`
         )
         .then(res => {
           let response = res.data.data;
