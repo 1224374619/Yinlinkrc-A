@@ -521,7 +521,7 @@ export default {
         if (valid) {
           let params = {
             cert: this.files ? this.files : null,
-            enterpriseForm: this.companyInfos.enterpriseForm[1],
+            enterpriseForm: this.companyInfos.enterpriseForm,
             enterpriseFormCode: null,
             registeredAddress: this.companyInfos.registeredAddress,
             uniformSocialCreditCode: this.companyInfos.uniformSocialCreditCode
