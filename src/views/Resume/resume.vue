@@ -7,11 +7,11 @@
           class="el-menu-vertical-demo"
           unique-opened
           style = 'height:600px;border: 1px solid rgba(246,246,246,1);box-shadow: 0px 2px 12px 0px rgba(0,0,0,0.06);'
-          v-if="!isCollapse"
+          
           router
           background-color="#FFFFFF"
           active-text-color="#327cf3"
-          :collapse="isCollapse"
+          
         >
           <template v-for="(item,index) in $router.options.routes" v-if="item.item === 2">
             <el-submenu :index="index+''">

@@ -5,11 +5,7 @@
     <div class="body">
       <div class="form">
         <div class="logo">
-          <img
-            style="height:40px;margin:57px 0 0 0"
-            
-            :src="require('../assets/images/logo.png')"
-          />
+          <img style="height:40px;margin:57px 0 0 0" :src="require('../assets/images/logo.png')" />
         </div>
         <div class="photo">
           <div style="margin:89px 0 0 174px">
@@ -102,7 +98,7 @@ export default {
   data() {
     return {
       form: {
-        tel: '',
+        tel: "",
         password: ""
       },
       show: {
@@ -149,20 +145,18 @@ export default {
               password: this.form.password
             })
             .then(res => {
-              console.log(res.request.status)
               if (res.request.status == 200) {
-                this.state()
+                this.state();
                 let token = res.headers["auth-token"];
                 Cookies.set("token", token);
-                this.companyDetail()
                 // this.$router.push({ path: "/home" });
               } else {
                 return false;
               }
             })
             .catch(error => {
-              this.$message({
-                showClose: true,
+              this.$notify.error({
+                title: "错误",
                 message: "输入有误，请重新输入"
               });
             });
@@ -178,10 +172,9 @@ export default {
         .then(res => {
           if (res.data.code == "200") {
             Cookies.set("status", res.data.data.details.companyId);
-            console.log()
             if (res.data.data.details.companyId === 0) {
               this.$router.push({ path: "/enterpriseAudit" });
-            }else {
+            } else {
               this.$router.push({ path: "/home" });
             }
           } else {
@@ -206,36 +199,36 @@ export default {
           }
         });
     },
-    //公司详情
-    companyDetail() {
-      this.$http
-        .get("/business-core/companyes/brief")
-        .then(res => {
-          if (res.data.code == "200") {
-            console.log(res)
-          } else {
-          }
-        })
-        .catch(error => {
-          if (error.response.status === 404) {
-            this.$message({
-              message: "页面丢失，请重新加载",
-              type: "error"
-            });
-          } else if (error.response.status === 403) {
-            this.$message({
-              message: "登陆超时，请重新登录",
-              type: "error"
-            });
-            this.$router.push({ path: "/login" });
-          } else {
-            this.$message({
-              message: error.response.data.message,
-              type: "error"
-            });
-          }
-        });
-    },
+    // //公司详情
+    // companyDetail() {
+    //   this.$http
+    //     .get("/business-core/companyes/brief")
+    //     .then(res => {
+    //       if (res.data.code == "200") {
+    //         console.log(res)
+    //       } else {
+    //       }
+    //     })
+    //     .catch(error => {
+    //       if (error.response.status === 404) {
+    //         this.$message({
+    //           message: "页面丢失，请重新加载",
+    //           type: "error"
+    //         });
+    //       } else if (error.response.status === 403) {
+    //         this.$message({
+    //           message: "登陆超时，请重新登录",
+    //           type: "error"
+    //         });
+    //         this.$router.push({ path: "/login" });
+    //       } else {
+    //         this.$message({
+    //           message: error.response.data.message,
+    //           type: "error"
+    //         });
+    //       }
+    //     });
+    // },
     // gotoHomeUI() {
     //   this.$router.push({ path: "/" });
     // },

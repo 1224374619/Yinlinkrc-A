@@ -258,8 +258,8 @@
                   style="width:240px"
                   :picker-options="expireTimeOption"
                   v-model="ruleForm.onlineTime"
-                  type="date"
-                  placeholder="选择日期"
+                  type="datetime"
+                  placeholder="选择日期时间"
                 ></el-date-picker>
               </el-form-item>
               <el-form-item label="下线时间" prop="offlineTime">
@@ -267,8 +267,8 @@
                   style="width:240px"
                   :picker-options="expireTimeOption"
                   v-model="ruleForm.offlineTime"
-                  type="date"
-                  placeholder="选择日期"
+                  type="datetime"
+                  placeholder="选择日期时间"
                 ></el-date-picker>
               </el-form-item>
               <!-- <el-form-item label="上线日常">
@@ -295,7 +295,7 @@ export default {
       expireTimeOption: {
         disabledDate(date) {
           //disabledDate 文档上：设置禁用状态，参数为当前日期，要求返回 Boolean
-          return date.getTime() < Date.now();
+          return date.getTime() < Date.now()-24*60*60*1000;
         }
       },
       ruleForm: {
@@ -854,98 +854,104 @@ export default {
           }
           let logoutTime = this.ruleForm.offlineTime.getTime();
           let publishedTime = this.ruleForm.onlineTime.getTime();
-          console.log(this.ruleForm.workCity);
           if (valid) {
-            let params = {
-              addressId: this.ruleForm.workCity,
-              catalogCode: this.ruleForm.positionCatalog,
-              catalogFirst: CodeToTag(
-                [
-                  parseInt(
-                    (parseInt(this.ruleForm.positionCatalog / 100) * 100) /
-                      10000
-                  ) * 10000,
-                  parseInt(this.ruleForm.positionCatalog / 100) * 100,
-                  this.ruleForm.positionCatalog
-                ],
-                this.positionCatalogList
-              )[0],
-              catalogSecondary: CodeToTag(
-                [
-                  parseInt(
-                    (parseInt(this.ruleForm.positionCatalog / 100) * 100) /
-                      10000
-                  ) * 10000,
-                  parseInt(this.ruleForm.positionCatalog / 100) * 100,
-                  this.ruleForm.positionCatalog
-                ],
-                this.positionCatalogList
-              )[1],
-              catalogThird: CodeToTag(
-                [
-                  parseInt(
-                    (parseInt(this.ruleForm.positionCatalog / 100) * 100) /
-                      10000
-                  ) * 10000,
-                  parseInt(this.ruleForm.positionCatalog / 100) * 100,
-                  this.ruleForm.positionCatalog
-                ],
-                this.positionCatalogList
-              )[2],
-              companyId: this.companyId,
-              degreeMin: degreeName,
-              degreeMinCode: this.ruleForm.degree,
-              description: this.ruleForm.positionCatalogDetail,
-              email: this.ruleForm.email,
-              isGraduate: true,
-              jobType: natureName,
-              jobTypeCode: this.ruleForm.nature,
-              managerId: this.ruleForm.HR,
-              positionName: this.ruleForm.positionName,
-              proxyEmail: this.ruleForm.email,
-              requirement: this.ruleForm.JobSearch,
-              salaryMax: salaryMax,
-              salaryMin: salaryMin,
-              published: true,
-              sourceType: null,
-              sourceUrl: null,
-              workAgeMax: workAgeMax,
-              workAgeMin: workAgeMin,
-              offlineTime: logoutTime,
-              publishedTime: publishedTime
-            };
-            this.$http
-              .post("/business-core/positions", params)
-              .then(res => {
-                if (res.data.code == "200") {
-                  this.$message({
-                    message: res.data.message,
-                    type: "success"
-                  });
-                  this.$router.push({
-                    path: "/position/info"
-                  });
-                } else {
-                }
-              })
-              .catch(error => {
-          if (error.response.status === 404) {
-            this.$notify.error({
-              title: "错误",
-              message: "页面丢失，请重新加载"
-            });
-          } else if (error.response.status === 403) {
-            this.$notify.error({
-              title: "错误",
-              message: "登陆超时，请重新登录"
-            });
-          } else {
-            this.$notify.error({
-              title: "错误",
-              message: error.response.data.message
-            });
-          }
-        });
+            if (publishedTime > logoutTime) {
+              this.$notify.error({
+                title: "错误",
+                message: "上线时间应该要小于下线时间"
+              });
+            } else {
+              let params = {
+                addressId: this.ruleForm.workCity,
+                catalogCode: this.ruleForm.positionCatalog,
+                catalogFirst: CodeToTag(
+                  [
+                    parseInt(
+                      (parseInt(this.ruleForm.positionCatalog / 100) * 100) /
+                        10000
+                    ) * 10000,
+                    parseInt(this.ruleForm.positionCatalog / 100) * 100,
+                    this.ruleForm.positionCatalog
+                  ],
+                  this.positionCatalogList
+                )[0],
+                catalogSecondary: CodeToTag(
+                  [
+                    parseInt(
+                      (parseInt(this.ruleForm.positionCatalog / 100) * 100) /
+                        10000
+                    ) * 10000,
+                    parseInt(this.ruleForm.positionCatalog / 100) * 100,
+                    this.ruleForm.positionCatalog
+                  ],
+                  this.positionCatalogList
+                )[1],
+                catalogThird: CodeToTag(
+                  [
+                    parseInt(
+                      (parseInt(this.ruleForm.positionCatalog / 100) * 100) /
+                        10000
+                    ) * 10000,
+                    parseInt(this.ruleForm.positionCatalog / 100) * 100,
+                    this.ruleForm.positionCatalog
+                  ],
+                  this.positionCatalogList
+                )[2],
+                companyId: this.companyId,
+                degreeMin: degreeName,
+                degreeMinCode: this.ruleForm.degree,
+                description: this.ruleForm.positionCatalogDetail,
+                email: this.ruleForm.email,
+                isGraduate: true,
+                jobType: natureName,
+                jobTypeCode: this.ruleForm.nature,
+                managerId: this.ruleForm.HR,
+                positionName: this.ruleForm.positionName,
+                proxyEmail: this.ruleForm.email,
+                requirement: this.ruleForm.JobSearch,
+                salaryMax: salaryMax,
+                salaryMin: salaryMin,
+                published: true,
+                sourceType: null,
+                sourceUrl: null,
+                workAgeMax: workAgeMax,
+                workAgeMin: workAgeMin,
+                offlineTime: logoutTime,
+                publishedTime: publishedTime
+              };
+              this.$http
+                .post("/business-core/positions", params)
+                .then(res => {
+                  if (res.data.code == "200") {
+                    this.$message({
+                      message: res.data.message,
+                      type: "success"
+                    });
+                    this.$router.push({
+                      path: "/position/info"
+                    });
+                  } else {
+                  }
+                })
+                .catch(error => {
+                  if (error.response.status === 404) {
+                    this.$notify.error({
+                      title: "错误",
+                      message: "页面丢失，请重新加载"
+                    });
+                  } else if (error.response.status === 403) {
+                    this.$notify.error({
+                      title: "错误",
+                      message: "登陆超时，请重新登录"
+                    });
+                  } else {
+                    this.$notify.error({
+                      title: "错误",
+                      message: error.response.data.message
+                    });
+                  }
+                });
+            }
           } else {
             console.log("error submit!!");
             return false;

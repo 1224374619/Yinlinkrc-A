@@ -58,7 +58,7 @@
             </li>
             <li>
               <span>企业地点：</span>
-              <span class="spanSecond">{{companyInfo.address.district}}</span>
+              <span class="spanSecond">{{companyInfo.address.detail}}</span>
             </li>
             <li>
               <span>企业介绍：</span>
@@ -150,6 +150,7 @@
               style="margin-left:0px"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
+              :on-error="handleAvatarError"
             >
               <img v-if="imageUrl" :src="imageUrl" class="avatar" />
               <i
@@ -265,6 +266,7 @@
               :action="uploadUrl"
               :file-list="auditTempFile"
               :on-success="dealWithUploadLicense"
+              :on-error="handleAvatarError"
               :with-credentials="true"
               :data="uploadDatas"
               :headers="myHeaders"
@@ -403,6 +405,12 @@ export default {
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
       this.file = res.data;
+    },
+    handleAvatarError(err, file, fileList) {
+      this.$notify.error({
+        title: "错误",
+        message: "图片上传失败，请重新上传"
+      })
     },
     dealWithUploadLicense(res, file) {
       // this.imageUrl = URL.createObjectURL(file.raw);

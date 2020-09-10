@@ -9,6 +9,7 @@ export default new Vuex.Store({
     companyID:'',
     hasLogin:true,
     hasLogins:true,
+    value:'',
     user: window.sessionStorage.getItem('username'),
     token: '',
     username: window.sessionStorage.getItem('user'),

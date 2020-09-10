@@ -200,8 +200,9 @@
                 ></el-input>
               </el-form-item>
               <el-form-item label="负责HR" prop="HR">
-                <el-select v-model="ruleForm.HR" placeholder="请选择责HR">
+                <el-select style="width:240px" v-model="ruleForm.HR" placeholder="请选择责HR">
                   <el-option
+                  
                     v-for="item in HRlist"
                     :key="item.id"
                     :label="item.realName"
@@ -226,10 +227,24 @@
                 <el-button style="margin:0 0 0 20px" @click.prevent="removeDomain(domain)">删除</el-button>
               </el-form-item>
               <el-form-item label="上线时间" prop="onlineTime">
-                <el-date-picker @change="online" v-model="ruleForm.onlineTime" placeholder="选择日期"></el-date-picker>
+                <el-date-picker
+                  style="width:240px"
+                  :picker-options="expireTimeOption"
+                  v-model="ruleForm.onlineTime"
+                  type="datetime"
+                  @change="online"
+                  placeholder="选择日期时间"
+                ></el-date-picker>
               </el-form-item>
               <el-form-item label="下线时间" prop="offlineTime">
-                <el-date-picker @change="offline" v-model="ruleForm.offlineTime" placeholder="选择日期"></el-date-picker>
+                <el-date-picker
+                  @change="offline"
+                  style="width:240px"
+                  :picker-options="expireTimeOption"
+                  v-model="ruleForm.offlineTime"
+                  type="datetime"
+                  placeholder="选择日期时间"
+                ></el-date-picker>
               </el-form-item>
               <!-- <el-form-item label="上线日常">
                 <span style="width:240px">13天</span>
@@ -252,6 +267,12 @@ import { CodeToTag } from "../../cookie.js";
 export default {
   data() {
     return {
+      expireTimeOption: {
+        disabledDate(date) {
+          //disabledDate 文档上：设置禁用状态，参数为当前日期，要求返回 Boolean
+          return date.getTime() < Date.now() - 24 * 60 * 60 * 1000;
+        }
+      },
       ruleForm: {
         positionName: "",
         nature: "",
@@ -758,9 +779,8 @@ export default {
               positionName: response.positionName,
               nature: response.jobTypeCode,
               positionCatalog: [
-                parseInt(
-                  (parseInt(response.catalogCode / 100) * 100) / 10000
-                ) * 10000,
+                parseInt((parseInt(response.catalogCode / 100) * 100) / 10000) *
+                  10000,
                 parseInt(response.catalogCode / 100) * 100,
                 response.catalogCode
               ],
@@ -913,99 +933,103 @@ export default {
             break;
         }
         if (valid) {
-          let params = {
-            addressId: this.ruleForm.workCity,
-
-            catalogCode: this.ruleForm.positionCatalog[2],
-            catalogFirst: CodeToTag(
-              [
-                parseInt(
-                  (parseInt(this.ruleForm.positionCatalog[2] / 100) * 100) / 10000
-                ) * 10000,
-                parseInt(this.ruleForm.positionCatalog[2] / 100) * 100,
-                this.ruleForm.positionCatalog[2]
-              ],
-              this.positionCatalogList
-            )[0],
-            catalogSecondary: CodeToTag(
-              [
-                parseInt(
-                  (parseInt(this.ruleForm.positionCatalog[2] / 100) * 100) / 10000
-                ) * 10000,
-                parseInt(this.ruleForm.positionCatalog[2] / 100) * 100,
-                this.ruleForm.positionCatalog[2]
-              ],
-              this.positionCatalogList
-            )[1],
-            catalogThird: CodeToTag(
-              [
-                parseInt(
-                  (parseInt(this.ruleForm.positionCatalog[2] / 100) * 100) / 10000
-                ) * 10000,
-                parseInt(this.ruleForm.positionCatalog[2] / 100) * 100,
-                this.ruleForm.positionCatalog[2]
-              ],
-              this.positionCatalogList
-            )[2],
-
-            // catalogCode: null,
-            // catalogFirst: this.ruleForm.positionCatalog[0],
-            // catalogSecondary: this.ruleForm.positionCatalog[1],
-            // catalogThird: this.ruleForm.positionCatalog[2],
-            companyId: this.companyId,
-            degreeMin: degreeName,
-            degreeMinCode: this.ruleForm.degree,
-            description: this.ruleForm.positionCatalogDetail,
-            email: this.ruleForm.email,
-            isGraduate: true,
-            jobType: natureName,
-            jobTypeCode: this.ruleForm.nature,
-            managerId: this.ruleForm.HR,
-            positionName: this.ruleForm.positionName,
-            proxyEmail: this.ruleForm.email,
-            requirement: this.ruleForm.JobSearch,
-            salaryMax: salaryMax,
-            salaryMin: salaryMin,
-            published: true,
-            sourceType: null,
-            sourceUrl: null,
-            workAgeMax: workAgeMax,
-            workAgeMin: workAgeMin,
-            offlineTime: this.logoutTime,
-            publishedTime: this.publishedTime
-          };
-          this.$http
-            .put(`/business-core/positions/${this.positionID}`, params)
-            .then(res => {
-              if (res.data.code == "200") {
-                this.$message({
-                  message: res.data.message,
-                  type: "success"
-                });
-                this.$router.push({
-                  path: "/position/info"
-                });
-              } else {
-              }
-            })
-            .catch(error => {
-              if (error.response.status === 404) {
-                this.$notify.error({
-                  title: "错误",
-                  message: "页面丢失，请重新加载"
-                });
-              } else if (error.response.status === 403) {
-                this.$notify.error({
-                  title: "错误",
-                  message: "登陆超时，请重新登录"
-                });
-              } else {
-                this.$notify.error({
-                  title: "错误",
-                  message: error.response.data.message
-                });
-              }
+          if (this.logoutTime < this.publishedTime) {
+            this.$notify.error({
+              title: "错误",
+              message: "上线时间应该要小于下线时间"
             });
+          } else {
+            let params = {
+              addressId: this.ruleForm.workCity,
+              catalogCode: this.ruleForm.positionCatalog[2],
+              catalogFirst: CodeToTag(
+                [
+                  parseInt(
+                    (parseInt(this.ruleForm.positionCatalog[2] / 100) * 100) /
+                      10000
+                  ) * 10000,
+                  parseInt(this.ruleForm.positionCatalog[2] / 100) * 100,
+                  this.ruleForm.positionCatalog[2]
+                ],
+                this.positionCatalogList
+              )[0],
+              catalogSecondary: CodeToTag(
+                [
+                  parseInt(
+                    (parseInt(this.ruleForm.positionCatalog[2] / 100) * 100) /
+                      10000
+                  ) * 10000,
+                  parseInt(this.ruleForm.positionCatalog[2] / 100) * 100,
+                  this.ruleForm.positionCatalog[2]
+                ],
+                this.positionCatalogList
+              )[1],
+              catalogThird: CodeToTag(
+                [
+                  parseInt(
+                    (parseInt(this.ruleForm.positionCatalog[2] / 100) * 100) /
+                      10000
+                  ) * 10000,
+                  parseInt(this.ruleForm.positionCatalog[2] / 100) * 100,
+                  this.ruleForm.positionCatalog[2]
+                ],
+                this.positionCatalogList
+              )[2],
+              companyId: this.companyId,
+              degreeMin: degreeName,
+              degreeMinCode: this.ruleForm.degree,
+              description: this.ruleForm.positionCatalogDetail,
+              email: this.ruleForm.email,
+              isGraduate: true,
+              jobType: natureName,
+              jobTypeCode: this.ruleForm.nature,
+              managerId: this.ruleForm.HR,
+              positionName: this.ruleForm.positionName,
+              proxyEmail: this.ruleForm.email,
+              requirement: this.ruleForm.JobSearch,
+              salaryMax: salaryMax,
+              salaryMin: salaryMin,
+              published: true,
+              sourceType: null,
+              sourceUrl: null,
+              workAgeMax: workAgeMax,
+              workAgeMin: workAgeMin,
+              offlineTime: this.logoutTime,
+              publishedTime: this.publishedTime
+            };
+            this.$http
+              .put(`/business-core/positions/${this.positionID}`, params)
+              .then(res => {
+                if (res.data.code == "200") {
+                  this.$message({
+                    message: res.data.message,
+                    type: "success"
+                  });
+                  this.$router.push({
+                    path: "/position/info"
+                  });
+                } else {
+                }
+              })
+              .catch(error => {
+                if (error.response.status === 404) {
+                  this.$notify.error({
+                    title: "错误",
+                    message: "页面丢失，请重新加载"
+                  });
+                } else if (error.response.status === 403) {
+                  this.$notify.error({
+                    title: "错误",
+                    message: "登陆超时，请重新登录"
+                  });
+                } else {
+                  this.$notify.error({
+                    title: "错误",
+                    message: error.response.data.message
+                  });
+                }
+              });
+          }
         } else {
           console.log("error submit!!");
           return false;
@@ -1014,7 +1038,7 @@ export default {
     },
     //重置
     resetForm(formName) {
-      this.$router.go(-1);//返回上一层
+      this.$router.go(-1); //返回上一层
     },
     removeDomain(item) {
       var index = this.ruleForm.domains.indexOf(item);

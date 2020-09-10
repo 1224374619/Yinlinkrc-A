@@ -50,7 +50,7 @@
           </div>
           <div class="user-operations" v-else>
             <el-dropdown trigger="hover" style="margin:0 10px 0 0">
-              <el-badge :value="this.value" class="item" size="mini" style="margin:10px 40px 0 0">
+              <el-badge :value="this.$store.state.value" class="item" size="mini" style="margin:10px 40px 0 0">
                 <img
                   style="width:22px;height:22px"
                   @click="tidings"
@@ -59,26 +59,17 @@
               </el-badge>
               <el-dropdown-menu slot="dropdown" style="width:412px;height:258px;">
                 <div
-                  style="width:412px;height:210px;border-bottom:1px solid #fafafa;cursor:default"
-                  v-if="notificationlist.length>5"
+                  style="width:412px;height:210px;border-bottom:1px solid #fafafa;cursor:default;overflow:scroll;overflow-x:hidden;"
                 >
-                  <div class="badge" v-for="(item,index) in notificationlist.slice(0,5)" :key="index">
+                  <div
+                    class="badge"
+                    v-for="(item,index) in notificationlist"
+                    :key="index"
+                  >
                     <span style="color:#6C6C6C;font-size:14px;margin-left:24px;">{{item.title}}</span>
                     <span
-                      style="color:#909090;font-size:12px;margin-left:35px;"
-                    >{{item.releaseTime|formatDateOne}}</span>
-                  </div>
-                </div>
-
-                <div
-                  style="width:412px;height:210px;border-bottom:1px solid #fafafa;cursor:default"
-                  v-else
-                >
-                  <div class="badge" v-for="(item,index) in notificationlist" :key="index">
-                    <span style="color:#6C6C6C;font-size:14px;margin-left:24px;">{{item.title}}</span>
-                    <span
-                      style="color:#909090;font-size:12px;margin-left:35px;"
-                    >{{item.releaseTime|formatDateOne}}</span>
+                      style="color:#909090;font-size:12px;margin-right:25px;"
+                    ><el-badge :is-dot="!item.isRead" class="item">{{item.releaseTime|formatDateOne}}</el-badge></span>
                   </div>
                 </div>
                 <div
@@ -100,8 +91,13 @@
                 style="margin:10px 0 0 0;height:47px;width:47px"
                 v-if="this.avatarUrl === ''"
                 :src="require('../assets/images/156.png')"
-              /> -->
-              <img style="margin:10px 0 0 0;height:47px;width:47px"  :src="this.avatarUrl" />
+              />-->
+              <img
+                style="margin:10px 0 0 0;height:47px;width:47px"
+                v-if="this.status === 0"
+                :src="require('../assets/images/mo.png')"
+              />
+              <img style="margin:10px 0 0 0;height:47px;width:47px" v-else :src="this.avatarUrl" />
               <el-dropdown-menu slot="dropdown" style="font-size:14px">
                 <el-dropdown-item
                   id="personals"
@@ -147,11 +143,10 @@ export default {
     return {
       tok: this.$store.state.token,
       token: "",
-      value: "",
       notificationlist: [],
       status: "",
-      avatarUrl:'',
-      shortName:''
+      avatarUrl: "",
+      shortName: ""
     };
   },
   computed: mapState({
@@ -178,7 +173,7 @@ export default {
         .then(res => {
           if (res.data.code == "200") {
             this.chorus = false;
-            this.notification()
+            this.notification();
           } else {
           }
         })
@@ -249,11 +244,11 @@ export default {
         .then(res => {
           if (res.data.code == "200") {
             this.status = res.data.data.details.companyId;
-            // if (res.data.data.details.companyId === 0) {
-            //   this.$router.push({ path: "/enterpriseAudit" });
-            // }else {
-            //   this.$router.push({ path: "/home" });
-            // }
+            if (this.status === 0) {
+              return;
+            } else {
+              this.brief();
+            }
           } else {
           }
         })
@@ -279,7 +274,7 @@ export default {
     //用户通知
     notification() {
       let params = {
-        isRead: false,
+        isRead: null,
         pageNum: 1,
         pageSize: 10,
         sortBy: null,
@@ -290,7 +285,16 @@ export default {
         .then(res => {
           if (res.data.code == "200") {
             this.notificationlist = res.data.data.list;
-            this.value = res.data.data.total;
+            let notificationlist = []
+            this.notificationlist.forEach(function(item, index) {
+              if (item.isRead === false) {
+                notificationlist.push(item.isRead)
+                console.log(notificationlist)
+              }else {
+                return
+              }
+            });
+            this.$store.state.value = notificationlist.length;
           } else {
           }
         })
@@ -316,14 +320,16 @@ export default {
     //获取简历简讯
     brief() {
       // const token = this.$store.state.token
-      this.$http.get("/business-core/companyes/brief").then(res => {
-        if (res.data.code == "200") {
-          // this.defaultResumeId = res.data.data.defaultResumeId;
-          this.shortName = res.data.data.shortName;
-          this.avatarUrl = res.data.data.logoUrl;
-        }
-      })
-      .catch(error => {
+      this.$http
+        .get("/business-core/companyes/brief")
+        .then(res => {
+          if (res.data.code == "200") {
+            // this.defaultResumeId = res.data.data.defaultResumeId;
+            this.shortName = res.data.data.shortName;
+            this.avatarUrl = res.data.data.logoUrl;
+          }
+        })
+        .catch(error => {
           if (error.response.status === 404) {
             this.$notify.error({
               title: "错误",
@@ -355,7 +361,6 @@ export default {
     this.fullName = window.sessionStorage.getItem("username");
     this.notification();
     this.state();
-    this.brief();
   }
 };
 </script>

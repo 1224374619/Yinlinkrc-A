@@ -11,6 +11,8 @@
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload"
+          :on-error="handleAvatarError"
+          
         >
           <i class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
@@ -95,6 +97,7 @@
           :headers="myHeaders"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
+          :on-error="handleAvatarError"
         >
           <img v-if="imageUrl" :src="imageUrl" class="avatar" />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -333,10 +336,15 @@ export default {
     },
     //图片上传
     handleAvatarSuccess(res, file) {
-      console.log(res, file);
       this.file = res.data;
       this.imageUrl = URL.createObjectURL(file.raw);
       this.avatar()
+    },
+    handleAvatarError(err, file, fileList) {
+      this.$notify.error({
+        title: "错误",
+        message: "图片上传失败，请重新上传"
+      });
     },
     //获取用户得基本信息
     base() {
@@ -405,7 +413,7 @@ export default {
       return "/business-user/account/avatar";
     },
     uploadCompanyFile() {
-      return "/api/v2/file-service/files/upload";
+      return "/api/file-service/files/upload";
     }
   }
 };

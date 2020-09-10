@@ -5,11 +5,10 @@
     </div>
     <div class="aside">
       <div>
-        <div v-if="activeName === 'first'" class="tab-operations" @click='allRead'>
+        <div v-if="activeName === 'first'" class="tab-operations" @click="allRead">
           <el-button style="color:#FF7152;" type="text">全部已读</el-button>
         </div>
-        <div v-else class="tab-operations">
-        </div>
+        <div v-else class="tab-operations"></div>
         <el-tabs
           v-model="activeName"
           type="card"
@@ -17,7 +16,7 @@
           style="width:96%;margin:20px auto;"
         >
           <el-tab-pane label="未读消息" name="first">
-            <el-table :data="tableData" style="width: 100%;height:auto">
+            <el-table :data="tableData" style="width: 100%;height:450px">
               <el-table-column prop="title" label="消息列表">
                 <template slot-scope="scope">
                   <el-collapse v-model="activeNames" @change="handleChange">
@@ -45,7 +44,7 @@
             ></el-pagination>
           </el-tab-pane>
           <el-tab-pane label="已读消息" name="second">
-            <el-table :data="tableData" style="width: 100%;height:auto">
+            <el-table :data="tableData" style="width: 100%;height:450px">
               <el-table-column prop="title" label="消息列表">
                 <template slot-scope="scope">
                   <el-collapse v-model="activeNames" @change="handleChange">
@@ -86,10 +85,10 @@ export default {
       tableData: [],
       page: {
         total: 0,
-        pageSize: 10,
+        pageSize: 5,
         current: 1,
-        pageSizeOpts: [10, 20, 30]
-      },
+        pageSizeOpts: [5, 10, 20]
+      }
     };
   },
   methods: {
@@ -99,7 +98,8 @@ export default {
         .put("/business-notification/message/read")
         .then(res => {
           if (res.data.code == "200") {
-            this.notification()
+            this.notification();
+            this.$store.state.value = 0;
           } else {
           }
         })
@@ -122,21 +122,21 @@ export default {
           }
         });
     },
-   //跳转
-    handleClick (tab) {
-      console.log(tab)
-      if (tab.paneName === 'first') {
-        this.activeName = 'first'
-        this.notification()
-      }else {
-        this.activeName = 'second'
-        this.notification()
+    //跳转
+    handleClick(tab) {
+      console.log(tab);
+      if (tab.paneName === "first") {
+        this.activeName = "first";
+        this.notification();
+      } else {
+        this.activeName = "second";
+        this.notification();
       }
     },
-     //用户通知
+    //用户通知
     notification() {
       let params = {
-        isRead: this.activeName === 'first'?false:true,
+        isRead: this.activeName === "first" ? false : true,
         pageNum: this.page.current,
         pageSize: this.page.pageSize,
         sortBy: null,
@@ -172,27 +172,27 @@ export default {
     },
     handleSizeChange(val) {
       this.page.pageSize = val;
-      this.page.current = 1
-      this.notification()
+      this.page.current = 1;
+      this.notification();
     },
     handleCurrentChange(val) {
       this.page.current = val;
-      this.notification()
-    },
+      this.notification();
+    }
   },
   created() {
-    this.notification()
+    this.notification();
   }
 };
 </script>
 
 <style lang="stylus" scoped>
 .container {
-  margin: 50px auto ;
+  margin: 0 auto;
   width: 1280px;
-  height 100%
   border: 1px solid #ffffff;
   background: #ffffff;
+  overflow-y: hidden;
 
   .nav {
     width: 960px;
@@ -210,7 +210,7 @@ export default {
   .tab-operations {
     position: absolute;
     margin: 7px 0 0 860px;
-    z-index:999
+    z-index: 999;
   }
 
   .aside {

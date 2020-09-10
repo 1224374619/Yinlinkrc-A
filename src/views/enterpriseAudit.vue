@@ -53,7 +53,7 @@
         </p>
         <!-- <el-form-item label="企业名称" prop="companyName">
           <el-input v-model="companyInfo.companyName" placeholder="请输入与企业证件材料一致的全称"></el-input>
-        </el-form-item> -->
+        </el-form-item>-->
         <el-form-item label="企业注册地" prop="registeredAddress">
           <el-input v-model="companyInfo.registeredAddress" placeholder="请输入企业注册地（省份、城市）"></el-input>
         </el-form-item>
@@ -81,6 +81,7 @@
             :data="uploadData"
             :headers="myHeaders"
             :on-success="dealWithUploadLicense"
+            :on-error="handleAvatarError"
             :with-credentials="true"
             list-type="picture"
           >
@@ -159,46 +160,20 @@
         </el-form-item>
         <el-form-item label="企业 LOGO" prop="file">
           <el-upload
-            class="avatar-upload"
+            class="upload"
             :action="uploadCompanyFile"
-            :data="uploadDatas"
+            :file-list="tempFile"
+            :data="uploadData"
             :headers="myHeaders"
-            style="margin-left:0px"
-            :show-file-list="false"
             :on-success="handleAvatarSuccess"
+            :on-error="handleAvatarError"
+            :with-credentials="true"
+            list-type="picture"
           >
-            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-            <i
-              v-else
-              style="border:1px solid #dcdfe6;margin:0 200px 0 0"
-              class="el-icon-plus avatar-uploader-icon"
-            ></i>
-            <div class="el-upload__tip">支持图片格式：png、jpg、jpeg，最大不超过 3M。</div>
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__tip" slot="tip">支持图片格式：png、jpg、jpeg、gif，最大不超过 3M。</div>
             <div class="el-upload__tip">为了尽快通过审核，请上传真实合法且清晰的执照图片。</div>
           </el-upload>
-          <!-- <img
-              ref="preview-logo"
-              class="logo"
-              :src="companyInfo.logoUrl"
-              v-if="companyInfo.logoUrl"
-            />
-            <el-button size="small" type="primary">点击更新</el-button>
-            <div class="el-upload__tip">支持图片格式：png、jpg、jpeg，最大不超过 3M。</div>
-            <div class="el-upload__tip">为了尽快通过审核，请上传真实合法且清晰的执照图片。</div>
-            <input class="image-input" ref="input" type="file" accept="image/*" />
-            <el-dialog
-              title="裁切图片"
-              :visible.sync="lOGOUploadModalVisible"
-              :close-on-click-modal="false"
-              :close-on-press-escape="false"
-              width="30%"
-            >
-              <vue-cropper ref="cropper" :src="imgSrc" :aspectRatio="1"></vue-cropper>
-              <span slot="footer" class="dialog-footer">
-                <el-button>重新选择</el-button>
-                <el-button type="primary" @click="cropImage">确定</el-button>
-              </span>
-          </el-dialog>-->
         </el-form-item>
         <div class="operations">
           <el-button type="primary" class="main" @click="addCompany('companyInfo')">保存</el-button>
@@ -213,7 +188,7 @@
         label-width="140px"
         class="demo-ruleForm"
       >
-       <p class="header">
+        <p class="header">
           <span>企业基本信息审核</span>
         </p>
         <el-form-item label="姓名" prop="name">
@@ -226,22 +201,20 @@
           <el-input v-model="ruleForm.email"></el-input>
         </el-form-item>
         <el-form-item label="用户头像" prop="filees">
+          
           <el-upload
-            class="avatar-upload"
+            class="upload"
             :action="uploadCompanyFile"
             :data="uploadDataavatar"
             :headers="myHeaders"
-            style="margin-left:0px"
-            :show-file-list="false"
+            :file-list="tempFile"
             :on-success="handleAvatar"
+            :on-error="handleAvatarError"
+            :with-credentials="true"
+            list-type="picture"
           >
-            <img v-if="imageUrles" :src="imageUrles" class="avatar" />
-            <i
-              v-else
-              style="border:1px solid #dcdfe6;margin:0 200px 0 0"
-              class="el-icon-plus avatar-uploader-icon"
-            ></i>
-            <div class="el-upload__tip">支持图片格式：png、jpg、jpeg，最大不超过 3M。</div>
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__tip" slot="tip">支持图片格式：png、jpg、jpeg、gif，最大不超过 3M。</div>
             <div class="el-upload__tip">为了尽快通过审核，请上传真实合法且清晰的执照图片。</div>
           </el-upload>
         </el-form-item>
@@ -433,9 +406,9 @@ export default {
             .then(res => {
               let response = res.data.data;
               if (res.data.code == "200") {
-                 this.$router.push({ path: "/login" });
-                 this.$message({
-                  message: '基本信息已提交审核，请耐心等待',
+                this.$router.push({ path: "/login" });
+                this.$message({
+                  message: "基本信息已提交审核，请耐心等待",
                   type: "success"
                 });
               } else {
@@ -446,23 +419,23 @@ export default {
               }
             })
             .catch(error => {
-          if (error.response.status === 404) {
-            this.$notify.error({
-              title: "错误",
-              message: "页面丢失，请重新加载"
+              if (error.response.status === 404) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "页面丢失，请重新加载"
+                });
+              } else if (error.response.status === 403) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "登陆超时，请重新登录"
+                });
+              } else {
+                this.$notify.error({
+                  title: "错误",
+                  message: error.response.data.message
+                });
+              }
             });
-          } else if (error.response.status === 403) {
-            this.$notify.error({
-              title: "错误",
-              message: "登陆超时，请重新登录"
-            });
-          } else {
-            this.$notify.error({
-              title: "错误",
-              message: error.response.data.message
-            });
-          }
-        });
         } else {
           console.log("error submit!!");
           return false;
@@ -515,34 +488,34 @@ export default {
               let response = res.data.data;
               if (res.data.code == "200") {
                 this.$message({
-                  message: '企业资质已提交审核，请耐心等待',
+                  message: "企业资质已提交审核，请耐心等待",
                   type: "success"
                 });
               } else {
-                 this.$message({
+                this.$message({
                   message: res.data.message,
                   type: "error"
                 });
               }
             })
             .catch(error => {
-          if (error.response.status === 404) {
-            this.$notify.error({
-              title: "错误",
-              message: "页面丢失，请重新加载"
+              if (error.response.status === 404) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "页面丢失，请重新加载"
+                });
+              } else if (error.response.status === 403) {
+                this.$notify.error({
+                  title: "错误",
+                  message: "登陆超时，请重新登录"
+                });
+              } else {
+                this.$notify.error({
+                  title: "错误",
+                  message: error.response.data.message
+                });
+              }
             });
-          } else if (error.response.status === 403) {
-            this.$notify.error({
-              title: "错误",
-              message: "登陆超时，请重新登录"
-            });
-          } else {
-            this.$notify.error({
-              title: "错误",
-              message: error.response.data.message
-            });
-          }
-        });
         } else {
           console.log("error submit!!");
           return false;
@@ -557,6 +530,12 @@ export default {
       this.imageUrles = URL.createObjectURL(file.raw);
       this.filees = res.data;
     },
+    handleAvatarError(err, file, fileList) {
+      this.$notify.error({
+        title: "错误",
+        message: "图片上传失败，请重新上传"
+      })
+    },
     dealWithUploadLicense(res, file) {
       // this.imageUrl = URL.createObjectURL(file.raw);
       this.files = res.data;
@@ -564,7 +543,7 @@ export default {
   },
   computed: {
     uploadCompanyFile() {
-      return "/api/v2/file-service/files/upload";
+      return "/api/file-service/files/upload";
     }
   },
   created() {
@@ -637,6 +616,7 @@ export default {
 
   .el-icon-upload {
     font-size: 25px;
+    margin: 0 280px 0 0;
   }
 
   .el-upload__tip {
