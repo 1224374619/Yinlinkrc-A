@@ -11,7 +11,7 @@
         </li>
         <li>
           <span>待上线</span>
-          <span style="color:#FF7152;font-size:24px">{{positionList.editingNum}}</span>
+          <span style="color:#FF7152;font-size:24px">{{positionList.waitingNum}}</span>
         </li>
         <li>
           <span>审核中</span>

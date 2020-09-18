@@ -47,6 +47,7 @@
         :rules="companyInfoFormRules"
         :model="companyInfo"
         label-width="140px"
+        v-if="!baseInfor"
       >
         <p class="header">
           <span>企业资质审核</span>
@@ -75,7 +76,7 @@
         </el-form-item>
         <el-form-item label="上传证件原件照片" prop="file">
           <el-upload
-            class="upload"
+            class="upload-demo"
             :action="uploadCompanyFile"
             :file-list="tempFile"
             :data="uploadData"
@@ -187,6 +188,7 @@
         ref="ruleForm"
         label-width="140px"
         class="demo-ruleForm"
+        v-if="baseInfor"
       >
         <p class="header">
           <span>企业基本信息审核</span>
@@ -201,13 +203,12 @@
           <el-input v-model="ruleForm.email"></el-input>
         </el-form-item>
         <el-form-item label="用户头像" prop="filees">
-          
           <el-upload
             class="upload"
             :action="uploadCompanyFile"
             :data="uploadDataavatar"
             :headers="myHeaders"
-            :file-list="tempFile"
+            :file-list="tempFiles"
             :on-success="handleAvatar"
             :on-error="handleAvatarError"
             :with-credentials="true"
@@ -242,6 +243,7 @@ export default {
       centerDialogVisible: false,
       centerDialogVisibles: false,
       cityList: [],
+      baseInfor: false,
       list: [],
       industryList: [],
       optionList: [],
@@ -374,7 +376,7 @@ export default {
           }
         ],
         position: [{ required: true, message: "请输入职位", trigger: "blur" }],
-        file: [{ required: true, message: "请上传头像", trigger: "blur" }]
+        filees: [{ required: true, message: "请上传头像", trigger: "blur" }]
       },
       ruleForm: {
         name: "",
@@ -406,7 +408,29 @@ export default {
             .then(res => {
               let response = res.data.data;
               if (res.data.code == "200") {
-                this.$router.push({ path: "/login" });
+                this.$_http
+                  .post(`/business-user/login`, {
+                    username: this.form.tel,
+                    password: this.form.password
+                  })
+                  .then(res => {
+                    console.log(res);
+                    if (res.status == 200) {
+                      // this.state();
+                      console.log(res.headers);
+                      let token = res.headers["auth-token"];
+                      Cookies.set("token", token);
+                      // this.$router.push({ path: "/home" });
+                    } else {
+                      return false;
+                    }
+                  })
+                  .catch(error => {
+                    this.$notify.error({
+                      title: "错误",
+                      message: "输入有误，请重新输入"
+                    });
+                  });
                 this.$message({
                   message: "基本信息已提交审核，请耐心等待",
                   type: "success"
@@ -487,6 +511,7 @@ export default {
             .then(res => {
               let response = res.data.data;
               if (res.data.code == "200") {
+                this.baseInfor = true;
                 this.$message({
                   message: "企业资质已提交审核，请耐心等待",
                   type: "success"
@@ -523,18 +548,18 @@ export default {
       });
     },
     handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
+      // this.imageUrl = URL.createObjectURL(file.raw);
       this.file = res.data;
     },
     handleAvatar(res, file) {
-      this.imageUrles = URL.createObjectURL(file.raw);
+      // this.imageUrles = URL.createObjectURL(file.raw);
       this.filees = res.data;
     },
     handleAvatarError(err, file, fileList) {
       this.$notify.error({
         title: "错误",
         message: "图片上传失败，请重新上传"
-      })
+      });
     },
     dealWithUploadLicense(res, file) {
       // this.imageUrl = URL.createObjectURL(file.raw);

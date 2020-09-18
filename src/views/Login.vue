@@ -145,8 +145,10 @@ export default {
               password: this.form.password
             })
             .then(res => {
-              if (res.request.status == 200) {
-                this.state();
+              console.log(res)
+              if (res.status == 200) {
+                // this.state();
+                console.log(res.headers)
                 let token = res.headers["auth-token"];
                 Cookies.set("token", token);
                 // this.$router.push({ path: "/home" });
