@@ -286,6 +286,7 @@
   </div>
 </template>
 <script>
+import Cookies from "js-cookie";
 import positionCatalog from "../../assets/positionCatalog.json";
 import city from "../../assets/city.json";
 import { CodeToTag } from "../../cookie.js";
@@ -295,7 +296,7 @@ export default {
       expireTimeOption: {
         disabledDate(date) {
           //disabledDate 文档上：设置禁用状态，参数为当前日期，要求返回 Boolean
-          return date.getTime() < Date.now()-24*60*60*1000;
+          return date.getTime() < Date.now() - 24 * 60 * 60 * 1000;
         }
       },
       ruleForm: {
@@ -982,12 +983,21 @@ export default {
   mounted: function() {},
   updated: function() {},
   created() {
+    let token = Cookies.get("Btoken");
     // this.companyID = this.$route.query.companyID;
     this.positionCatalogList = positionCatalog.data;
     this.cityList = city.data;
-    this.ListHR();
-    this.brief();
-    this.state();
+    if (token) {
+      this.ListHR();
+      this.brief();
+      this.state();
+    }else {
+      this.$notify.error({
+        title: "错误",
+        message: "登陆超时，请重新登录"
+      });
+      this.$router.push({ path: "/login" });
+    }
   }
 };
 </script>

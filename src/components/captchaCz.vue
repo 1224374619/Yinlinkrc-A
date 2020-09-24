@@ -40,15 +40,15 @@ export default {
           if (res.data.code == "200") {
           } else {
             this.$message({
-            message: res.data.message,
-            type: "error"
-          });
+              message: res.data.message,
+              type: "error"
+            });
           }
         })
         .catch(error => {
-          this.$message({
-            message: error.response.data.message,
-            type: "error"
+          this.$notify.error({
+            title: "错误",
+            message: error.response.data.message
           });
         });
     }
@@ -56,7 +56,7 @@ export default {
   watch: {
     captchaInput() {
       this.$emit("input", this.captchaInput);
-    }
+    },
   }
 };
 </script>
@@ -69,12 +69,12 @@ export default {
   }
 
   .btn {
-    width 150px
-    height 40px
-    margin 0 0 2px 10px
-    font-size 16px
-    color #327cf3
-    border 1px solid #327cf3
+    width: 150px;
+    height: 40px;
+    margin: 0 0 2px 10px;
+    font-size: 16px;
+    color: #327cf3;
+    border: 1px solid #327cf3;
   }
 }
 </style>

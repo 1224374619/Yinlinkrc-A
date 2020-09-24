@@ -114,6 +114,7 @@
 // import CustomizedFooter from 'components/customized-footer.vue';
 // import CustomizedNav from 'components/customized-nav.vue';
 import Captcha from "components/captcha.vue";
+import Cookies from "js-cookie";
 // import PasswordInput from 'components/password-input.vue';
 
 export default {
@@ -163,6 +164,24 @@ export default {
     gotoHomeUI() {
       this.$router.push({ path: "/" });
     },
+    login() {
+      this.$_http
+        .post(`/business-user/login`, {
+          username: this.form.tel,
+          password: this.form.password
+        })
+        .then(res => {
+          let token = res.headers["auth-token"];
+          Cookies.set("Btoken", token);
+          this.$router.push({ path: "/enterpriseAudit" });
+        })
+        .catch(error => {
+          this.$notify.error({
+            title: "错误",
+            message: "输入有误，请重新输入"
+          });
+        });
+    },
     onSubmit() {
       this.$refs["form"].validate(valid => {
         if (valid) {
@@ -175,29 +194,10 @@ export default {
             })
             .then(res => {
               if (res.data.code == "201") {
+                this.$store.state.phone = this.form.tel
+                this.$store.state.pwc = this.form.password
                 this.open2();
-                this.$_http
-                  .post(`/business-user/login`, {
-                    username: this.form.tel,
-                    password: this.form.password
-                  })
-                  .then(res => {
-                    console.log(res);
-                    if (res.status == 200) {
-                      let token = res.headers["auth-token"];
-                      Cookies.set("token", token);
-                      this.$router.push({ path: "/enterpriseAudit" });
-                    } else {
-                      return false;
-                    }
-                  })
-                  .catch(error => {
-                    this.$notify.error({
-                      title: "错误",
-                      message: "输入有误，请重新输入"
-                    });
-                  });
-                // this.$router.push({ path: "/login" });
+                this.login();
               }
             })
             .catch(error => {
@@ -224,7 +224,7 @@ export default {
       });
     },
     getCaptcha() {
-      this.$router.push({ path: "/login" });
+      // this.$router.push({ path: "/login" });
       this.instance.close();
     },
     open2() {

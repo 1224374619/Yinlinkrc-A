@@ -78,6 +78,7 @@
 </template>
 
 <script>
+import Cookies from "js-cookie";
 export default {
   data() {
     return {
@@ -181,7 +182,17 @@ export default {
     }
   },
   created() {
-    this.notification();
+    let token = Cookies.get("Btoken");
+    if (token) {
+      this.notification();
+    }else {
+      this.$notify.error({
+        title: "错误",
+        message: "登陆超时，请重新登录"
+      });
+      this.$router.push({ path: "/login" });
+    }
+    
   }
 };
 </script>

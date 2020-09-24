@@ -137,6 +137,7 @@
 </template>
 
 <script>
+import Cookies from "js-cookie";
 import citys from "../../assets/city.json";
 import positionCatalog from "../../assets/positionCatalog.json";
 import industry from "../../assets/industry.json";
@@ -458,10 +459,20 @@ export default {
     }
   },
   created() {
+    let token = Cookies.get("Btoken");
     this.city = citys.data;
     this.positionCatalog = positionCatalog.data;
     this.industry = industry.data;
-    this.platform();
+    if (token) {
+      this.platform();
+    }else {
+      this.$notify.error({
+        title: "错误",
+        message: "登陆超时，请重新登录"
+      });
+      this.$router.push({ path: "/login" });
+    }
+    
   }
 };
 </script>

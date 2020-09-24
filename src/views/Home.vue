@@ -140,6 +140,7 @@
 </template>
 
 <script>
+import Cookies from "js-cookie";
 export default {
   name: "home",
   data() {
@@ -277,9 +278,6 @@ export default {
             this.companyID = res.data.data.id;
             this.companyDetails = res.data.data;
             this.squareUrl = res.data.data.logoUrl;
-            this.positionBoard();
-            this.resumeBoard();
-            this.state()
           } else {
           }
         })
@@ -317,7 +315,17 @@ export default {
     // },
   },
   created() {
-    this.companyBrief();
+    let token = Cookies.get("Btoken");
+    if (token === undefined) {
+      Cookies.set("Btoken", "");
+    } else if (token) {
+      this.companyBrief();
+      this.positionBoard();
+      this.resumeBoard();
+      this.state();
+    } else {
+      this.$router.push({ path: "/login" });
+    }
   }
 };
 </script>

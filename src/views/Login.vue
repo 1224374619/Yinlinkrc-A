@@ -145,12 +145,10 @@ export default {
               password: this.form.password
             })
             .then(res => {
-              console.log(res)
               if (res.status == 200) {
-                // this.state();
-                console.log(res.headers)
-                let token = res.headers["auth-token"];
-                Cookies.set("token", token);
+                let token = res.headers["auth-token"]
+                Cookies.set("Btoken", token);
+                this.state();
                 // this.$router.push({ path: "/home" });
               } else {
                 return false;
@@ -175,7 +173,7 @@ export default {
           if (res.data.code == "200") {
             Cookies.set("status", res.data.data.details.companyId);
             if (res.data.data.details.companyId === 0) {
-              this.$router.push({ path: "/enterpriseAudit" });
+              return
             } else {
               this.$router.push({ path: "/home" });
             }
@@ -245,6 +243,7 @@ export default {
     }
   },
   created() {
+    
     // this.$emit('header', false);
     // this.$emit('footer', false);
   },

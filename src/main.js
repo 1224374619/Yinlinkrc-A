@@ -5,10 +5,13 @@ import './utils/http'
 import ElementUI from 'element-ui';
 import App from './App.vue';
 import qs from 'qs'
+import axios from "axios";
 // import router from './router';
 import routes from './router/index.js'
 import VueRouter from 'vue-router'
-import { Notification } from 'element-ui';
+import {
+  Notification
+} from 'element-ui';
 import store from './store';
 import scroll from 'vue-seamless-scroll'
 // import Cookies from 'js-cookie'
@@ -19,7 +22,6 @@ import {
 import {
   CodeToTag
 } from './cookie';
-import cookie from 'vue-cookie';
 import Cookies from 'js-cookie'
 import 'babel-polyfill';
 import './assets/iconfont/iconfont.css'
@@ -27,11 +29,13 @@ import VueAMap from 'vue-amap';
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import '../node_modules/swiper/dist/css/swiper.css'
 import VueFullpage from 'vue-fullpage.js'
+import queryString from 'querystring'
 Vue.use(VueFullpage)
 Vue.use(VueAwesomeSwiper)
 Vue.use(VueRouter);
 Vue.use(VueAMap);
 Vue.use(Cookies);
+
 VueAMap.initAMapApiLoader({
   key: '594f89b2e0fb82adadc7113372876925',
   plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor', 'AMap.Geolocation'],
@@ -45,10 +49,109 @@ Vue.use(ElementUI);
 Vue.prototype.$moment = Moment;
 Vue.prototype.$qs = qs; //qs全局挂载在vue实例上
 Vue.prototype.$message = Message
-Vue.prototype.$cookie = cookie;
 Vue.prototype.$CodeToTag = {
   CodeToTag
 }
+
+let config = {
+  //判断当前开发环境，切换代理配置
+  // baseURL: process.env.NODE_ENV === 'production' ? '/api/v1/' : '/api/',
+  baseURL: '/api/v2/',
+  // headers: {
+  //     'Auth-Token': token
+  // },
+  timeout: 60 * 1000, // Timeout
+  withCredentials: true, // Check cross-site Access-Control
+};
+const _axios = axios.create(config);
+const _axioes = axios.create(config);
+// 添加request拦截器 
+_axios.interceptors.request.use(
+  function (config) {
+    let token = Cookies.get('Btoken')
+    if (token) {
+      config.headers['Auth-Token'] = token;
+    }
+    return config
+  },
+  function (error) {
+    Promise.reject(error)
+  })
+// http response 拦截器
+_axios.interceptors.response.use(
+  response => {
+    Cookies.set("Btoken", response.headers['auth-token']);
+    return response;
+  },
+  error => {
+    if (error.response.status === 403) {
+      Cookies.set("Btoken", '');
+      // Notification.error({
+      //   title: '错误',
+      //   message: '登录超时，请登录'
+      // });
+      router.replace('/login');
+    }
+    return Promise.reject(error);
+  }
+);
+// /api/v1/consumer-user
+const instance = axios.create({
+  baseURL: '/api/v2/',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded'
+  },
+  transformRequest: [(data) => queryString.stringify(data)]
+})
+Vue.prototype.$_http = instance;
+const locals = axios.create({
+  baseURL: '/api/v2/',
+  timeout: 60 * 1000, // Timeout
+  withCredentials: true, // Check cross-site Access-Control
+})
+Vue.prototype.$locals = locals;
+// 添加request拦截器 
+_axioes.interceptors.request.use(
+  function (config) {
+    if (config.method === 'get') {
+      config.paramsSerializer = function (params) {
+        return queryString.stringify(params, {
+          arrayFormat: 'repeat'
+        })
+      }
+    }
+    let token = Cookies.get('Btoken')
+    if (token) {
+      config.headers['Auth-Token'] = token;
+    }
+    return config
+  },
+  function (error) {
+    Promise.reject(error)
+  })
+
+Plugin.install = function (Vue, options) {
+  Vue.axios = _axios;
+  window.axios = _axios;
+  Object.defineProperties(Vue.prototype, {
+    http: {
+      get() {
+        return _axios;
+      }
+    },
+    $http: {
+      get() {
+        return _axios;
+      }
+    },
+    $local: {
+      get() {
+        return _axioes;
+      }
+    },
+  });
+};
+Vue.use(Plugin)
 
 // 定义全局时间戳过滤器
 Vue.filter('formatDate', function (value) {
@@ -85,9 +188,11 @@ const router = new VueRouter({
   routes
 })
 
+
+
 // 注册全局钩子用来拦截导航
 router.beforeEach((to, from, next) => {
-  const token = Cookies.get('token')
+  const token = Cookies.get('Btoken')
   const status = Cookies.get('status')
   if (to.name === 'login' || to.name === 'register' || to.name === 'resetpassword') {
     store.state.hasLogin = false
@@ -96,9 +201,9 @@ router.beforeEach((to, from, next) => {
     store.state.hasLogin = true
     store.state.hasLogins = true
   }
-   if (to.name === 'tidings') {
+  if (to.name === 'tidings') {
     store.state.hasLogins = false
-   }
+  }
   // console.log(to.path)
   // if (to.name === 'home') {
   //   if (status === "0") {
@@ -142,10 +247,10 @@ router.beforeEach((to, from, next) => {
         title: "错误",
         message: '请先登录'
       });
-    setTimeout(()=>next({
+      setTimeout(() => next({
         path: '/login'
         // query: {redirect: to.fullPath} // 将跳转的路由path作为参数，登录成功后跳转到该路由
-      }),2000)
+      }), 2000)
 
     }
   } else {

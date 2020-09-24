@@ -50,7 +50,12 @@
           </div>
           <div class="user-operations" v-else>
             <el-dropdown trigger="hover" style="margin:0 10px 0 0">
-              <el-badge :value="this.$store.state.value" class="item" size="mini" style="margin:10px 40px 0 0">
+              <el-badge
+                :value="this.$store.state.value"
+                class="item"
+                size="mini"
+                style="margin:10px 40px 0 0"
+              >
                 <img
                   style="width:22px;height:22px"
                   @click="tidings"
@@ -61,15 +66,14 @@
                 <div
                   style="width:412px;height:210px;border-bottom:1px solid #fafafa;cursor:default;overflow:scroll;overflow-x:hidden;"
                 >
-                  <div
-                    class="badge"
-                    v-for="(item,index) in notificationlist"
-                    :key="index"
-                  >
+                  <div class="badge" v-for="(item,index) in notificationlist" :key="index">
                     <span style="color:#6C6C6C;font-size:14px;margin-left:24px;">{{item.title}}</span>
-                    <span
-                      style="color:#909090;font-size:12px;margin-right:25px;"
-                    ><el-badge :is-dot="!item.isRead" class="item">{{item.releaseTime|formatDateOne}}</el-badge></span>
+                    <span style="color:#909090;font-size:12px;margin-right:25px;">
+                      <el-badge
+                        :is-dot="!item.isRead"
+                        class="item"
+                      >{{item.releaseTime|formatDateOne}}</el-badge>
+                    </span>
                   </div>
                 </div>
                 <div
@@ -285,13 +289,12 @@ export default {
         .then(res => {
           if (res.data.code == "200") {
             this.notificationlist = res.data.data.list;
-            let notificationlist = []
+            let notificationlist = [];
             this.notificationlist.forEach(function(item, index) {
               if (item.isRead === false) {
-                notificationlist.push(item.isRead)
-                console.log(notificationlist)
-              }else {
-                return
+                notificationlist.push(item.isRead);
+              } else {
+                return;
               }
             });
             this.$store.state.value = notificationlist.length;
@@ -356,11 +359,14 @@ export default {
     }
   },
   created() {
-    this.token = Cookies.get("token");
-    // this.initList();
+    this.token = Cookies.get("Btoken");
     this.fullName = window.sessionStorage.getItem("username");
-    this.notification();
-    this.state();
+    if (this.token) {
+      this.notification();
+      this.state();
+    } else {
+      this.$router.push({ path: "/login" });
+    }
   }
 };
 </script>

@@ -10,6 +10,8 @@ export default new Vuex.Store({
     hasLogin:true,
     hasLogins:true,
     value:'',
+    phone:'',
+    pwc:'',
     user: window.sessionStorage.getItem('username'),
     token: '',
     username: window.sessionStorage.getItem('user'),
@@ -23,7 +25,7 @@ export default new Vuex.Store({
     },
     SET_TOKEN: (state, data) => {
       state.token = data
-      window.sessionStorage.setItem('token', data) 
+      window.sessionStorage.setItem('Btoken', data) 
     },
     SET_List: (state, data) => {
       state.lsitOne = data
@@ -46,7 +48,7 @@ export default new Vuex.Store({
       // 登出的时候要清除token
       state.token = null
       state.user = null
-      window.sessionStorage.removeItem('token')
+      window.sessionStorage.removeItem('Btoken')
       window.sessionStorage.removeItem('user')
     }
   }

@@ -49,7 +49,7 @@ export default {
       }
     };
     return {
-      frozen: false,
+      frozen: true,
       counter: countNumber,
       captchaInput: "",
       captchaStatusText: captchaLabel,
@@ -139,8 +139,31 @@ export default {
       }, 1000);
       this.$locals.post("/business-user/account/phone/vcode", {
         phone: this.ruleForm.phone
-      });
+      }).then(res => {
+          if (res.data.code == "200") {
+          } else {
+            this.$message({
+              message: res.data.message,
+              type: "error"
+            });
+          }
+        })
+        .catch(error => {
+          this.$notify.error({
+            title: "错误",
+            message: error.response.data.message
+          });
+        });
     }
+  },
+  watch: {
+    "ruleForm.phone": function() {
+      if (this.ruleForm.phone) {
+        this.frozen = false;
+      }else {
+        this.frozen = true;
+      }
+    },
   }
 };
 </script>

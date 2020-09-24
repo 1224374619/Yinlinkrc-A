@@ -12,7 +12,6 @@
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload"
           :on-error="handleAvatarError"
-          
         >
           <i class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
@@ -139,8 +138,8 @@
 </template>
 
 <script>
-let token = Cookies.get("token");
 import Cookies from "js-cookie";
+
 const captchaLabel = "获取验证码";
 const countNumber = 60;
 export default {
@@ -186,7 +185,7 @@ export default {
         email: ""
       },
       imageUrl: "",
-      file:"",
+      file: "",
       rules: {
         vcode: [{ required: true, message: "请输入验证码", trigger: "blur" }],
         password: [{ required: true, message: "请输入密码", trigger: "blur" }],
@@ -338,7 +337,7 @@ export default {
     handleAvatarSuccess(res, file) {
       this.file = res.data;
       this.imageUrl = URL.createObjectURL(file.raw);
-      this.avatar()
+      this.avatar();
     },
     handleAvatarError(err, file, fileList) {
       this.$notify.error({
@@ -353,7 +352,7 @@ export default {
         .then(res => {
           if (res.data.code == "200") {
             this.formDate = res.data.data;
-            this.imageUrl = res.data.data.avatarUrl
+            this.imageUrl = res.data.data.avatarUrl;
           } else {
           }
         })
@@ -377,9 +376,9 @@ export default {
         });
     },
     avatar() {
-      let params = this.file
+      let params = this.file;
       this.$http
-        .post("/business-user/account/avatar",params)
+        .post("/business-user/account/avatar", params)
         .then(res => {
           if (res.data.code == "200") {
           } else {
@@ -406,14 +405,23 @@ export default {
     }
   },
   created() {
-    this.base();
+    let token = Cookies.get("Btoken");
+    if (token) {
+      this.base();
+    } else {
+      this.$notify.error({
+        title: "错误",
+        message: "登陆超时，请重新登录"
+      });
+      this.$router.push({ path: "/login" });
+    }
   },
   computed: {
     uploadUrl() {
-      return "/business-user/account/avatar";
+      return "/api/v2/business-user/account/avatar";
     },
     uploadCompanyFile() {
-      return "/api/file-service/files/upload";
+      return "/api/v2/file-service/files/upload";
     }
   }
 };

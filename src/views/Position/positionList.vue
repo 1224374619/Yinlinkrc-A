@@ -138,7 +138,7 @@
                   @click="handleClick(scope.row)"
                   type="text"
                   size="small"
-                >刷新排名</el-button> -->
+                >刷新排名</el-button>-->
               </template>
             </el-table-column>
           </el-table>
@@ -182,7 +182,7 @@
                   @click="edit(scope.row)"
                   type="text"
                   size="small"
-                >编辑</el-button> -->
+                >编辑</el-button>-->
               </template>
             </el-table-column>
           </el-table>
@@ -272,7 +272,7 @@
                   @click="onlines(scope.row)"
                   type="text"
                   size="small"
-                >上线</el-button> -->
+                >上线</el-button>-->
                 <el-button
                   style="color:#FF7152"
                   @click="deletes(scope.row)"
@@ -329,7 +329,7 @@
                   @click="onlines(scope.row)"
                   type="text"
                   size="small"
-                >上线</el-button> -->
+                >上线</el-button>-->
                 <el-button
                   style="color:#FF7152"
                   @click="deletes(scope.row)"
@@ -356,6 +356,8 @@
 </template>
 
 <script>
+import Cookies from "js-cookie";
+
 import citys from "../../assets/city.json";
 export default {
   name: "home",
@@ -588,7 +590,7 @@ export default {
               district: null,
               province: null
             },
-        managerName: this.form.HR?this.form.HR:null,
+        managerName: this.form.HR ? this.form.HR : null,
         offlineTimeMax: this.offlineEndTime,
         offlineTimeMin: this.offlineStartTime,
         pageNum: this.page.current,
@@ -771,10 +773,19 @@ export default {
     }
   },
   created() {
+    let token = Cookies.get("Btoken");
     this.city = citys.data;
-    this.ListHR();
-    this.positionBoard();
-    this.online();
+    if (token) {
+      this.ListHR();
+      this.positionBoard();
+      this.online();
+    } else {
+      this.$notify.error({
+        title: "错误",
+        message: "登陆超时，请重新登录"
+      });
+      this.$router.push({ path: "/login" });
+    }
   }
 };
 </script>

@@ -47,7 +47,7 @@
         :rules="companyInfoFormRules"
         :model="companyInfo"
         label-width="140px"
-        v-if="!baseInfor"
+        v-show="!baseInfor"
       >
         <p class="header">
           <span>企业资质审核</span>
@@ -164,7 +164,7 @@
             class="upload"
             :action="uploadCompanyFile"
             :file-list="tempFile"
-            :data="uploadData"
+            :data="uploadDatas"
             :headers="myHeaders"
             :on-success="handleAvatarSuccess"
             :on-error="handleAvatarError"
@@ -188,7 +188,7 @@
         ref="ruleForm"
         label-width="140px"
         class="demo-ruleForm"
-        v-if="baseInfor"
+        v-show="baseInfor"
       >
         <p class="header">
           <span>企业基本信息审核</span>
@@ -202,7 +202,7 @@
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="ruleForm.email"></el-input>
         </el-form-item>
-        <el-form-item label="用户头像" prop="filees">
+        <el-form-item label="用户头像">
           <el-upload
             class="upload"
             :action="uploadCompanyFile"
@@ -230,8 +230,8 @@
   </div>
 </template>
 <script>
-let token = Cookies.get("token");
 import Cookies from "js-cookie";
+
 import industry from "../assets/industry.json";
 import city from "../assets/city.json";
 import list from "../assets/list.json";
@@ -410,17 +410,15 @@ export default {
               if (res.data.code == "200") {
                 this.$_http
                   .post(`/business-user/login`, {
-                    username: this.form.tel,
-                    password: this.form.password
+                    username: this.$store.state.phone,
+                    password: this.$store.state.pwc
                   })
                   .then(res => {
                     console.log(res);
                     if (res.status == 200) {
-                      // this.state();
-                      console.log(res.headers);
                       let token = res.headers["auth-token"];
-                      Cookies.set("token", token);
-                      // this.$router.push({ path: "/home" });
+                      Cookies.set("Btoken", token);
+                      this.$router.push({ path: "/home" });
                     } else {
                       return false;
                     }
@@ -568,7 +566,7 @@ export default {
   },
   computed: {
     uploadCompanyFile() {
-      return "/api/file-service/files/upload";
+      return "/api/v2/file-service/files/upload";
     }
   },
   created() {

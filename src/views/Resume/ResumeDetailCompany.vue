@@ -154,6 +154,7 @@
   </div>
 </template>
 <script>
+import Cookies from "js-cookie";
 export default {
   data() {
     return {
@@ -208,9 +209,19 @@ export default {
     }
   },
   created() {
+    let token = Cookies.get("Btoken");
     this.positionId = this.$route.query.positionId;
     this.resumeId = this.$route.query.resumeId;
-    this.resumeDetail();
+    if (token) {
+      this.resumeDetail();
+    }else {
+      this.$notify.error({
+        title: "错误",
+        message: "登陆超时，请重新登录"
+      });
+      this.$router.push({ path: "/login" });
+    }
+    
   },
   filters: {
     level(level) {

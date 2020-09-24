@@ -201,6 +201,7 @@
 </template>
 <script>
 import qs from "qs";
+import Cookies from "js-cookie";
 export default {
   data() {
     return {
@@ -512,12 +513,14 @@ export default {
     }
   },
   created() {
+    let token = Cookies.get("Btoken");
     this.positionId = this.$route.query.positionId;
     this.resumeId = this.$route.query.resumeId;
     this.resumeIds = this.$route.query.resumeIds;
     this.resumeIdes = this.$route.query.resumeIdes;
     this.processedState = this.$route.query.processedState;
-    if (this.resumeId) {
+    if (token) {
+      if (this.resumeId) {
       this.resumeDetail();
       this.arrResume.push(this.resumeId);
     } else if (this.resumeIds) {
@@ -527,6 +530,14 @@ export default {
       this.resumeDetailes();
       this.arrResume.push(this.resumeIdes);
     }
+    }else {
+      this.$notify.error({
+        title: "错误",
+        message: "登陆超时，请重新登录"
+      });
+      this.$router.push({ path: "/login" });
+    }
+    
   },
   filters: {
     level(level) {

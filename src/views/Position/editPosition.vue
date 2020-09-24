@@ -202,7 +202,6 @@
               <el-form-item label="负责HR" prop="HR">
                 <el-select style="width:240px" v-model="ruleForm.HR" placeholder="请选择责HR">
                   <el-option
-                  
                     v-for="item in HRlist"
                     :key="item.id"
                     :label="item.realName"
@@ -261,6 +260,8 @@
   </div>
 </template>
 <script>
+import Cookies from "js-cookie";
+
 import positionCatalog from "../../assets/positionCatalog.json";
 import city from "../../assets/city.json";
 import { CodeToTag } from "../../cookie.js";
@@ -1056,12 +1057,21 @@ export default {
   mounted: function() {},
   updated: function() {},
   created() {
+    let token = Cookies.get("Btoken");
     this.positionID = this.$route.query.position;
     this.positionCatalogList = positionCatalog.data;
     this.cityList = city.data;
-    this.ListHR();
-    this.brief();
-    this.positionDetail();
+    if (token) {
+      this.ListHR();
+      this.brief();
+      this.positionDetail();
+    } else {
+      this.$notify.error({
+        title: "错误",
+        message: "登陆超时，请重新登录"
+      });
+      this.$router.push({ path: "/login" });
+    }
   }
 };
 </script>

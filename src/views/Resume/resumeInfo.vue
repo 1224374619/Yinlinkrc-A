@@ -148,6 +148,7 @@
 </template>
 
 <script>
+import Cookies from "js-cookie";
 export default {
   name: "home",
   data() {
@@ -480,8 +481,18 @@ export default {
     }
   },
   created() {
-    this.resumeBoard()
-    this.resumeOnline()
+    let token = Cookies.get("Btoken");
+    if (token) {
+      this.resumeBoard()
+      this.resumeOnline()
+    }else {
+      this.$notify.error({
+        title: "错误",
+        message: "登陆超时，请重新登录"
+      });
+      this.$router.push({ path: "/login" });
+    }
+    
   }
 };
 </script>

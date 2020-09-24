@@ -155,6 +155,7 @@
 </template>
 
 <script>
+import Cookies from "js-cookie";
 import citys from "../../assets/city.json";
 const timeUtil = require("../../timeUtil.js");
 import qs from "qs";
@@ -459,8 +460,18 @@ export default {
     }
   },
   created() {
+    let token = Cookies.get("Btoken");
     this.city = citys.data;
-    this.platform();
+    if (token) {
+      this.platform();
+    }else {
+      this.$notify.error({
+        title: "错误",
+        message: "登陆超时，请重新登录"
+      });
+      this.$router.push({ path: "/login" });
+    }
+    
   },
   filters: {
     processedState(processedState) {
