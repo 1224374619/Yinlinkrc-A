@@ -139,7 +139,7 @@
 
 <script>
 import Cookies from "js-cookie";
-
+let token = Cookies.get("Btoken");
 const captchaLabel = "获取验证码";
 const countNumber = 60;
 export default {

@@ -293,7 +293,7 @@
 </template>
 <script>
 import Cookies from "js-cookie";
-
+let token = Cookies.get("Btoken");
 import industry from "../../assets/industry.json";
 import city from "../../assets/city.json";
 import option from "../../assets/option.json";
