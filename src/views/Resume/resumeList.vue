@@ -70,37 +70,47 @@
         </el-form>
       </div>
     </el-dialog>-->
-    <!-- <el-dialog title="修改面试邀请" :visible.sync="centerDialogVisibles" width="40%" center>
+    <el-dialog
+      title
+      :visible.sync="centerDialogVisible"
+      width="20%"
+      center
+      :show-close="false"
+      style="margin:100px 0 0 0"
+    >
       <div
-        style=" display: flex;flex-direction: row;font-family: PingFangSC-Medium;color: #5C5C5C 100%;font-size:20px"
-      >
-        <div style="margin:0 0 0 30px">姓名：zadqqeqw</div>
-        <div style="margin:0 0 0 30px">面试岗位：qeeqeqe</div>
+        style="text-align:center;font-family: PingFangSC-Medium;color: #111111;font-size:20px"
+      >确定发送面试邀请</div>
+      <div style="margin:50px 0 0 18%">
+        <el-button @click="centerDialogVisible = false">取 消</el-button>
+        <el-button style="margin:0 0 0 40px" type="primary" @click="centerDialogVisible = false">确 定</el-button>
       </div>
+      <div style="height:35px"></div>
+    </el-dialog>
+    <el-dialog title="修改面试邀请" :visible.sync="centerDialogVisibles" width="44%" center>
       <div style="margin:30px 0 0 0">
         <el-form
           :model="ruleForm"
-          :rules="rules"
+          :rules="rulesQuiz"
           ref="ruleForm"
           :inline="true"
           label-width="100px"
           class="demo-ruleForm"
         >
-          <el-form-item label="面试次数" prop="region">
-            <el-select style="width:234px" v-model="value" placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
+          <el-form-item label="面试公司">
+            <el-input style="width:580px" v-model="companyName" placeholder="面试公司"></el-input>
           </el-form-item>
-          <el-form-item label="面试时间" required>
-            <el-date-picker style="width:234px" v-model="value1" type="date" placeholder="选择日期"></el-date-picker>
+          <el-form-item label="面试时间" prop="oralTime">
+            <el-date-picker style="width:580px" v-model="oralTime" type="date" placeholder="选择日期"></el-date-picker>
           </el-form-item>
-          <el-form-item label="面试地址" prop="delivery">
-            <el-select style="width:580px" v-model="value" placeholder="请选择">
+          <el-form-item label="面试职位">
+            <el-input style="width:234px" v-model="positions" placeholder="面试职位"></el-input>
+          </el-form-item>
+          <el-form-item label="薪资范围">
+            <el-input style="width:234px" v-model="dalary" placeholder="薪资范围"></el-input>
+          </el-form-item>
+          <el-form-item label="面试地址" prop="address">
+            <el-select style="width:580px" v-model="address" placeholder="请选择">
               <el-option
                 v-for="item in cities"
                 :key="item.value"
@@ -116,25 +126,22 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="联系人" prop="region">
+          <el-form-item label="联系人" prop="user">
             <el-input style="width:234px" v-model="user" placeholder="联系人"></el-input>
           </el-form-item>
-          <el-form-item label="联系电话" required>
-            <el-input style="width:234px" v-model="user" placeholder="联系电话"></el-input>
+          <el-form-item label="联系电话" prop="phone">
+            <el-input style="width:234px" v-model="phone" placeholder="联系电话"></el-input>
           </el-form-item>
-          <el-form-item label="联系邮箱" required>
-            <el-input style="width:580px" v-model="user" placeholder="联系邮箱"></el-input>
-          </el-form-item>
-          <el-form-item label="备注" required>
-            <el-input type="textarea" style="width:580px" v-model="user" placeholder></el-input>
+          <el-form-item label="备注">
+            <el-input type="textarea" style="width:580px" v-model="desc" placeholder></el-input>
           </el-form-item>
           <el-form-item style="margin:0 0 0 40%">
-            <el-button plain>取消</el-button>
+            <el-button style="margin:0 50px 0 0" plain>预览</el-button>
             <el-button @click="submitForm('ruleForm')" type="primary">发送</el-button>
           </el-form-item>
         </el-form>
       </div>
-    </el-dialog>-->
+    </el-dialog>
     <el-dialog
       title
       :show-close="false"
@@ -223,8 +230,33 @@
           <el-button @click="onSubmit" style="background:#FF7152;color:#ffffff">查询</el-button>
         </el-form-item>
       </el-form>
-      <div class="tab-operations">
+      <!-- <div class="tab-operations">
         <span @click="uploadFile" style="color:#FF7152;font-size:12px">批量下载简历</span>
+      </div>-->
+      <div class="tab-operations" v-if='ms'>
+        <ul
+          class="el-dropdown-menu el-popper"
+          id="dropdown-menu-6024"
+          style="position: absolute; top: 40px; left: 160px; transform-origin: center top; z-index: 2011;width:110px;"
+          x-placement="bottom-end"
+        >
+          <li tabindex="-1" class="el-dropdown-menu__item">
+            <i class="el-icon-plus"></i>黄金糕
+          </li>
+          <li tabindex="-1" class="el-dropdown-menu__item">
+            <i class="el-icon-circle-plus"></i>狮子头
+          </li>
+          <li tabindex="-1" class="el-dropdown-menu__item">
+            <i class="el-icon-circle-plus-outline"></i>螺蛳粉
+          </li>
+          <li tabindex="-1" class="el-dropdown-menu__item">
+            <i class="el-icon-check"></i>双皮奶
+          </li>
+          <li tabindex="-1" class="el-dropdown-menu__item">
+            <i class="el-icon-circle-check"></i>蚵仔煎
+          </li>
+          <div x-arrow class="popper__arrow" style="left: 59px;"></div>
+        </ul>
       </div>
       <el-tabs
         v-model="activeName"
@@ -409,7 +441,7 @@
         @tab-click="handleClick"
         style="width:98%;margin:0 auto"
       >
-        <el-tab-pane label="待处理" name="first">
+        <el-tab-pane label="待查看" name="first">
           <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="fullName" label="姓名" show-overflow-tooltip></el-table-column>
@@ -460,7 +492,64 @@
             :total="page.total"
           ></el-pagination>
         </el-tab-pane>
-        <el-tab-pane label="处理中" name="second">
+        <el-tab-pane label="已查看" name="sixth">
+          <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column prop="fullName" label="姓名" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="workAge" label="工作年限" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="jobSearchStatus" label="求职状态" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="targetCity" label="所在地区" show-overflow-tooltip></el-table-column>
+            <el-table-column label="简历完整度" show-overflow-tooltip>
+              <template slot-scope="scope">
+                <span>{{scope.row.completedPercent}}%</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="投递时间" show-overflow-tooltip>
+              <template slot-scope="scope">
+                <span>{{scope.row.submittedTime|formatDateOne}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="address" label="操作时间" show-overflow-tooltip>
+              <template slot-scope="scope">
+                <span>{{scope.row.operatorTime|formatDateOne}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="operatorName" label="操作员" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="name" label="操作">
+              <template slot-scope="scope">
+                <el-button
+                  style="color:#FF7152"
+                  @click="examing(scope.row)"
+                  type="text"
+                  size="small"
+                >查看</el-button>
+                <el-button
+                  style="color:#FF7152"
+                  @click="offer(scope.row)"
+                  type="text"
+                  size="small"
+                >面试</el-button>
+                <el-button
+                  style="color:#FF7152"
+                  @click="unfit(scope.row)"
+                  type="text"
+                  size="small"
+                >不合适</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-pagination
+            @size-change="handleSizeChangeSecond"
+            @current-change="handleCurrentChangeSecond"
+            :current-page="page1.current"
+            class="pagination"
+            :page-sizes="page1.pageSizeOpts"
+            :page-size="page1.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="page1.total"
+          ></el-pagination>
+        </el-tab-pane>
+        <el-tab-pane label="面试" name="second" @click="ms">
           <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="fullName" label="姓名" show-overflow-tooltip></el-table-column>
@@ -664,25 +753,29 @@ export default {
   name: "home",
   data() {
     return {
+      ms:false,
       ruleFormQuiz: {
-        num: "",
-        time: "",
-        city: "",
-        email: "",
+        companyName: "",
+        oralTime: "",
+        positions: "",
+        dalary: "",
+        address: "",
         user: "",
         phone: "",
         desc: ""
       },
       rulesQuiz: {
-        num: [{ required: true, message: "请选择面试次数", trigger: "blur" }],
-        time: [
-          { required: true, message: "请选择面试时间", trigger: "change" }
+        oralTime: [
+          { required: true, message: "请选择面试时间", trigger: "blur" }
         ],
-        city: [
+        phone: [
+          { required: true, message: "请填写面试联系方式", trigger: "change" }
+        ],
+        address: [
           { required: true, message: "请选择面试地址", trigger: "change" }
         ],
-        email: [
-          { required: true, message: "请选择面试邮箱", trigger: "change" }
+        user: [
+          { required: true, message: "请填写面试联系人", trigger: "change" }
         ]
       },
       page: {
@@ -798,7 +891,7 @@ export default {
       multipleSelection: [],
       arrResume: [],
       multipleSelection: [],
-      dialogVisible:false
+      dialogVisible: false
     };
   },
   methods: {
@@ -818,13 +911,13 @@ export default {
         { resumeIds: this.arrResume },
         { arrayFormat: "repeat" }
       );
-      this.dialogVisible = true
+      this.dialogVisible = true;
       this.$local
         .get("/business-core/resumes/dowload?" + resumeList, {
           responseType: "blob"
         })
         .then(res => {
-          this.dialogVisible = false
+          this.dialogVisible = false;
           const disposition = res.headers["content-disposition"];
           let fileName = disposition.substring(
             disposition.indexOf("filename=") + 9,
@@ -853,7 +946,7 @@ export default {
           }
         })
         .catch(error => {
-          this.dialogVisible = false
+          this.dialogVisible = false;
           if (error.response.status === 404) {
             this.$notify.error({
               title: "错误",
@@ -956,23 +1049,23 @@ export default {
                 }
               })
               .catch(error => {
-          if (error.response.status === 404) {
-            this.$notify.error({
-              title: "错误",
-              message: "页面丢失，请重新加载"
-            });
-          } else if (error.response.status === 403) {
-            this.$notify.error({
-              title: "错误",
-              message: "登陆超时，请重新登录"
-            });
-          } else {
-            this.$notify.error({
-              title: "错误",
-              message: error.response.data.message
-            });
-          }
-        });
+                if (error.response.status === 404) {
+                  this.$notify.error({
+                    title: "错误",
+                    message: "页面丢失，请重新加载"
+                  });
+                } else if (error.response.status === 403) {
+                  this.$notify.error({
+                    title: "错误",
+                    message: "登陆超时，请重新登录"
+                  });
+                } else {
+                  this.$notify.error({
+                    title: "错误",
+                    message: error.response.data.message
+                  });
+                }
+              });
           } else {
           }
         })
@@ -1079,23 +1172,23 @@ export default {
                 }
               })
               .catch(error => {
-          if (error.response.status === 404) {
-            this.$notify.error({
-              title: "错误",
-              message: "页面丢失，请重新加载"
-            });
-          } else if (error.response.status === 403) {
-            this.$notify.error({
-              title: "错误",
-              message: "登陆超时，请重新登录"
-            });
-          } else {
-            this.$notify.error({
-              title: "错误",
-              message: error.response.data.message
-            });
-          }
-        });
+                if (error.response.status === 404) {
+                  this.$notify.error({
+                    title: "错误",
+                    message: "页面丢失，请重新加载"
+                  });
+                } else if (error.response.status === 403) {
+                  this.$notify.error({
+                    title: "错误",
+                    message: "登陆超时，请重新登录"
+                  });
+                } else {
+                  this.$notify.error({
+                    title: "错误",
+                    message: error.response.data.message
+                  });
+                }
+              });
           } else {
           }
         })
@@ -1203,23 +1296,23 @@ export default {
                 }
               })
               .catch(error => {
-          if (error.response.status === 404) {
-            this.$notify.error({
-              title: "错误",
-              message: "页面丢失，请重新加载"
-            });
-          } else if (error.response.status === 403) {
-            this.$notify.error({
-              title: "错误",
-              message: "登陆超时，请重新登录"
-            });
-          } else {
-            this.$notify.error({
-              title: "错误",
-              message: error.response.data.message
-            });
-          }
-        });
+                if (error.response.status === 404) {
+                  this.$notify.error({
+                    title: "错误",
+                    message: "页面丢失，请重新加载"
+                  });
+                } else if (error.response.status === 403) {
+                  this.$notify.error({
+                    title: "错误",
+                    message: "登陆超时，请重新登录"
+                  });
+                } else {
+                  this.$notify.error({
+                    title: "错误",
+                    message: error.response.data.message
+                  });
+                }
+              });
           } else {
           }
         })
@@ -1326,23 +1419,23 @@ export default {
                 }
               })
               .catch(error => {
-          if (error.response.status === 404) {
-            this.$notify.error({
-              title: "错误",
-              message: "页面丢失，请重新加载"
-            });
-          } else if (error.response.status === 403) {
-            this.$notify.error({
-              title: "错误",
-              message: "登陆超时，请重新登录"
-            });
-          } else {
-            this.$notify.error({
-              title: "错误",
-              message: error.response.data.message
-            });
-          }
-        });
+                if (error.response.status === 404) {
+                  this.$notify.error({
+                    title: "错误",
+                    message: "页面丢失，请重新加载"
+                  });
+                } else if (error.response.status === 403) {
+                  this.$notify.error({
+                    title: "错误",
+                    message: "登陆超时，请重新登录"
+                  });
+                } else {
+                  this.$notify.error({
+                    title: "错误",
+                    message: error.response.data.message
+                  });
+                }
+              });
           } else {
           }
         })
@@ -1557,6 +1650,9 @@ export default {
         });
     },
     //tab
+    mss () {
+
+    },
     handleClick(tab) {
       let completedPercentMax;
       let completedPercentMin;
@@ -1598,6 +1694,7 @@ export default {
         this.endTime = null;
       }
       if (tab.paneName === "first") {
+        this.ms = false
         this.processedState = "TO_PROCESS";
         this.params = {
           city: this.form.city[0] ? this.form.city[0] : null,
@@ -1614,6 +1711,7 @@ export default {
           submittedTimeStart: this.startTime
         };
       } else if (tab.paneName === "second") {
+        this.ms = true
         this.processedState = "PROCESSING";
         this.params = {
           city: this.form.city[0] ? this.form.city[0] : null,
@@ -1630,6 +1728,7 @@ export default {
           submittedTimeStart: this.startTime
         };
       } else if (tab.paneName === "third") {
+        this.ms = false
         this.processedState = "OFFERED";
         this.params = {
           city: this.form.city[0] ? this.form.city[0] : null,
@@ -1646,6 +1745,7 @@ export default {
           submittedTimeStart: this.startTime
         };
       } else if (tab.paneName === "fourth") {
+        this.ms = false
         this.processedState = "UNFIT";
         this.params = {
           city: this.form.city[0] ? this.form.city[0] : null,
@@ -1662,6 +1762,7 @@ export default {
           submittedTimeStart: this.startTime
         };
       } else {
+        this.ms = false
         this.processedState = "EMPLOYED";
         this.params = {
           city: this.form.city[0] ? this.form.city[0] : null,
@@ -2804,16 +2905,19 @@ export default {
     }
   }
 }
+
 .loading {
   text-align: center;
   margin: -20px 0 0 0;
 }
+
 .loading-text {
   font-size: 24px;
   color: #222222;
   text-align: center;
-  margin: 30px 0 30px 0
+  margin: 30px 0 30px 0;
 }
+
 .resume-second {
   width: 100%;
   height: 80px;
@@ -2860,8 +2964,22 @@ export default {
   .tab-operations {
     position: absolute;
     z-index: 999;
-    margin: 7px 0 0 840px;
+    // margin: 7px 0 0 840px;
     font-family: PingFangSC-Regular;
+    
+
+    .el-dropdown-menu {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      padding: 10px 0;
+      margin: 5px 0;
+      background-color: #fff;
+      border: 1px solid #ebeef5;
+      border-radius: 4px;
+      box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+    }
   }
 
   .demo-form {
