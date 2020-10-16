@@ -404,7 +404,7 @@ export default {
             realName: this.ruleForm.name
           };
           this.$http
-            .post("/business-core/companyAccounts/cmpanyAdmin", params)
+            .post("/business-core/companyAccounts/companyAdmin", params)
             .then(res => {
               let response = res.data.data;
               if (res.data.code == "200") {
