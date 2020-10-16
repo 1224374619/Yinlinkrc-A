@@ -173,7 +173,7 @@ export default {
           if (res.data.code == "200") {
             Cookies.set("status", res.data.data.details.companyId);
             if (res.data.data.details.companyId === 0) {
-              return
+              this.$router.push({ path: "/enterpriseAudit" });
             } else {
               this.$router.push({ path: "/home" });
             }
