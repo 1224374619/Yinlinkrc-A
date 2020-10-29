@@ -173,7 +173,6 @@
       <div class="pagination" v-else-if="this.processedState === 'TO_PROCESS'">
         <el-button plain @click="back">返回</el-button>
         <el-button type="primary" @click="unfit">不合格</el-button>
-        <el-button type="primary" @click="info">通知面试/笔试</el-button>
         <el-button type="text" @click="uploadFile">立即下载</el-button>
       </div>
       <div class="pagination" v-else-if="this.processedState === 'OFFERED'">

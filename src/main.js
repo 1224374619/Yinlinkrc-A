@@ -56,7 +56,7 @@ Vue.prototype.$CodeToTag = {
 let config = {
   //判断当前开发环境，切换代理配置
   // baseURL: process.env.NODE_ENV === 'production' ? '/api/v1/' : '/api/',
-  baseURL: '/api/v2/',
+  baseURL: '/api/',
   // headers: {
   //     'Auth-Token': token
   // },
@@ -84,20 +84,31 @@ _axios.interceptors.response.use(
     return response;
   },
   error => {
-    if (error.response.status === 403) {
+    if (error.response.status === 404) {
+      Notification.error({
+        title: "错误",
+        message: "页面丢失，请重新加载"
+      });
+    } else if (error.response.status === 403) {
       Cookies.set("Btoken", '');
-      // Notification.error({
-      //   title: '错误',
-      //   message: '登录超时，请登录'
-      // });
+      Notification.error({
+        title: "错误",
+        message: "登陆超时，请重新登录"
+      });
       router.replace('/login');
+      
+    } else {
+      Notification.error({
+        title: "错误",
+        message: error.response.data.message
+      });
     }
     return Promise.reject(error);
   }
 );
 // /api/v1/consumer-user
 const instance = axios.create({
-  baseURL: '/api/v2/',
+  baseURL: '/api/',
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded'
   },
@@ -105,7 +116,7 @@ const instance = axios.create({
 })
 Vue.prototype.$_http = instance;
 const locals = axios.create({
-  baseURL: '/api/v2/',
+  baseURL: '/api/',
   timeout: 60 * 1000, // Timeout
   withCredentials: true, // Check cross-site Access-Control
 })

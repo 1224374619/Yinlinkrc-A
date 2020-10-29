@@ -9,6 +9,7 @@ import resumeInfo from '../views/Resume/resumeInfo.vue'
 import talent from '../views/Resume/talent.vue'
 import resumeDetail from '../views/Resume/ResumeDetail.vue'
 import resumeCompany from '../views/Resume/resumeCompany.vue'
+import appraise from '../views/Resume/appraise.vue'
 import ResumeDetailCompany from '../views/Resume/ResumeDetailCompany.vue'
 import resumeList from '../views/Resume/resumeList.vue'
 import positionlist from '../views/Position/positionList.vue'
@@ -123,6 +124,12 @@ let routes = [{
             component: resumeList,
             name: '职位详情',
             hidden: true,
+        },
+        {
+            path: '/resume/appraise',
+            iconCls: 'el-icon-user',
+            component: appraise,
+            name: '评价',
         }]
     },
     {

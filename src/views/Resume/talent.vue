@@ -251,12 +251,12 @@ export default {
         resumeIds: this.arrResume
       };
       let resumeList = qs.stringify(
-        { resumeIds: this.arrResume },
+        { resumeIds: 119 },
         { arrayFormat: "repeat" }
       );
       this.dialogVisible = true
       this.$local
-        .get("/business-core/resumes/dowload?" + resumeList, {
+        .get(`/business-core/resumes/download/12873/119`, {
           responseType: "blob"
         })
         .then(res => {
