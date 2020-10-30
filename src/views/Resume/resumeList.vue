@@ -305,7 +305,6 @@
           id="dropdown-menu-6024"
           style="position: absolute; top: 40px; left: 160px; transform-origin: center top; z-index: 2011;width:110px;"
           x-placement="bottom-end"
-          
         >
           <li
             tabindex="-1"
@@ -316,7 +315,7 @@
             tabindex="-1"
             @click="interviewstatus(2)"
             :class="this.interviewStates== 'TO_BE_ACCEPTED' ? 'dropdown-buttons' : 'el-dropdown-menu__item'"
-          >待接收</li>
+          >待接受</li>
           <li
             tabindex="-1"
             @click="interviewstatus(3)"
@@ -542,7 +541,7 @@
             </el-table-column>
             <el-table-column label="投递时间" show-overflow-tooltip>
               <template slot-scope="scope">
-                <span>{{scope.row.submittedTime|formatDateOne}}</span>
+                <span>{{scope.row.submittedTime|formatDate}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="name" label="操作" width="220">
@@ -631,7 +630,7 @@
           ></el-pagination>
         </el-tab-pane>
         <el-tab-pane name="second">
-          <span slot='label' @mouseover="selectStyle()" >面试</span>
+          <span slot="label" @mouseover="selectStyle()">面试</span>
           <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="fullName" label="姓名" show-overflow-tooltip></el-table-column>
@@ -1054,21 +1053,21 @@ export default {
     selectStyle() {
       if (this.processedState === "INTERVIEW") {
         this.ms = true;
-      }else {
-        return
+      } else {
+        return;
       }
     },
     outStyle() {
       this.ms = false;
     },
-     //取消面试
+    //取消面试
     notInterview(list) {
       let params = {
-        reason:'对不起，您的简历不符合'
-      }
-  
+        reason: "对不起，您的简历不符合"
+      };
+
       this.$http
-        .put(`/business-core/interview/cancel/${list.interviewId}`,params)
+        .put(`/business-core/interview/cancel/${list.interviewId}`, params)
         .then(res => {
           if (res.data.code == "200") {
             let completedPercentMax;
@@ -1111,16 +1110,16 @@ export default {
               this.endTime = null;
             }
             this.params = {
-              city: this.form.city[0] ? this.form.city[0] : null,
+              city: this.form.city[1] ? this.form.city[1] : null,
               completedPercentMax: completedPercentMax,
               completedPercentMin: completedPercentMin,
-              jobSearchStatusCode: Number(this.formInline.state),
+              jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
               pageNum: 1,
               pageSize: 10,
               district: this.form.city[2] ? this.form.city[2] : null,
               interviewState: this.interviewStates,
               processedState: this.processedState,
-              province: this.form.city[1] ? this.form.city[1] : null,
+              province: this.form.city[0] ? this.form.city[0] : null,
               sortBy: null,
               sortOrder: null,
               submittedTimeEnd: this.endTime,
@@ -1199,16 +1198,16 @@ export default {
               this.endTime = null;
             }
             this.params = {
-              city: this.form.city[0] ? this.form.city[0] : null,
+              city: this.form.city[1] ? this.form.city[1] : null,
               completedPercentMax: completedPercentMax,
               completedPercentMin: completedPercentMin,
-              jobSearchStatusCode: Number(this.formInline.state),
+              jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
               pageNum: 1,
               pageSize: 10,
               district: this.form.city[2] ? this.form.city[2] : null,
               interviewState: this.interviewStates,
               processedState: this.processedState,
-              province: this.form.city[1] ? this.form.city[1] : null,
+              province: this.form.city[0] ? this.form.city[0] : null,
               sortBy: null,
               sortOrder: null,
               submittedTimeEnd: this.endTime,
@@ -1297,16 +1296,16 @@ export default {
         this.endTime = null;
       }
       this.params = {
-        city: this.form.city[0] ? this.form.city[0] : null,
+        city: this.form.city[1] ? this.form.city[1] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: Number(this.formInline.state),
+        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
         pageNum: 1,
         pageSize: 10,
         district: this.form.city[2] ? this.form.city[2] : null,
         interviewState: this.interviewStates,
         processedState: this.processedState,
-        province: this.form.city[1] ? this.form.city[1] : null,
+        province: this.form.city[0] ? this.form.city[0] : null,
         sortBy: null,
         sortOrder: null,
         submittedTimeEnd: this.endTime,
@@ -1416,7 +1415,7 @@ export default {
               city: this.form.city[0] ? this.form.city[0] : null,
               completedPercentMax: completedPercentMax,
               completedPercentMin: completedPercentMin,
-              jobSearchStatusCode: Number(this.formInline.state),
+              jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
               pageNum: 1,
               pageSize: 10,
               processedState: this.processedState,
@@ -1503,10 +1502,10 @@ export default {
         resumeIds: this.arrResume
       };
       let resumeList = qs.stringify(
-        { 
+        {
           resumeIds: this.arrResume,
-          positionIds:this.positionID
-         },
+          positionIds: this.positionID
+        },
         { arrayFormat: "repeat" }
       );
       this.dialogVisible = true;
@@ -1615,7 +1614,7 @@ export default {
               city: this.form.city[0] ? this.form.city[0] : null,
               completedPercentMax: completedPercentMax,
               completedPercentMin: completedPercentMin,
-              jobSearchStatusCode: Number(this.formInline.state),
+              jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
               pageNum: 1,
               pageSize: 10,
               processedState: this.processedState,
@@ -1738,7 +1737,7 @@ export default {
               city: this.form.city[0] ? this.form.city[0] : null,
               completedPercentMax: completedPercentMax,
               completedPercentMin: completedPercentMin,
-              jobSearchStatusCode: Number(this.formInline.state),
+              jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
               pageNum: 1,
               pageSize: 10,
               processedState: this.processedState,
@@ -1991,7 +1990,7 @@ export default {
               city: this.form.city[0] ? this.form.city[0] : null,
               completedPercentMax: completedPercentMax,
               completedPercentMin: completedPercentMin,
-              jobSearchStatusCode: Number(this.formInline.state),
+              jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
               pageNum: 1,
               pageSize: 10,
               processedState: this.processedState,
@@ -2065,6 +2064,18 @@ export default {
     //查看
     examing(tab) {
       console.log(tab);
+      if (this.processedState === "TO_PROCESS") {
+        this.$http
+          .put(
+            `/business-core/position/${this.positionID}/resumes/${tab.id}/processing`)
+          .then(res => {
+            let response = res.data.data.list;
+            if (res.data.code == "200") {
+            } else {
+            }
+          })
+          .catch(error => {});
+      }
       this.$router.push({
         path: "/resume/talent/Detail",
         query: {
@@ -2127,14 +2138,16 @@ export default {
       }
 
       let params = {
-        city: this.form.city[0] ? this.form.city[0] : null,
+        city: this.form.city[1] ? this.form.city[1] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: Number(this.formInline.state),
+        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
         pageNum: 1,
         pageSize: 10,
+        district: this.form.city[2] ? this.form.city[2] : null,
+        interviewState: this.interviewStates,
         processedState: this.processedState,
-        province: this.form.city[1] ? this.form.city[1] : null,
+        province: this.form.city[0] ? this.form.city[0] : null,
         sortBy: null,
         sortOrder: null,
         submittedTimeEnd: this.endTime,
@@ -2302,7 +2315,7 @@ export default {
           city: this.form.city[0] ? this.form.city[0] : null,
           completedPercentMax: completedPercentMax,
           completedPercentMin: completedPercentMin,
-          jobSearchStatusCode: Number(this.formInline.state),
+          jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
           pageNum: 1,
           pageSize: 10,
           processedState: this.processedState,
@@ -2316,16 +2329,16 @@ export default {
         this.ms = true;
         this.processedState = "INTERVIEW";
         this.params = {
-          city: this.form.city[0] ? this.form.city[0] : null,
+          city: this.form.city[1] ? this.form.city[1] : null,
           completedPercentMax: completedPercentMax,
           completedPercentMin: completedPercentMin,
-          jobSearchStatusCode: Number(this.formInline.state),
+          jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
           pageNum: 1,
           district: this.form.city[2] ? this.form.city[2] : null,
           interviewState: this.interviewStates,
           pageSize: 10,
           processedState: this.processedState,
-          province: this.form.city[1] ? this.form.city[1] : null,
+          province: this.form.city[0] ? this.form.city[0] : null,
           sortBy: null,
           sortOrder: null,
           submittedTimeEnd: this.endTime,
@@ -2335,16 +2348,16 @@ export default {
         this.ms = false;
         this.processedState = "OFFERED";
         this.params = {
-          city: this.form.city[0] ? this.form.city[0] : null,
+          city: this.form.city[1] ? this.form.city[1] : null,
           completedPercentMax: completedPercentMax,
           completedPercentMin: completedPercentMin,
-          jobSearchStatusCode: Number(this.formInline.state),
+          jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
           pageNum: 1,
           district: this.form.city[2] ? this.form.city[2] : null,
           interviewState: null,
           pageSize: 10,
           processedState: this.processedState,
-          province: this.form.city[1] ? this.form.city[1] : null,
+          province: this.form.city[0] ? this.form.city[0] : null,
           sortBy: null,
           sortOrder: null,
           submittedTimeEnd: this.endTime,
@@ -2354,16 +2367,16 @@ export default {
         this.ms = false;
         this.processedState = "UNFIT";
         this.params = {
-          city: this.form.city[0] ? this.form.city[0] : null,
+          city: this.form.city[1] ? this.form.city[1] : null,
           completedPercentMax: completedPercentMax,
           completedPercentMin: completedPercentMin,
-          jobSearchStatusCode: Number(this.formInline.state),
+          jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
           pageNum: 1,
           district: this.form.city[2] ? this.form.city[2] : null,
           interviewState: null,
           pageSize: 10,
           processedState: this.processedState,
-          province: this.form.city[1] ? this.form.city[1] : null,
+          province: this.form.city[0] ? this.form.city[0] : null,
           sortBy: null,
           sortOrder: null,
           submittedTimeEnd: this.endTime,
@@ -2373,16 +2386,16 @@ export default {
         this.ms = false;
         this.processedState = "EMPLOYED";
         this.params = {
-          city: this.form.city[0] ? this.form.city[0] : null,
+          city: this.form.city[1] ? this.form.city[1] : null,
           completedPercentMax: completedPercentMax,
           completedPercentMin: completedPercentMin,
-          jobSearchStatusCode: Number(this.formInline.state),
+          jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
           pageNum: 1,
           district: this.form.city[2] ? this.form.city[2] : null,
           interviewState: null,
           pageSize: 10,
           processedState: this.processedState,
-          province: this.form.city[1] ? this.form.city[1] : null,
+          province: this.form.city[0] ? this.form.city[0] : null,
           sortBy: null,
           sortOrder: null,
           submittedTimeEnd: this.endTime,
@@ -2392,16 +2405,16 @@ export default {
         this.ms = false;
         this.processedState = "PROCESSING";
         this.params = {
-          city: this.form.city[0] ? this.form.city[0] : null,
+          city: this.form.city[1] ? this.form.city[1] : null,
           completedPercentMax: completedPercentMax,
           completedPercentMin: completedPercentMin,
-          jobSearchStatusCode: Number(this.formInline.state),
+          jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
           pageNum: 1,
           district: this.form.city[2] ? this.form.city[2] : null,
           interviewState: null,
           pageSize: 10,
           processedState: this.processedState,
-          province: this.form.city[1] ? this.form.city[1] : null,
+          province: this.form.city[0] ? this.form.city[0] : null,
           sortBy: null,
           sortOrder: null,
           submittedTimeEnd: this.endTime,
@@ -2496,16 +2509,16 @@ export default {
       if (tab.paneName === "first") {
         this.processedState = "TO_PROCESS";
         this.params = {
-          city: this.form.city[0] ? this.form.city[0] : null,
+          city: this.form.city[1] ? this.form.city[1] : null,
           completedPercentMax: completedPercentMax,
           completedPercentMin: completedPercentMin,
-          jobSearchStatusCode: Number(this.formInline.state),
+          jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
           pageNum: 1,
           district: this.form.city[2] ? this.form.city[2] : null,
           interviewState: null,
           pageSize: 10,
           processedState: this.processedState,
-          province: this.form.city[1] ? this.form.city[1] : null,
+          province: this.form.city[0] ? this.form.city[0] : null,
           sortBy: null,
           sortOrder: null,
           submittedTimeEnd: this.endTime,
@@ -2514,16 +2527,16 @@ export default {
       } else if (tab.paneName === "second") {
         this.processedState = "OFFERED";
         this.params = {
-          city: this.form.city[0] ? this.form.city[0] : null,
+          city: this.form.city[1] ? this.form.city[1] : null,
           completedPercentMax: completedPercentMax,
           completedPercentMin: completedPercentMin,
-          jobSearchStatusCode: Number(this.formInline.state),
+          jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
           pageNum: 1,
           district: this.form.city[2] ? this.form.city[2] : null,
           interviewState: null,
           pageSize: 10,
           processedState: this.processedState,
-          province: this.form.city[1] ? this.form.city[1] : null,
+          province: this.form.city[0] ? this.form.city[0] : null,
           sortBy: null,
           sortOrder: null,
           submittedTimeEnd: this.endTime,
@@ -2532,16 +2545,16 @@ export default {
       } else if (tab.paneName === "third") {
         this.processedState = "UNFIT";
         this.params = {
-          city: this.form.city[0] ? this.form.city[0] : null,
+          city: this.form.city[1] ? this.form.city[1] : null,
           completedPercentMax: completedPercentMax,
           completedPercentMin: completedPercentMin,
-          jobSearchStatusCode: Number(this.formInline.state),
+          jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
           pageNum: 1,
           district: this.form.city[2] ? this.form.city[2] : null,
           interviewState: null,
           pageSize: 10,
           processedState: this.processedState,
-          province: this.form.city[1] ? this.form.city[1] : null,
+          province: this.form.city[0] ? this.form.city[0] : null,
           sortBy: null,
           sortOrder: null,
           submittedTimeEnd: this.endTime,
@@ -2550,16 +2563,16 @@ export default {
       } else {
         this.processedState = "EMPLOYED";
         this.params = {
-          city: this.form.city[0] ? this.form.city[0] : null,
+          city: this.form.city[1] ? this.form.city[1] : null,
           completedPercentMax: completedPercentMax,
           completedPercentMin: completedPercentMin,
-          jobSearchStatusCode: Number(this.formInline.state),
+          jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
           pageNum: 1,
           district: this.form.city[2] ? this.form.city[2] : null,
           interviewState: null,
           pageSize: 10,
           processedState: this.processedState,
-          province: this.form.city[1] ? this.form.city[1] : null,
+          province: this.form.city[0] ? this.form.city[0] : null,
           sortBy: null,
           sortOrder: null,
           submittedTimeEnd: this.endTime,
@@ -2656,7 +2669,7 @@ export default {
         city: this.form.city[0] ? this.form.city[0] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: Number(this.formInline.state),
+        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
         pageNum: this.page.current,
         pageSize: this.page.pageSize,
         processedState: "TO_PROCESS",
@@ -2740,7 +2753,7 @@ export default {
         city: this.form.city[0] ? this.form.city[0] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: Number(this.formInline.state),
+        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
         pageNum: this.page.current,
         pageSize: 10,
         processedState: "TO_PROCESS",
@@ -2826,7 +2839,7 @@ export default {
         city: this.form.city[0] ? this.form.city[0] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: Number(this.formInline.state),
+        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
         pageNum: this.page1.current,
         pageSize: this.page1.pageSize,
         processedState: "PROCESSING",
@@ -2910,7 +2923,7 @@ export default {
         city: this.form.city[0] ? this.form.city[0] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: Number(this.formInline.state),
+        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
         pageNum: this.page1.current,
         pageSize: 10,
         processedState: "PROCESSING",
@@ -2996,7 +3009,7 @@ export default {
         city: this.form.city[0] ? this.form.city[0] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: Number(this.formInline.state),
+        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
         pageNum: this.page2.current,
         pageSize: this.page2.pageSize,
         processedState: "OFFERED",
@@ -3080,7 +3093,7 @@ export default {
         city: this.form.city[0] ? this.form.city[0] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: Number(this.formInline.state),
+        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
         pageNum: this.page2.current,
         pageSize: 10,
         processedState: "OFFERED",
@@ -3166,7 +3179,7 @@ export default {
         city: this.form.city[0] ? this.form.city[0] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: Number(this.formInline.state),
+        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
         pageNum: this.page3.current,
         pageSize: this.page3.pageSize,
         processedState: "UNFIT",
@@ -3250,7 +3263,7 @@ export default {
         city: this.form.city[0] ? this.form.city[0] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: Number(this.formInline.state),
+        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
         pageNum: this.page3.current,
         pageSize: 10,
         processedState: "UNFIT",
@@ -3336,7 +3349,7 @@ export default {
         city: this.form.city[0] ? this.form.city[0] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: Number(this.formInline.state),
+        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
         pageNum: this.page3.current,
         pageSize: this.page3.pageSize,
         processedState: "EMPLOYED",
@@ -3420,7 +3433,7 @@ export default {
         city: this.form.city[0] ? this.form.city[0] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: Number(this.formInline.state),
+        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
         pageNum: this.page3.current,
         pageSize: 10,
         processedState: "EMPLOYED",
@@ -3507,7 +3520,7 @@ export default {
         city: this.form.city[0] ? this.form.city[0] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: Number(this.formInline.state),
+        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
         pageNum: this.page3.current,
         pageSize: this.page3.pageSize,
         processedState: "INTERVIEW",
@@ -3591,7 +3604,7 @@ export default {
         city: this.form.city[0] ? this.form.city[0] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: Number(this.formInline.state),
+        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
         pageNum: this.page3.current,
         pageSize: 10,
         processedState: "INTERVIEW",
@@ -3656,7 +3669,7 @@ export default {
       var a;
       switch (state) {
         case "TO_BE_ACCEPTED":
-          a = "待接收";
+          a = "待接受";
           break;
         case "REFUSED":
           a = "已拒绝";
@@ -3670,7 +3683,7 @@ export default {
         case "TO_CANCEL_THE_INTERVIEW":
           a = "面试取消";
           break;
-        case "THAS_BEEN_EFFECTIVE":
+        case "HAS_BEEN_EFFECTIVE":
           a = "已失效";
           break;
       }
@@ -3880,7 +3893,7 @@ export default {
     }
   }
 
-    .tab-operation {
+  .tab-operation {
     position: absolute;
     z-index: 999;
     margin: 7px 0 0 870px;
