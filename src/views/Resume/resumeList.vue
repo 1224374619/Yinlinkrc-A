@@ -1041,6 +1041,7 @@ export default {
       processedState: "",
       multipleSelection: [],
       arrResume: [],
+      arrPosition: [],
       multipleSelection: [],
       dialogVisible: false,
       addressList: [],
@@ -1113,7 +1114,10 @@ export default {
               city: this.form.city[1] ? this.form.city[1] : null,
               completedPercentMax: completedPercentMax,
               completedPercentMin: completedPercentMin,
-              jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+              jobSearchStatusCode:
+                this.formInline.state === ""
+                  ? null
+                  : Number(this.formInline.state),
               pageNum: 1,
               pageSize: 10,
               district: this.form.city[2] ? this.form.city[2] : null,
@@ -1201,7 +1205,10 @@ export default {
               city: this.form.city[1] ? this.form.city[1] : null,
               completedPercentMax: completedPercentMax,
               completedPercentMin: completedPercentMin,
-              jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+              jobSearchStatusCode:
+                this.formInline.state === ""
+                  ? null
+                  : Number(this.formInline.state),
               pageNum: 1,
               pageSize: 10,
               district: this.form.city[2] ? this.form.city[2] : null,
@@ -1299,7 +1306,8 @@ export default {
         city: this.form.city[1] ? this.form.city[1] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+        jobSearchStatusCode:
+          this.formInline.state === "" ? null : Number(this.formInline.state),
         pageNum: 1,
         pageSize: 10,
         district: this.form.city[2] ? this.form.city[2] : null,
@@ -1415,7 +1423,10 @@ export default {
               city: this.form.city[0] ? this.form.city[0] : null,
               completedPercentMax: completedPercentMax,
               completedPercentMin: completedPercentMin,
-              jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+              jobSearchStatusCode:
+                this.formInline.state === ""
+                  ? null
+                  : Number(this.formInline.state),
               pageNum: 1,
               pageSize: 10,
               processedState: this.processedState,
@@ -1495,33 +1506,38 @@ export default {
       this.multipleSelection = val;
       this.multipleSelection.forEach((item, index, array) => {
         this.arrResume.push(item.id);
+        this.arrPosition.push(item.positionId);
       });
     },
     uploadFile() {
-      let params = {
-        resumeIds: this.arrResume
+      // let resumeList = qs.stringify(
+      //   {
+      //     resumeIds: this.arrResume,
+      //     positionIds: this.arrPosition
+      //   },
+      //   { arrayFormat: "repeat" }
+      // );
+      let resumeList = {
+        resumeIds: this.arrResume,
+        positionIds: this.arrPosition
       };
-      let resumeList = qs.stringify(
-        {
-          resumeIds: this.arrResume,
-          positionIds: this.positionID
-        },
-        { arrayFormat: "repeat" }
-      );
       this.dialogVisible = true;
       this.$local
-        .get("/business-core/resumes/batchPackageDownloadLong?" + resumeList, {
+        .post("/business-core/resumes/batchPackageDownloadLong", resumeList, {
           responseType: "blob"
         })
         .then(res => {
+          console.log(res.headers);
           this.dialogVisible = false;
           const disposition = res.headers["content-disposition"];
+          console.log(disposition);
           let fileName = disposition.substring(
             disposition.indexOf("filename=") + 9,
             disposition.length
           );
           // iso8859-1的字符转换成中文
           fileName = decodeURI(escape(fileName));
+          console.log(fileName)
           // 去掉双引号
           fileName = fileName.replace(/\"/g, "");
           const content = res.data;
@@ -1614,7 +1630,10 @@ export default {
               city: this.form.city[0] ? this.form.city[0] : null,
               completedPercentMax: completedPercentMax,
               completedPercentMin: completedPercentMin,
-              jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+              jobSearchStatusCode:
+                this.formInline.state === ""
+                  ? null
+                  : Number(this.formInline.state),
               pageNum: 1,
               pageSize: 10,
               processedState: this.processedState,
@@ -1737,7 +1756,10 @@ export default {
               city: this.form.city[0] ? this.form.city[0] : null,
               completedPercentMax: completedPercentMax,
               completedPercentMin: completedPercentMin,
-              jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+              jobSearchStatusCode:
+                this.formInline.state === ""
+                  ? null
+                  : Number(this.formInline.state),
               pageNum: 1,
               pageSize: 10,
               processedState: this.processedState,
@@ -1990,7 +2012,10 @@ export default {
               city: this.form.city[0] ? this.form.city[0] : null,
               completedPercentMax: completedPercentMax,
               completedPercentMin: completedPercentMin,
-              jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+              jobSearchStatusCode:
+                this.formInline.state === ""
+                  ? null
+                  : Number(this.formInline.state),
               pageNum: 1,
               pageSize: 10,
               processedState: this.processedState,
@@ -2067,7 +2092,8 @@ export default {
       if (this.processedState === "TO_PROCESS") {
         this.$http
           .put(
-            `/business-core/position/${this.positionID}/resumes/${tab.id}/processing`)
+            `/business-core/position/${this.positionID}/resumes/${tab.id}/processing`
+          )
           .then(res => {
             let response = res.data.data.list;
             if (res.data.code == "200") {
@@ -2141,7 +2167,8 @@ export default {
         city: this.form.city[1] ? this.form.city[1] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+        jobSearchStatusCode:
+          this.formInline.state === "" ? null : Number(this.formInline.state),
         pageNum: 1,
         pageSize: 10,
         district: this.form.city[2] ? this.form.city[2] : null,
@@ -2315,7 +2342,8 @@ export default {
           city: this.form.city[0] ? this.form.city[0] : null,
           completedPercentMax: completedPercentMax,
           completedPercentMin: completedPercentMin,
-          jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+          jobSearchStatusCode:
+            this.formInline.state === "" ? null : Number(this.formInline.state),
           pageNum: 1,
           pageSize: 10,
           processedState: this.processedState,
@@ -2332,7 +2360,8 @@ export default {
           city: this.form.city[1] ? this.form.city[1] : null,
           completedPercentMax: completedPercentMax,
           completedPercentMin: completedPercentMin,
-          jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+          jobSearchStatusCode:
+            this.formInline.state === "" ? null : Number(this.formInline.state),
           pageNum: 1,
           district: this.form.city[2] ? this.form.city[2] : null,
           interviewState: this.interviewStates,
@@ -2351,7 +2380,8 @@ export default {
           city: this.form.city[1] ? this.form.city[1] : null,
           completedPercentMax: completedPercentMax,
           completedPercentMin: completedPercentMin,
-          jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+          jobSearchStatusCode:
+            this.formInline.state === "" ? null : Number(this.formInline.state),
           pageNum: 1,
           district: this.form.city[2] ? this.form.city[2] : null,
           interviewState: null,
@@ -2370,7 +2400,8 @@ export default {
           city: this.form.city[1] ? this.form.city[1] : null,
           completedPercentMax: completedPercentMax,
           completedPercentMin: completedPercentMin,
-          jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+          jobSearchStatusCode:
+            this.formInline.state === "" ? null : Number(this.formInline.state),
           pageNum: 1,
           district: this.form.city[2] ? this.form.city[2] : null,
           interviewState: null,
@@ -2389,7 +2420,8 @@ export default {
           city: this.form.city[1] ? this.form.city[1] : null,
           completedPercentMax: completedPercentMax,
           completedPercentMin: completedPercentMin,
-          jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+          jobSearchStatusCode:
+            this.formInline.state === "" ? null : Number(this.formInline.state),
           pageNum: 1,
           district: this.form.city[2] ? this.form.city[2] : null,
           interviewState: null,
@@ -2408,7 +2440,8 @@ export default {
           city: this.form.city[1] ? this.form.city[1] : null,
           completedPercentMax: completedPercentMax,
           completedPercentMin: completedPercentMin,
-          jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+          jobSearchStatusCode:
+            this.formInline.state === "" ? null : Number(this.formInline.state),
           pageNum: 1,
           district: this.form.city[2] ? this.form.city[2] : null,
           interviewState: null,
@@ -2512,7 +2545,8 @@ export default {
           city: this.form.city[1] ? this.form.city[1] : null,
           completedPercentMax: completedPercentMax,
           completedPercentMin: completedPercentMin,
-          jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+          jobSearchStatusCode:
+            this.formInline.state === "" ? null : Number(this.formInline.state),
           pageNum: 1,
           district: this.form.city[2] ? this.form.city[2] : null,
           interviewState: null,
@@ -2530,7 +2564,8 @@ export default {
           city: this.form.city[1] ? this.form.city[1] : null,
           completedPercentMax: completedPercentMax,
           completedPercentMin: completedPercentMin,
-          jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+          jobSearchStatusCode:
+            this.formInline.state === "" ? null : Number(this.formInline.state),
           pageNum: 1,
           district: this.form.city[2] ? this.form.city[2] : null,
           interviewState: null,
@@ -2548,7 +2583,8 @@ export default {
           city: this.form.city[1] ? this.form.city[1] : null,
           completedPercentMax: completedPercentMax,
           completedPercentMin: completedPercentMin,
-          jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+          jobSearchStatusCode:
+            this.formInline.state === "" ? null : Number(this.formInline.state),
           pageNum: 1,
           district: this.form.city[2] ? this.form.city[2] : null,
           interviewState: null,
@@ -2566,7 +2602,8 @@ export default {
           city: this.form.city[1] ? this.form.city[1] : null,
           completedPercentMax: completedPercentMax,
           completedPercentMin: completedPercentMin,
-          jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+          jobSearchStatusCode:
+            this.formInline.state === "" ? null : Number(this.formInline.state),
           pageNum: 1,
           district: this.form.city[2] ? this.form.city[2] : null,
           interviewState: null,
@@ -2669,7 +2706,8 @@ export default {
         city: this.form.city[0] ? this.form.city[0] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+        jobSearchStatusCode:
+          this.formInline.state === "" ? null : Number(this.formInline.state),
         pageNum: this.page.current,
         pageSize: this.page.pageSize,
         processedState: "TO_PROCESS",
@@ -2753,7 +2791,8 @@ export default {
         city: this.form.city[0] ? this.form.city[0] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+        jobSearchStatusCode:
+          this.formInline.state === "" ? null : Number(this.formInline.state),
         pageNum: this.page.current,
         pageSize: 10,
         processedState: "TO_PROCESS",
@@ -2839,7 +2878,8 @@ export default {
         city: this.form.city[0] ? this.form.city[0] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+        jobSearchStatusCode:
+          this.formInline.state === "" ? null : Number(this.formInline.state),
         pageNum: this.page1.current,
         pageSize: this.page1.pageSize,
         processedState: "PROCESSING",
@@ -2923,7 +2963,8 @@ export default {
         city: this.form.city[0] ? this.form.city[0] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+        jobSearchStatusCode:
+          this.formInline.state === "" ? null : Number(this.formInline.state),
         pageNum: this.page1.current,
         pageSize: 10,
         processedState: "PROCESSING",
@@ -3009,7 +3050,8 @@ export default {
         city: this.form.city[0] ? this.form.city[0] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+        jobSearchStatusCode:
+          this.formInline.state === "" ? null : Number(this.formInline.state),
         pageNum: this.page2.current,
         pageSize: this.page2.pageSize,
         processedState: "OFFERED",
@@ -3093,7 +3135,8 @@ export default {
         city: this.form.city[0] ? this.form.city[0] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+        jobSearchStatusCode:
+          this.formInline.state === "" ? null : Number(this.formInline.state),
         pageNum: this.page2.current,
         pageSize: 10,
         processedState: "OFFERED",
@@ -3179,7 +3222,8 @@ export default {
         city: this.form.city[0] ? this.form.city[0] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+        jobSearchStatusCode:
+          this.formInline.state === "" ? null : Number(this.formInline.state),
         pageNum: this.page3.current,
         pageSize: this.page3.pageSize,
         processedState: "UNFIT",
@@ -3263,7 +3307,8 @@ export default {
         city: this.form.city[0] ? this.form.city[0] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+        jobSearchStatusCode:
+          this.formInline.state === "" ? null : Number(this.formInline.state),
         pageNum: this.page3.current,
         pageSize: 10,
         processedState: "UNFIT",
@@ -3349,7 +3394,8 @@ export default {
         city: this.form.city[0] ? this.form.city[0] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+        jobSearchStatusCode:
+          this.formInline.state === "" ? null : Number(this.formInline.state),
         pageNum: this.page3.current,
         pageSize: this.page3.pageSize,
         processedState: "EMPLOYED",
@@ -3433,7 +3479,8 @@ export default {
         city: this.form.city[0] ? this.form.city[0] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+        jobSearchStatusCode:
+          this.formInline.state === "" ? null : Number(this.formInline.state),
         pageNum: this.page3.current,
         pageSize: 10,
         processedState: "EMPLOYED",
@@ -3520,7 +3567,8 @@ export default {
         city: this.form.city[0] ? this.form.city[0] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+        jobSearchStatusCode:
+          this.formInline.state === "" ? null : Number(this.formInline.state),
         pageNum: this.page3.current,
         pageSize: this.page3.pageSize,
         processedState: "INTERVIEW",
@@ -3604,7 +3652,8 @@ export default {
         city: this.form.city[0] ? this.form.city[0] : null,
         completedPercentMax: completedPercentMax,
         completedPercentMin: completedPercentMin,
-        jobSearchStatusCode: this.formInline.state === ''?null: Number(this.formInline.state),
+        jobSearchStatusCode:
+          this.formInline.state === "" ? null : Number(this.formInline.state),
         pageNum: this.page3.current,
         pageSize: 10,
         processedState: "INTERVIEW",

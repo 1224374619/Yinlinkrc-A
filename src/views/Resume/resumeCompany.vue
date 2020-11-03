@@ -244,35 +244,39 @@ export default {
       currentPage4: 4,
       tableData: [],
       arrResume: [],
-      multipleSelection: []
+      multipleSelection: [],
+      arrPosition: []
     };
   },
   methods: {
     //下载简历
     handleSelectionChange(val) {
       this.arrResume = [];
+      this.arrPosition = [];
       this.multipleSelection = val;
       this.multipleSelection.forEach((item, index, array) => {
         this.arrResume.push(item.id);
+        this.arrPosition.push(item.positionId);
       });
     },
     //下载
     upload(tab) {
-      console.log(tab);
-      this.arrResume.push(tab.id);
+      // console.log(tab);
+      // this.arrResume.push(tab.id);
       this.uploadFile();
     },
     uploadFile() {
       let params = {
-        resumeIds: this.arrResume
+        resumeIds: this.arrResume,
+        positionIds: this.arrPosition
       };
-      let resumeList = qs.stringify(
-        { resumeIds: this.arrResume },
-        { arrayFormat: "repeat" }
-      );
+      // let resumeList = qs.stringify(
+      //   { resumeIds: this.arrResume },
+      //   { arrayFormat: "repeat" }
+      // );
       this.dialogVisible = true;
       this.$local
-        .get("/business-core/resumes/dowload?" + resumeList, {
+        .post("/business-core/resumes/batchPackageDownloadLong",params, {
           responseType: "blob"
         })
         .then(res => {
@@ -528,7 +532,7 @@ export default {
 }
 
 .tab-operations {
-  margin: 0 0 10px 900px;
+  margin: -20px 0 10px 900px;
   font-family: PingFangSC-Regular;
 }
 

@@ -225,21 +225,21 @@ export default {
           timestamp: "2018-04-11"
         }
       ],
-      arrResume: []
+      arrResume: ''
     };
   },
   methods: {
     uploadFile() {
-      let params = {
-        resumeIds: this.arrResume
-      };
-      let resumeList = qs.stringify(
-        { resumeIds: this.arrResume },
-        { arrayFormat: "repeat" }
-      );
+      // let params = {
+      //   resumeIds: this.arrResume
+      // };
+      // let resumeList = qs.stringify(
+      //   { resumeIds: this.arrResume },
+      //   { arrayFormat: "repeat" }
+      // );
       this.dialogVisible = true;
       this.$local
-        .get("/business-core/resumes/dowload?" + resumeList, {
+        .get(`/business-core/resumes/download/${this.arrResume}`, {
           responseType: "blob"
         })
         .then(res => {
@@ -521,13 +521,16 @@ export default {
     if (token) {
       if (this.resumeId) {
       this.resumeDetail();
-      this.arrResume.push(this.resumeId);
+      this.arrResume = this.resumeId
+      // this.arrResume.push(this.resumeId);
     } else if (this.resumeIds) {
       this.resumeDetails();
-      this.arrResume.push(this.resumeIds);
+      this.arrResume = this.resumeIds
+      // this.arrResume.push(this.resumeIds);
     } else {
       this.resumeDetailes();
-      this.arrResume.push(this.resumeIdes);
+      this.arrResume = this.resumeIdes
+      // this.arrResume.push(this.resumeIdes);
     }
     }else {
       this.$notify.error({

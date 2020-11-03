@@ -243,20 +243,21 @@ export default {
     },
     //下载
     upload(tab) {
-      this.arrResume.push(tab.id);
+      // this.arrResume.push(tab.id);
       this.uploadFile();
     },
     uploadFile() {
       let params = {
-        resumeIds: this.arrResume
+        resumeIds: this.arrResume,
+        positionIds: []
       };
-      let resumeList = qs.stringify(
-        { resumeIds: 119 },
-        { arrayFormat: "repeat" }
-      );
+      // let resumeList = qs.stringify(
+      //   { resumeIds: 119 },
+      //   { arrayFormat: "repeat" }
+      // );
       this.dialogVisible = true
       this.$local
-        .get(`/business-core/resumes/download/12873/119`, {
+        .post(`/business-core/resumes/batchPackageDownloadLong/byResumeId`,params, {
           responseType: "blob"
         })
         .then(res => {
