@@ -70,6 +70,7 @@ _axios.interceptors.request.use(
   function (config) {
     let token = Cookies.get('Btoken')
     if (token) {
+      
       config.headers['Auth-Token'] = token;
     }
     return config
@@ -81,6 +82,7 @@ _axios.interceptors.request.use(
 _axios.interceptors.response.use(
   response => {
     Cookies.set("Btoken", response.headers['auth-token']);
+    
     return response;
   },
   error => {

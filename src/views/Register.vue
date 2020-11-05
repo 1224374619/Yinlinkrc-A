@@ -166,7 +166,7 @@ export default {
     },
     login() {
       this.$_http
-        .post(`/business-user/login`, {
+        .post(`/business-user/login/phone-pwd`, {
           username: this.form.tel,
           password: this.form.password
         })
