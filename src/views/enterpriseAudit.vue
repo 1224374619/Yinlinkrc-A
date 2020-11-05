@@ -243,7 +243,7 @@ export default {
       centerDialogVisible: false,
       centerDialogVisibles: false,
       cityList: [],
-      baseInfor: true,
+      baseInfor: false,
       list: [],
       industryList: [],
       optionList: [],
@@ -398,7 +398,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           let params = {
-            avatar: this.filees,
+            avatar: this.filees?this.filees:null,
             email: this.ruleForm.email,
             position: this.ruleForm.position,
             realName: this.ruleForm.name
