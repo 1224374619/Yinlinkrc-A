@@ -243,7 +243,7 @@ export default {
       centerDialogVisible: false,
       centerDialogVisibles: false,
       cityList: [],
-      baseInfor: false,
+      baseInfor: true,
       list: [],
       industryList: [],
       optionList: [],
@@ -566,7 +566,7 @@ export default {
   },
   computed: {
     uploadCompanyFile() {
-      return "/api/v2/file-service/files/upload";
+      return "/api/file-service/files/upload";
     }
   },
   created() {
