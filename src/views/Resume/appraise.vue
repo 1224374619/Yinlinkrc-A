@@ -143,7 +143,12 @@
                 style="display: flex;flex-direction: row;margin:20px 35px 0 0"
                 @click="like(item)"
               >
-                <img style="width:25px;height:25px" src="../../assets/images/zan.png" />
+                <img
+                  v-if="item.isLike"
+                  style="width:25px;height:25px"
+                  src="../../assets/images/zan.png"
+                />
+                <img v-else style="width:25px;height:25px" src="../../assets/images/hzan.png" />
                 <span style="line-height:25px;font-size:14px">{{item.likeNum}}</span>
               </div>
               <div
@@ -1104,10 +1109,7 @@ export default {
         toUserType: item.userType
       };
       this.$http
-        .put(
-          `/business-core/interview/evaluation/${item.interviewId}`,
-          params
-        )
+        .put(`/business-core/interview/evaluation/${item.interviewId}`, params)
         .then(res => {
           if (res.data.code == "200") {
             if (this.tabname === "first") {
@@ -1234,24 +1236,24 @@ export default {
           if (res.data.code == "200") {
             this.candidatesList = res.data.data.evaluations.list;
             this.page.total = res.data.data.evaluations.total;
-            this.candidatesList.forEach((item, index, array) => {
-              let params = {
-                pageNum: 1,
-                pageSize: 10,
-                sortBy: null,
-                sortOrder: null
-              };
-              this.$http
-                .post(`/business-core/evaluation/sublist/${item.id}`, params)
-                .then(res => {
-                  if (res.data.code == "200") {
-                    this.sublistcontent = res.data.data.list[0].content;
-                    this.sublistcreatedTime = res.data.data.list[0].createdTime;
-                  } else {
-                  }
-                })
-                .catch(error => {});
-            });
+            // this.candidatesList.forEach((item, index, array) => {
+            //   let params = {
+            //     pageNum: 1,
+            //     pageSize: 10,
+            //     sortBy: null,
+            //     sortOrder: null
+            //   };
+            //   this.$http
+            //     .post(`/business-core/evaluation/sublist/${item.id}`, params)
+            //     .then(res => {
+            //       if (res.data.code == "200") {
+            //         this.sublistcontent = res.data.data.list[0].content;
+            //         this.sublistcreatedTime = res.data.data.list[0].createdTime;
+            //       } else {
+            //       }
+            //     })
+            //     .catch(error => {});
+            // });
           } else {
           }
         })

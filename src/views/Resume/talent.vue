@@ -247,9 +247,9 @@ export default {
       this.uploadFile();
     },
     uploadFile() {
-      let params = {
+      let resumeList = {
         resumeIds: this.arrResume,
-        positionIds: []
+        positionIds: null
       };
       // let resumeList = qs.stringify(
       //   { resumeIds: 119 },
@@ -257,7 +257,7 @@ export default {
       // );
       this.dialogVisible = true
       this.$local
-        .post(`/business-core/resumes/batchPackageDownloadLong/byResumeId`,params, {
+        .post(`/business-core/resumes/batchPackageDownloadLong/byResumeId`,resumeList, {
           responseType: "blob"
         })
         .then(res => {

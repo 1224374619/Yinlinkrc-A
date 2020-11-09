@@ -1503,6 +1503,7 @@ export default {
     //下载简历
     handleSelectionChange(val) {
       this.arrResume = [];
+      this.arrPosition = [];
       this.multipleSelection = val;
       this.multipleSelection.forEach((item, index, array) => {
         this.arrResume.push(item.id);

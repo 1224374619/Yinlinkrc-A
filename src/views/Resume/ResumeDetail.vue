@@ -225,7 +225,8 @@ export default {
           timestamp: "2018-04-11"
         }
       ],
-      arrResume: ''
+      arrResume: '',
+      id:''
     };
   },
   methods: {
@@ -239,7 +240,7 @@ export default {
       // );
       this.dialogVisible = true;
       this.$local
-        .get(`/business-core/resumes/download/${this.arrResume}`, {
+        .get(`/business-core/resumes/download/${this.positionId}/${this.id}`, {
           responseType: "blob"
         })
         .then(res => {
@@ -522,14 +523,17 @@ export default {
       if (this.resumeId) {
       this.resumeDetail();
       this.arrResume = this.resumeId
+      this.id = this.resumeId
       // this.arrResume.push(this.resumeId);
     } else if (this.resumeIds) {
       this.resumeDetails();
       this.arrResume = this.resumeIds
+      this.id = this.resumeIds
       // this.arrResume.push(this.resumeIds);
     } else {
       this.resumeDetailes();
       this.arrResume = this.resumeIdes
+      this.id = this.resumeIdes
       // this.arrResume.push(this.resumeIdes);
     }
     }else {

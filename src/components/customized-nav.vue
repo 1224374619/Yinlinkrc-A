@@ -204,7 +204,7 @@ export default {
     //退出
     detrusion() {
       this.$http
-        .get("/logout?returnUrl=http://localhost:8080/login")
+        .get("/business-user/loggedOut")
         .then(res => {
           this.$store.commit("LOGOUT");
           this.$router.push({ path: "/login" });

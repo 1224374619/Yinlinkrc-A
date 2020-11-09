@@ -500,6 +500,9 @@ export default {
         case "OFFERED":
           a = "录用";
           break;
+        case "INTERVIEW":
+          a = "面试";
+          break;  
         case "EMPLOYED":
           a = "已入职";
           break;
