@@ -243,7 +243,7 @@ export default {
       centerDialogVisible: false,
       centerDialogVisibles: false,
       cityList: [],
-      baseInfor: true,
+      baseInfor: false,
       list: [],
       industryList: [],
       optionList: [],
