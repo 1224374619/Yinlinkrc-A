@@ -172,7 +172,7 @@ export default {
         })
         .then(res => {
           let token = res.headers["auth-token"];
-          Cookies.set("Btoken", token);
+          Cookies.set("Btoken",token);
           this.$router.push({ path: "/enterpriseAudit" });
         })
         .catch(error => {
@@ -194,8 +194,10 @@ export default {
             })
             .then(res => {
               if (res.data.code == "201") {
-                this.$store.state.phone = this.form.tel
-                this.$store.state.pwc = this.form.password
+                // this.$store.state.phone = this.form.tel
+                // this.$store.state.pwc = this.form.password
+                Cookies.set("tel", this.form.tel);
+                Cookies.set("password", this.form.password);
                 this.open2();
                 this.login();
               }

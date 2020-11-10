@@ -232,6 +232,7 @@
 <script>
 import Cookies from "js-cookie";
 let token = Cookies.get("Btoken");
+console.log(token)
 import industry from "../assets/industry.json";
 import city from "../assets/city.json";
 import list from "../assets/list.json";
@@ -398,7 +399,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           let params = {
-            avatar: this.filees?this.filees:null,
+            avatar: this.filees ? this.filees : null,
             email: this.ruleForm.email,
             position: this.ruleForm.position,
             realName: this.ruleForm.name
@@ -408,31 +409,37 @@ export default {
             .then(res => {
               let response = res.data.data;
               if (res.data.code == "200") {
-                this.$_http
-                  .post(`/business-user/login/phone-pwd`, {
-                    username: this.$store.state.phone,
-                    password: this.$store.state.pwc
-                  })
-                  .then(res => {
-                    console.log(res);
-                    if (res.status == 200) {
-                      let token = res.headers["auth-token"];
-                      Cookies.set("Btoken", token);
-                      this.$router.push({ path: "/home" });
-                    } else {
-                      return false;
-                    }
-                  })
-                  .catch(error => {
-                    this.$notify.error({
-                      title: "错误",
-                      message: "输入有误，请重新输入"
-                    });
-                  });
+                this.$router.push({ path: "/login"});
+                // let tel = Cookies.get("tel");
+                // let password = Cookies.get("password");
+                // this.$_http
+                //   .post(`/business-user/login/phone-pwd`, {
+                //     username: tel,
+                //     password: password
+                //   })
+                //   .then(res => {
+                //     console.log(res);
+                //     if (res.status == 200) {
+                //       // let token = res.headers["auth-token"];
+                //       Cookies.set("Btoken",res.headers["auth-token"]);
+                //       console.log(Cookies.get("Btoken"))
+                //       window.reload()
+                      
+                //     } else {
+                //       return false;
+                //     }
+                //   })
+                //   .catch(error => {
+                //     this.$notify.error({
+                //       title: "错误",
+                //       message: "输入有误，请重新输入"
+                //     });
+                //   });
                 this.$message({
-                  message: "基本信息已提交审核，请耐心等待",
+                  message: "基本信息已提交审核，请重新登录查看审核状态",
                   type: "success"
                 });
+                // this.$router.push({ path: "/home" });
               } else {
                 this.$message({
                   message: res.data.message,
@@ -504,7 +511,7 @@ export default {
               uniformSocialCreditCode: this.companyInfo.uniformSocialCreditCode
             }
           };
-          this.$http
+          this.$localo
             .post("/business-core/companyes", params)
             .then(res => {
               let response = res.data.data;
@@ -566,7 +573,7 @@ export default {
   },
   computed: {
     uploadCompanyFile() {
-      return "/api/v2/file-service/files/upload";
+      return "/api/file-service/files/upload";
     }
   },
   created() {

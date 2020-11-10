@@ -159,7 +159,7 @@ export default {
         completedPercent: "",
         logoUrl: ""
       },
-      status: ""
+      status: "",
     };
   },
   methods: {
@@ -315,7 +315,15 @@ export default {
     // },
   },
   created() {
+    // this.signId = this.$route.query.id;
+    // this.tel = Cookies.get("tel");
+    // this.password = Cookies.get("password");
+    // console.log(this.signId,this.tel,this.password)
+    // if (this.signId == '1') {
+      
+    // }
     let token = Cookies.get("Btoken");
+    console.log()
     if (token === undefined) {
       Cookies.set("Btoken", "");
     } else if (token) {

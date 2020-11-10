@@ -65,13 +65,28 @@ let config = {
 };
 const _axios = axios.create(config);
 const _axioes = axios.create(config);
+const _axioesq = axios.create(config);
+
 // 添加request拦截器 
 _axios.interceptors.request.use(
   function (config) {
     let token = Cookies.get('Btoken')
     if (token) {
       
-      config.headers['Auth-Token'] = token;
+      config.headers['Auth-Token'] = token
+    }
+    return config
+  },
+  function (error) {
+    Promise.reject(error)
+  })
+  // 添加request拦截器 
+  _axioesq.interceptors.request.use(
+  function (config) {
+    let token = Cookies.get('Btoken')
+    if (token) {
+      
+      config.headers['Auth-Token'] = Cookies.get('Btoken')
     }
     return config
   },
@@ -81,8 +96,7 @@ _axios.interceptors.request.use(
 // http response 拦截器
 _axios.interceptors.response.use(
   response => {
-    Cookies.set("Btoken", response.headers['auth-token']);
-    
+    Cookies.set("Btoken",response.headers['auth-token'])
     return response;
   },
   error => {
@@ -108,6 +122,37 @@ _axios.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+_axioesq.interceptors.response.use(
+  response => {
+    // Cookies.remove("Btoken");
+    // Cookies.set("Btoken",response.headers['auth-token'])
+    return response;
+  },
+  error => {
+    if (error.response.status === 404) {
+      Notification.error({
+        title: "错误",
+        message: "页面丢失，请重新加载"
+      });
+    } else if (error.response.status === 403) {
+      Cookies.set("Btoken", '');
+      Notification.error({
+        title: "错误",
+        message: "登陆超时，请重新登录"
+      });
+      router.replace('/login');
+      
+    } else {
+      Notification.error({
+        title: "错误",
+        message: error.response.data.message
+      });
+    }
+    return Promise.reject(error);
+  }
+);
+
 // /api/v1/consumer-user
 const instance = axios.create({
   baseURL: '/api/v2/',
@@ -160,6 +205,11 @@ Plugin.install = function (Vue, options) {
     $local: {
       get() {
         return _axioes;
+      }
+    },
+    $localo: {
+      get() {
+        return _axioesq;
       }
     },
   });
