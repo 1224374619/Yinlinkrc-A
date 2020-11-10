@@ -570,6 +570,7 @@ export default {
     }
   },
   created() {
+    let token = Cookies.get("Btoken");
     this.cityList = city.data;
     this.list = list.data;
     this.industryList = industry.data;
