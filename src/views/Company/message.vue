@@ -303,7 +303,7 @@ export default {
   name: "home",
   data() {
     return {
-      myHeaders: { "Auth-Token": token },
+      myHeaders: { "Auth-Token": Cookies.get("token") },
       uploadData: {
         label: "company-logo"
       },

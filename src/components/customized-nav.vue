@@ -376,7 +376,7 @@ export default {
 
 <style lang="stylus">
 nav {
-  z-index: 100;
+  z-index: 400;
   font-family: PingFangSC-Regular;
   background-color: #ffffff;
   letter-spacing: 1.1;

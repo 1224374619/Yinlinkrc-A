@@ -163,7 +163,7 @@ export default {
       }, 100);
     };
     return {
-      myHeaders: { "Auth-Token": token },
+      myHeaders: { "Auth-Token": Cookies.get("token") },
       uploadDatas: {
         label: "company-account-avatar"
       },
