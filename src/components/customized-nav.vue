@@ -289,6 +289,8 @@ export default {
         .get("/business-notification/message", { params: params })
         .then(res => {
           if (res.data.code == "200") {
+            let token = res.headers["auth-token"]
+            Cookies.set("Btoken", token);
             this.notificationlist = res.data.data.list;
             let notificationlist = [];
             this.notificationlist.forEach(function(item, index) {

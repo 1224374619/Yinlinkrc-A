@@ -231,8 +231,6 @@
 </template>
 <script>
 import Cookies from "js-cookie";
-let token = Cookies.get("Btoken");
-console.log(token)
 import industry from "../assets/industry.json";
 import city from "../assets/city.json";
 import list from "../assets/list.json";
@@ -248,7 +246,8 @@ export default {
       list: [],
       industryList: [],
       optionList: [],
-      myHeaders: { "Auth-Token": token },
+      token: "",
+      myHeaders: { "Auth-Token": window.sessionStorage.getItem("Btoken") },
       uploadData: {
         label: "company-license"
       },
@@ -409,7 +408,7 @@ export default {
             .then(res => {
               let response = res.data.data;
               if (res.data.code == "200") {
-                this.$router.push({ path: "/login"});
+                this.$router.push({ path: "/login" });
                 // let tel = Cookies.get("tel");
                 // let password = Cookies.get("password");
                 // this.$_http
@@ -424,7 +423,7 @@ export default {
                 //       Cookies.set("Btoken",res.headers["auth-token"]);
                 //       console.log(Cookies.get("Btoken"))
                 //       window.reload()
-                      
+
                 //     } else {
                 //       return false;
                 //     }
@@ -577,7 +576,6 @@ export default {
     }
   },
   created() {
-    let token = Cookies.get("Btoken");
     this.cityList = city.data;
     this.list = list.data;
     this.industryList = industry.data;

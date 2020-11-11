@@ -171,6 +171,7 @@ export default {
           password: this.form.password
         })
         .then(res => {
+          window.sessionStorage.setItem('Btoken', res.headers["auth-token"])
           let token = res.headers["auth-token"];
           Cookies.set("Btoken",token);
           this.$router.push({ path: "/enterpriseAudit" });
