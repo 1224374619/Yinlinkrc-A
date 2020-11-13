@@ -30,6 +30,15 @@ import VueAwesomeSwiper from 'vue-awesome-swiper'
 import '../node_modules/swiper/dist/css/swiper.css'
 import VueFullpage from 'vue-fullpage.js'
 import queryString from 'querystring'
+
+import VueQuillEditor from 'vue-quill-editor'
+// require styles 引入样式
+import 'quill/dist/quill.core.css';
+import 'quill/dist/quill.snow.css';
+import 'quill/dist/quill.bubble.css';
+
+Vue.use(VueQuillEditor);
+
 Vue.use(VueFullpage)
 Vue.use(VueAwesomeSwiper)
 Vue.use(VueRouter);
@@ -56,7 +65,7 @@ Vue.prototype.$CodeToTag = {
 let config = {
   //判断当前开发环境，切换代理配置
   // baseURL: process.env.NODE_ENV === 'production' ? '/api/v1/' : '/api/',
-  baseURL: '/api/v2/',
+  baseURL: '/api/',
   // headers: {
   //     'Auth-Token': token
   // },
@@ -72,7 +81,7 @@ _axios.interceptors.request.use(
   function (config) {
     let token = Cookies.get('Btoken')
     if (token) {
-      
+
       config.headers['Auth-Token'] = token
     }
     return config
@@ -80,12 +89,12 @@ _axios.interceptors.request.use(
   function (error) {
     Promise.reject(error)
   })
-  // 添加request拦截器 
-  _axioesq.interceptors.request.use(
+// 添加request拦截器 
+_axioesq.interceptors.request.use(
   function (config) {
     let token = Cookies.get('Btoken')
     if (token) {
-      
+
       config.headers['Auth-Token'] = Cookies.get('Btoken')
     }
     return config
@@ -96,7 +105,7 @@ _axios.interceptors.request.use(
 // http response 拦截器
 _axios.interceptors.response.use(
   response => {
-    Cookies.set("Btoken",response.headers['auth-token'])
+    Cookies.set("Btoken", response.headers['auth-token'])
     return response;
   },
   error => {
@@ -112,7 +121,7 @@ _axios.interceptors.response.use(
         message: "登陆超时，请重新登录"
       });
       router.replace('/login');
-      
+
     } else {
       Notification.error({
         title: "错误",
@@ -142,7 +151,7 @@ _axioesq.interceptors.response.use(
         message: "登陆超时，请重新登录"
       });
       router.replace('/login');
-      
+
     } else {
       Notification.error({
         title: "错误",
@@ -155,7 +164,7 @@ _axioesq.interceptors.response.use(
 
 // /api/v1/consumer-user
 const instance = axios.create({
-  baseURL: '/api/v2/',
+  baseURL: '/api/',
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded'
   },
@@ -163,7 +172,7 @@ const instance = axios.create({
 })
 Vue.prototype.$_http = instance;
 const locals = axios.create({
-  baseURL: '/api/v2/',
+  baseURL: '/api/',
   timeout: 60 * 1000, // Timeout
   withCredentials: true, // Check cross-site Access-Control
 })

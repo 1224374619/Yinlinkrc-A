@@ -32,6 +32,12 @@ import base from '../views/Account/base.vue'
 import repassword from '../views/Account/repassword.vue'
 import resetpassword from '../views/ResetPassword.vue'
 import resetresult from '../views/ResetResult.vue'
+import unsteady from '../views/Unsteady/unsteady.vue' 
+import promotional from '../views/Unsteady/promotional.vue'
+import supervise from '../views/Unsteady/supervise.vue'
+import promotionalDetail from '../views/Unsteady/promotionalDetail.vue'
+import attention from '../views/Unsteady/attention.vue'
+import enroll from '../views/Unsteady/enroll.vue'
 Vue.use(Router);
 // const router = new Router({})
 let routes = [{
@@ -103,6 +109,104 @@ let routes = [{
             requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
         }
     },
+    
+    {
+        path: '/unsteady',
+        component: unsteady,
+        iconCls: 'el-icon-edit-outline',
+        name: '',
+        redirect: '/unsteady/promotional',
+        meta: {
+            requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
+        },
+        leaf: true, //只有一个节点
+        item: 6,
+        children: [{
+                path: '/unsteady/promotional',
+                // iconCls: 'el-icon-user',
+                
+                component: promotional,
+                name: '发布活动'
+            }
+        ]
+    },
+    {
+        path: '/unsteady',
+        component: unsteady,
+        iconCls: 'el-icon-user',
+        name: '',
+       
+        redirect: '/unsteady/supervise',
+        meta: {
+            requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
+        },
+        leaf: true, //只有一个节点
+        item: 6,
+        children: [{
+                path: '/unsteady/supervise',
+                // iconCls: 'el-icon-user',
+                component: supervise,
+                name: '活动管理'
+            }
+        ]
+    },
+    {
+        path: '/unsteady',
+        component: unsteady,
+        iconCls: 'el-icon-setting',
+        name: '',
+        redirect: '/unsteady/enroll',
+        meta: {
+            requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
+        },
+        leaf: true, //只有一个节点
+        item: 6,
+        children: [{
+                path: '/unsteady/enroll',
+                // iconCls: 'el-icon-user',
+                
+                component: enroll,
+                name: '报名管理'
+            }
+        ]
+    },
+    {
+        path: '/unsteady',
+        component: unsteady,
+        iconCls: 'el-icon-user',
+        name: '',
+        redirect: '/unsteady/promotionalDetail',
+        meta: {
+            requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
+        },
+        leaf: true, //只有一个节点
+        children: [{
+                path: '/unsteady/promotionalDetail',
+                // iconCls: 'el-icon-user',
+                component: promotionalDetail,
+                name: '活动详情'
+            }
+        ]
+    },
+    {
+        path: '/unsteady',
+        component: unsteady,
+        iconCls: 'el-icon-user',
+        name: '',
+        redirect: '/unsteady/attention',
+        meta: {
+            requireAuth: true // 在需要登录的路由的meta中添加响应的权限标识
+        },
+        leaf: true, //只有一个节点
+        children: [{
+                path: '/unsteady/attention',
+                // iconCls: 'el-icon-user',
+                component: attention,
+                name: '发布须知'
+            }
+        ]
+    },
+    
     {
         path: '/resume',
         component: resume,
@@ -114,23 +218,24 @@ let routes = [{
         },
         item: 2,
         children: [{
-            path: '/resume/info',
-            iconCls: 'el-icon-user',
-            component: resumeInfo,
-            name: '简历看板'
-        }, {
-            path: '/resume/resumelist',
-            iconCls: 'el-icon-user',
-            component: resumeList,
-            name: '职位详情',
-            hidden: true,
-        },
-        {
-            path: '/resume/appraise',
-            iconCls: 'el-icon-user',
-            component: appraise,
-            name: '评价',
-        }]
+                path: '/resume/info',
+                iconCls: 'el-icon-user',
+                component: resumeInfo,
+                name: '简历看板'
+            }, {
+                path: '/resume/resumelist',
+                iconCls: 'el-icon-user',
+                component: resumeList,
+                name: '职位详情',
+                hidden: true,
+            },
+            {
+                path: '/resume/appraise',
+                iconCls: 'el-icon-user',
+                component: appraise,
+                name: '评价',
+            }
+        ]
     },
     {
         path: '/resume',

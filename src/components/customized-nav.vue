@@ -38,6 +38,9 @@
             <router-link :to="{path: '/company' }" index="4">
               <span>企业中心</span>
             </router-link>
+            <router-link :to="{path: '/unsteady' }" index="5">
+              <span>活动中心</span>
+            </router-link>
           </div>
           <div class="btn-set" v-if="!this.token">
             <router-link
@@ -417,7 +420,7 @@ nav {
         display: flex;
         height: 100%;
         flex: 1;
-        margin: 0 0 0 140px;
+        margin: 0 0 0 50px;
         font-family: 'PingFangSC-Regular';
 
         a {

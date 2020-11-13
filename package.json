@@ -21,12 +21,15 @@
     "vue-awesome-swiper": "^2.6.7",
     "vue-cookie": "^1.1.4",
     "vue-cookies": "^1.5.13",
+    "vue-froala-wysiwyg": "^3.2.3",
     "vue-fullpage": "^2.0.5",
     "vue-fullpage.js": "^0.1.5",
+    "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.0.1",
     "vue-seamless-scroll": "^1.1.17",
     "vuescroll": "^4.13.1",
-    "vuex": "^3.1.1"
+    "vuex": "^3.1.1",
+    "wangeditor": "^4.3.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.0",
