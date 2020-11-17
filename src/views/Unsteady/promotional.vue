@@ -230,7 +230,7 @@ import { quillEditor } from "vue-quill-editor";
 export default {
   data() {
     return {
-      unsteady: false,
+      unsteady: true,
       dialogVisible: true,
       checkList: [],
       unsteadyForm: {
