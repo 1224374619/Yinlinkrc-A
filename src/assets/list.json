@@ -2,15 +2,13 @@
   "success": true,
   "code": "200",
   "message": "请求成功",
-  "data": [
-    {
+  "data": [{
       "code": 100,
       "tag": "境内企业",
       "licence": "",
       "specification": "",
       "parent": 0,
-      "children": [
-        {
+      "children": [{
           "code": 101,
           "tag": "有营业执照企业",
           "licence": "[营业执照]",
@@ -98,8 +96,7 @@
       "licence": "",
       "specification": "",
       "parent": 0,
-      "children": [
-        {
+      "children": [{
           "code": 201,
           "tag": "港澳企业",
           "licence": "[公司注册证书]、[商业登记证]",
@@ -122,7 +119,12 @@
       "tag": "外国企业",
       "licence": "[营业执照]、[使领馆证明]",
       "specification": "a. [营业执照]翻译件雾加盖单位公章\r\nb.如该公司所在国家未与我国建立外交\r\n或外交已终止，其主体资格证明或身份\r\n证明应经所在地公证机构公证后，交由\r\n其他与我国建交的第三国大使馆认证。",
-      "parent": 0
+      "parent": 0,
+      "children": [{
+        "tag": "外国企业",
+        "licence": "[营业执照]、[使领馆证明]",
+        "specification": "a. [营业执照]翻译件雾加盖单位公章\r\nb.如该公司所在国家未与我国建立外交\r\n或外交已终止，其主体资格证明或身份\r\n证明应经所在地公证机构公证后，交由\r\n其他与我国建交的第三国大使馆认证。"
+      }]
     }
   ]
 }

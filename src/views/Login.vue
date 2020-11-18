@@ -1,329 +1,192 @@
-
 <template>
-  <div class="containers">
-    <!-- <customized-nav class="nav" :ctlHideMenus="true" /> -->
-    <div class="body">
-      <div class="form">
-        <div class="logo">
-          <img style="height:40px;margin:57px 0 0 0" :src="require('../assets/images/logo.png')" />
-        </div>
-        <div class="photo">
-          <div style="margin:89px 0 0 174px">
-            <img style="height:392px;" :src="require('../assets/images/de.png')" />
-          </div>
-          <div class="formlet" style="margin:0 0 0 158px">
-            <div class="header">
-              <span class="deng">登录</span>
-              <el-button
-                style="margin:39px 0 0 0;color:#373737;font-size:16px;font-wight:500;text-align:right"
-                @click="business"
-                type="text"
-              ></el-button>
-            </div>
-            <div class="formls">
-              <el-form ref="form" :rules="rules" :model="form" label-width="0px">
-                <el-form-item label prop="tel">
-                  <el-input
-                    prefix-icon="el-icon-mobile-phone"
-                    style="width:270px;height:43px;"
-                    v-model.number="form.tel"
-                    placeholder="请输入登录手机号"
-                  ></el-input>
-                </el-form-item>
-                <el-form-item label prop="password">
-                  <el-input
-                    prefix-icon="el-icon-lock"
-                    :type="show.old?'text':'password'"
-                    style="width:270px;height:43px;"
-                    placeholder="请输入密码"
-                    v-model="form.password"
-                  >
-                    <img
-                      :src="show.old?require('../assets/images/yan.png'):require('../assets/images/bi.png')"
-                      slot="suffix"
-                      alt
-                      style="margin:0 5px 0 0"
-                      @click="show.old=!show.old"
-                    />
-                  </el-input>
-
-                  <!-- <password-input v-model="form.password" /> -->
-                </el-form-item>
-                <el-form-item>
-                  <el-button
-                    style="margin:-20px 0 0 35px;float:right;font-size:14px;color:#818181;"
-                    type="text"
-                    @click="gotoResetPwdUI"
-                  >忘记密码？</el-button>
-                </el-form-item>
-                <el-form-item>
-                  <el-button
-                    style="width:270px;height:43px;margin:20px 0 0 0;background:#327cf3;color:#fff"
-                    class="full"
-                    @click="onSubmit"
-                  >立即登录</el-button>
-                </el-form-item>
-              </el-form>
-            </div>
-            <div class="adjunctive">
-              <el-button
-                style="margin:5px 0 0 105px;color:#373737;font-size:16px"
-                type="text"
-                @click="gotoRegisterUI"
-              >立即注册</el-button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- <div><customized-footer /></div> -->
-  </div>
+  <el-form
+    :model="ruleForm2"
+    :rules="rules2"
+    ref="ruleForm2"
+    label-position="left"
+    label-width="0px"
+    class="demo-ruleForm login-container"
+  >
+    <h3 class="title">系统登录</h3>
+    <el-form-item prop="account">
+      <el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="账号"></el-input>
+    </el-form-item>
+    <el-form-item prop="checkPass">
+      <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="密码"></el-input>
+    </el-form-item>
+    <!-- <el-form-item>
+      
+      <el-checkbox  v-model="checked" checked class="remember">记住密码</el-checkbox>
+    </el-form-item> -->
+    
+    <el-form-item style="width:100%;">
+      <el-button
+        type="primary"
+        style="width:95%;"
+        @click.native.prevent="open()"
+        :loading="logining"
+      >登录</el-button>
+      <!-- <el-button style="width:90%;" type="text" @click.native.prevent="handleReset2">注册</el-button> -->
+    </el-form-item>
+  </el-form>
 </template>
 
 <script>
-import CustomizedFooter from "components/customized-footer.vue";
-// import CustomizedNav from "components/customized-nav.vue";
-// import PasswordInput from "components/password-input.vue";
-import { mapMutations } from "vuex";
-import { DONE_LOGIN } from "store/mutation-types";
-import { watch } from "fs";
-import Cookies from "js-cookie";
+import { requestLogin } from "../api/api";
+import Cookies from 'js-cookie'
+//import NProgress from 'nprogress'
 export default {
-  name: "login",
-  components: {
-    CustomizedFooter
-    // CustomizedNav,
-    // PasswordInput
-  },
   data() {
     return {
-      form: {
-        tel: "",
-        password: ""
+      logining: false,
+      ruleForm2: {
+        account: "17717291341",
+        checkPass: "ylrc123"
       },
-      show: {
-        old: false,
-        new: false,
-        check: false
-      },
-      rules: {
-        tel: [
-          {
-            required: true,
-            message: "请输入登录手机号",
-            trigger: ["change", "blur"]
-          },
-          {
-            type: "number",
-            message: "手机号必须为数字值",
-            trigger: ["change", "blur"]
-          }
+      rules2: {
+        account: [
+          { required: true, message: "请输入账号", trigger: "blur" }
+          //{ validator: validaePass }
         ],
-        password: [
-          {
-            required: true,
-            message: "请输入登录密码",
-            trigger: ["change", "blur"]
-          }
-          // { pattern:/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,24}$/,message: '请输入正确密码', trigger: ['change','blur'] },
+        checkPass: [
+          { required: true, message: "请输入密码", trigger: "blur" }
+          //{ validator: validaePass2 }
         ]
-      }
+      },
+      checked: true
     };
   },
   methods: {
-    ...mapMutations([DONE_LOGIN]),
-    onSubmit() {
-      this.$refs["form"].validate(async valid => {
+    open() {
+      this.handleSubmit2();
+      // this.$confirm(
+      //   "检测到你的密码安全系数不高，请修改密码？",
+      //   "确认信息",
+      //   {
+      //     distinguishCancelAndClose: true,
+      //     confirmButtonText: "进行修改",
+      //     cancelButtonText: "放弃修改"
+      //   }
+      // )
+      //   .then(() => {
+      //     // this.$message({
+      //     //   type: "info",
+      //     //   message: "放弃修改"
+      //     // });
+      //     this.$router.push({ path: "/cypher" })
+      //   })
+      //   .catch(action => {
+      //     // this.$message({
+      //     //   type: "info",
+      //     //   message:
+      //     //     action === "cancel" ? "放弃修改" : ""
+      //     // });
+
+      //   });
+    },
+    handleReset2() {
+      this.$router.push({ path: "/register" });
+    },
+    handleSubmit2(ev) {
+      //   this.$router.push({ path: "/JobAuait" });
+      var _this = this;
+      this.$refs.ruleForm2.validate(valid => {
         if (valid) {
-          // const devMode = process.env.VUE_APP_DEV_MODE
-          // devMode ? `/login?returnUrl=http://${document.location.host}/api/resume/brief` : '/login?returnUrl=/resume/brief'
-          // `/login?returnUrl=http://${document.location.host}/api/resume/brief`
-          // `/login?returnUrl=/resume/brief`
+          //_this.$router.replace('/table');
+          // http://localhost:8080/api/reviewed/company/cert
+
           this.$_http
-            .post(`/business-user/login/phone-pwd`, {
-              username: this.form.tel,
-              password: this.form.password
+            .post(`/backend-user/login/phone-pwd`, {
+              username: this.ruleForm2.account,
+              password: this.ruleForm2.checkPass
             })
             .then(res => {
-              if (res.status == 200) {
-                let token = res.headers["auth-token"]
-                Cookies.set("Btoken", token);
-                this.state();
-                // this.$router.push({ path: "/home" });
+              if (res.request.status == 200) {
+                console.log(res.headers["auth-token"])
+                let token = res.headers["auth-token"];
+                Cookies.set("Atoken",token);
+                this.$router.push({ path: "/jobAuait" });
               } else {
                 return false;
               }
             })
             .catch(error => {
-              this.$notify.error({
-                title: "错误",
+              this.$message({
+                showClose: true,
                 message: "输入有误，请重新输入"
               });
             });
+
+          // this.$_http
+          //   .post(
+          //     `/login?returnUrl=http://localhost:8080/api/reviewed/company/cert`,
+          //     {
+          //       username: this.ruleForm2.account,
+          //       password: this.ruleForm2.checkPass
+          //     }
+          //   )
+          //   .then(res => {
+          //     if (res.data.code == 200) {
+          //       let token = "asd1d5.0o9utrf7.12jjkht";
+          //       this.$store.commit("SET_TOKEN", token);
+          //       this.$router.push({ path: "/JobAuait" });
+          //     } else {
+          //     }
+          //   })
+          //   .catch(error => {
+          //     // console.log(window.sessionStorage.getItem('token', data))
+          //     // this.$message({
+          //     //   message: error.response.data.message,
+          //     //   type: "error"
+          //     // });
+          //   });
+          //   this.logining = true;
+          //   //NProgress.start();
+          //   requestLogin(loginParams).then(data => {
+          //     this.logining = false;
+          //     //NProgress.done();
+          //     let { msg, code, user } = data;
+          //     if (code !== 200) {
+          //       this.$message({
+          //         message: msg,
+          //         type: "error"
+          //       });
+          //     } else {
+          //       sessionStorage.setItem("user", JSON.stringify(user));
+          //       this.$router.push({ path: "/RecordCenter" });
+          //     }
+          //   });
         } else {
+          console.log("error submit!!");
           return false;
         }
       });
-    },
-    //当前用户信息
-    state() {
-      this.$http
-        .get("/business-core/companyAccounts/user")
-        .then(res => {
-          if (res.data.code == "200") {
-            Cookies.set("status", res.data.data.details.companyId);
-            if (res.data.data.details.companyId === 0) {
-              this.$router.push({ path: "/enterpriseAudit" });
-            } else {
-              this.$router.push({ path: "/home" });
-            }
-          } else {
-          }
-        })
-        .catch(error => {
-          if (error.response.status === 404) {
-            this.$notify.error({
-              title: "错误",
-              message: "页面丢失，请重新加载"
-            });
-          } else if (error.response.status === 403) {
-            this.$notify.error({
-              title: "错误",
-              message: "登陆超时，请重新登录"
-            });
-          } else {
-            this.$notify.error({
-              title: "错误",
-              message: error.response.data.message
-            });
-          }
-        });
-    },
-    // //公司详情
-    // companyDetail() {
-    //   this.$http
-    //     .get("/business-core/companyes/brief")
-    //     .then(res => {
-    //       if (res.data.code == "200") {
-    //         console.log(res)
-    //       } else {
-    //       }
-    //     })
-    //     .catch(error => {
-    //       if (error.response.status === 404) {
-    //         this.$message({
-    //           message: "页面丢失，请重新加载",
-    //           type: "error"
-    //         });
-    //       } else if (error.response.status === 403) {
-    //         this.$message({
-    //           message: "登陆超时，请重新登录",
-    //           type: "error"
-    //         });
-    //         this.$router.push({ path: "/login" });
-    //       } else {
-    //         this.$message({
-    //           message: error.response.data.message,
-    //           type: "error"
-    //         });
-    //       }
-    //     });
-    // },
-    // gotoHomeUI() {
-    //   this.$router.push({ path: "/" });
-    // },
-    gotoRegisterUI() {
-      this.$router.push({ path: "register" });
-    },
-    gotoResetPwdUI() {
-      this.$router.push({ path: "resetpassword" });
-    },
-    business() {
-      window.open("http://47.102.145.186/business/#/login");
-    }
-  },
-  created() {
-    
-    // this.$emit('header', false);
-    // this.$emit('footer', false);
-  },
-  watch: {
-    oldsix: function() {
-      if (this.oldsix === false) {
-        alert(11);
-        this.old = false;
-      } else {
-        this.old = true;
-      }
     }
   }
 };
 </script>
 
-
-<style lang="stylus">
-.containers {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  background: #327cf3;
-
-  .body {
-    .form {
-      background: #FFFFFF;
-      width: 1176px;
-      height: 684px;
-      box-shadow: 0px 2px 12px 0px rgba(55, 6, 6, 0.5);
-      border-radius: 3px;
-
-      .logo {
-        margin: 0 700px 0 50px;
-      }
-
-      .photo {
-        display: flex;
-        flex-direction: row;
-
-        .formlet {
-          display: flex;
-          flex-direction: column;
-          width: 270px;
-
-          .header {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            margin-bottom: 20px;
-
-            .deng {
-              font-family: PingFangSC-Medium;
-              color: #327cf3;
-              font-size: 24px;
-              margin: 39px 0 0 0;
-              font-weight: 500;
-            }
-          }
-
-          .formls {
-            .el-input__inner {
-              background-color: #f7f7f7;
-              border: none;
-            }
-
-            .el-input__inner:focus {
-              border: 1px solid #CCCCCC;
-              background-color: #ffffff;
-            }
-
-            .el-form-item.is-error .el-input__inner {
-              border-color: #f56c6c;
-            }
-          }
-        }
-      }
-    }
+<style lang="scss" scoped>
+.login-container {
+  /*box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);*/
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  background-clip: padding-box;
+  margin: 180px auto;
+  width: 350px;
+  padding: 35px 35px 15px 35px;
+  background: #fff;
+  border: 1px solid #eaeaea;
+  box-shadow: 0 0 25px #cac6c6;
+  .title {
+    margin: 0px auto 40px auto;
+    text-align: center;
+    color: #505458;
+  }
+  .remember {
+    margin: 0px 0px 0 20px;
+    border:1px solid red
   }
 }
 </style>

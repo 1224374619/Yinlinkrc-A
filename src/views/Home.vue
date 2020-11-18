@@ -1,540 +1,368 @@
 <template>
-  <div class="container">
-    <div style="width:100%;height:30px;background:#f1f1f1;margin:0px 0 20px 0;">
-      <div>
-        <img
-          style="height:30px;margin:0 0 0 0;float:left"
-          :src="require('../assets/images/laba.png')"
-        />
-        <span
-          style="font-family:PingFangSC-Regular;color: #373737;line-height:30px;float:left"
-        >【公告】 建议使用谷歌浏览器或360浏览器最新版极速模式访问，以获得更佳体验！</span>
+  <el-row class="container">
+    <el-col class="header">
+      <div class="header-nav">
+        <el-col
+          class="logo"
+          :class="collapsed?'logo-collapse-width':'logo-width'"
+        >{{collapsed?'':sysName}}</el-col>
+        <el-col>
+          <div class="tools" @click.prevent="collapse">
+            <i class="fa fa-align-justify"></i>
+          </div>
+        </el-col>
+        <el-col class="userinfo">
+          <el-dropdown trigger="hover">
+            <span class="el-dropdown-link userinfo-inner" style="color:#373737">
+              <img style="margin-left:20px" :src="this.sysUserAvatar" />
+              {{sysUserName}}
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>我的消息</el-dropdown-item>
+              <el-dropdown-item>设置</el-dropdown-item>
+              <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </el-col>
       </div>
-    </div>
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>您的位置：首页</el-breadcrumb-item>
-    </el-breadcrumb>
-    <div class="content">
-      <div class="nav">
-        <div class="left">
-          <div class="left-first">
-            <div>简历看板</div>
-            <div @click="moreResume" style="font-size:14px">更多》</div>
-          </div>
-          <div class="left-second">
-            <ul>
-              <li>
-                <span>本日新增</span>
-                <span style="color:#FF7152;font-size:24px">{{incrementDailys}}</span>
-              </li>
-              <li>
-                <span>待处理</span>
-                <span style="color:#FF7152;font-size:24px">{{toProcessNums}}</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="left">
-          <div class="left-first">
-            <div>职位看板</div>
-            <div @click="morePosition" style="font-size:14px">更多》</div>
-          </div>
-          <div class="left-second">
-            <ul>
-              <li>
-                <span>已上线</span>
-                <span style="color:#FF7152;font-size:24px">{{onlineNums}}</span>
-              </li>
-              <li>
-                <span>待上线</span>
-                <span style="color:#FF7152;font-size:24px">{{editingNums}}</span>
-              </li>
-              <li>
-                <span>审核中</span>
-                <span style="color:#FF7152;font-size:24px">{{auditingNums}}</span>
-              </li>
-              <li>
-                <span>审核未通过</span>
-                <span style="color:#FF7152;font-size:24px">{{auditFailedNums}}</span>
-              </li>
-              <li>
-                <span>已下线</span>
-                <span style="color:#FF7152;font-size:24px">{{offlineNums}}</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <!-- <div class="left">
-          <div class="left-first">
-            <div>企业账单</div>
-            <div style="font-size:14px">更多》</div>
-          </div>
-          <div class="left-second"></div>
-        </div>-->
-      </div>
-      <div class="aside">
-        <div class="right">
-          <div class="right-first">
-            <div>系统通知</div>
-            <div style="font-size:14px">更多》</div>
-          </div>
-          <div class="right-second">
-            <div class="notification">
-              <div class="noti-head">
-                <span>标题</span>
-                <span>
-                  <el-badge style="padding:0 0 10px 0" :value="200" :max="99"></el-badge>
-                </span>
+    </el-col>
+    <div :span="24" class="main">
+      <aside :class="isCollapse?'menu-collapsed':'menu-expanded'">
+        <!--导航菜单-->
+        <el-menu
+          :default-active="$route.path"
+          class="el-menu-vertical-demo"
+          unique-opened
+          v-if="!isCollapse"
+          router
+          :collapse="isCollapse"
+          
+        >
+          <template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">
+            <el-submenu :index="index+''" v-if="!item.leaf">
+              <template slot="title">
+                <i :class="item.iconCls"></i>
+                {{item.name}}
+              </template>
+              <!-- 二级菜单 -->
+              <template v-for="itemChild in item.children" v-if="!itemChild.hidden">
+                <el-submenu
+                  v-if="itemChild.children && itemChild.children.length"
+                  :index="itemChild.path"
+                  :key="itemChild.path"
+                >
+                  <template slot="title">
+                    <i :class="itemChild.iconCls"></i>
+                    {{itemChild.name}}
+                  </template>
+
+                  <!-- 三级菜单 -->
+                  <el-menu-item
+                    v-for="itemChild_Child in itemChild.children"
+                    :index="itemChild_Child.path"
+                    :key="itemChild_Child.path"
+                    v-if="!itemChild_Child.hidden"
+                  >
+                    <i :class="itemChild_Child.iconCls"></i>
+                    <span slot="title">{{itemChild_Child.name}}</span>
+                  </el-menu-item>
+                </el-submenu>
+
+                <el-menu-item v-else :index="itemChild.path" :key="itemChild.path">
+                  <i :class="itemChild.iconCls"></i>
+                  <span slot="title">{{itemChild.name}}</span>
+                </el-menu-item>
+              </template>
+
+              <!-- <el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" v-if="!child.hidden">{{child.name}}</el-menu-item> -->
+            </el-submenu>
+          </template>
+        </el-menu>
+        <!--导航菜单-折叠后-->
+        <ul class="el-menu el-menu-vertical-demo collapsed" v-if="isCollapse" ref="menuCollapsed">
+          <li
+            v-for="(item,index) in $router.options.routes"
+            v-if="!item.hidden"
+            class="el-submenu item"
+          >
+            <template v-if="!item.leaf">
+              <div
+                class="el-submenu__title"
+                style="padding-left: 20px;"
+                @mouseover="showMenu(index,true)"
+                @mouseout="showMenu(index,false)"
+              >
+                <i :class="item.iconCls"></i>
               </div>
-              <div class="noti-content">
-                敬请期待
-                <!-- <span class="more">详情 &gt;</span> -->
-              </div>
-            </div>
-            <div class="notification">
-              <div class="noti-head">
-                <span>标题</span>
-                <span>
-                  <el-badge style="padding:0 0 10px 0" :value="200" :max="99"></el-badge>
-                </span>
-              </div>
-              <div class="noti-content">
-                敬请期待
-                <!-- <span class="more">详情 &gt;</span> -->
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="right" style="height:180px">
-          <div class="right-first">
-            <div>企业摘要</div>
-            <div style="font-size:14px">更多》</div>
-          </div>
-          <div class="right-second">
-            <div class="enterprise">
-              <div class="enter-head">
-                <img :src="squareUrl" />
-                <div>
-                  <span>企业信息完整度</span>
-                  <el-progress status="exception" :percentage="companyDetails.completedPercent"></el-progress>
+              <ul
+                class="el-menu submenu"
+                :class="'submenu-hook-'+index"
+                @mouseover="showMenu(index,true)"
+                @mouseout="showMenu(index,false)"
+              >
+                <li
+                  v-for="child in item.children"
+                  v-if="!child.hidden"
+                  :key="child.path"
+                  class="el-menu-item"
+                  style="padding-left: 40px;"
+                  :class="$route.path==child.path?'is-active':''"
+                  @click="$router.push(child.path)"
+                >{{child.name}}</li>
+              </ul>
+            </template>
+            <template v-else>
+              <li class="el-submenu">
+                <div
+                  class="el-submenu__title el-menu-item"
+                  style="padding-left: 20px;height: 56px;line-height: 56px;padding: 0 20px;"
+                  :class="$route.path==item.children[0].path?'is-active':''"
+                  @click="$router.push(item.children[0].path)"
+                >
+                  <i :class="item.iconCls"></i>
                 </div>
-              </div>
-              <div class="enter-content">
-                <p>
-                  企业名称：{{companyDetails.fullName}}
-                  <span class="tag">{{ }}</span>
-                </p>
-                <p>企业简称：{{companyDetails.shortName}}</p>
-                <p v-if="this.status === 'ONLINE'">企业审核：审核已通过</p>
-                <p v-else-if="this.status === 'AUDIT_FAIL'">企业审核：审核未通过</p>
-                <p v-else-if="this.status === 'AUDITING'">企业审核：审核中</p>
-                <p v-else-if="this.status === 'OFFLINE'">企业审核：已下线</p>
-                <p v-else>企业审核：未知</p>
-              </div>
-            </div>
+              </li>
+            </template>
+          </li>
+        </ul>
+      </aside>
+      <section class="content-container">
+        <div class="grid-content bg-purple-light">
+          <div class="breadcrumb-container">
+            <!-- <strong class="title">{{$route.name}}</strong> -->
+            <el-breadcrumb separator=">" class="breadcrumb-inner">
+              <el-breadcrumb-item v-for="item in $route.matched" :key="item.path">{{ item.name }}</el-breadcrumb-item>
+            </el-breadcrumb>
+          </div>
+          <div class="content-wrapper">
+            <transition name="fade" mode="out-in">
+              <router-view></router-view>
+            </transition>
           </div>
         </div>
-      </div>
+      </section>
     </div>
-  </div>
+  </el-row>
 </template>
 
 <script>
-import Cookies from "js-cookie";
 export default {
-  name: "home",
   data() {
     return {
-      incrementDailys: "",
-      toProcessNums: "",
-      auditFailedNums: "",
-      auditingNums: "",
-      editingNums: "",
-      offlineNums: "",
-      onlineNums: "",
-      companyID: "",
-      companyDetails: {
-        fullName: "",
-        shortName: "",
-        completedPercent: "",
-        logoUrl: ""
-      },
-      status: "",
+      sysName: "Yinlinkrc",
+      isCollapse: false,
+      sysUserName: "管理员",
+      sysUserAvatar:
+        "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg",
+      form: {
+        name: "",
+        region: "",
+        date1: "",
+        date2: "",
+        delivery: false,
+        type: [],
+        resource: "",
+        desc: ""
+      }
     };
   },
   methods: {
-    //更多简历
-    moreResume() {
-      this.$router.push({
-        path: "/resume/info"
-      });
+    onSubmit() {
+      console.log("submit!");
     },
-    //更多职位
-    morePosition() {
-      this.$router.push({
-        path: "/position/info"
-      });
+    handleopen() {
+      //console.log('handleopen');
     },
-    //公司状态
-    state() {
+    handleclose() {
+      //console.log('handleclose');
+    },
+    handleselect: function(a, b) {},
+    //退出登录
+    logout: function() {
       this.$http
-        .get("/business-core/companyes/state")
+        .get("/logout")
         .then(res => {
-          if (res.data.code == "200") {
-            this.status = res.data.data;
+          if (res.data.code == 200) {
+            this.$router.push("/login");
           } else {
           }
         })
         .catch(error => {
-          if (error.response.status === 404) {
-            this.$notify.error({
-              title: "错误",
-              message: "页面丢失，请重新加载"
-            });
-          } else if (error.response.status === 403) {
-            this.$notify.error({
-              title: "错误",
-              message: "登陆超时，请重新登录"
-            });
-          } else {
-            this.$notify.error({
-              title: "错误",
-              message: error.response.data.message
-            });
-          }
+          this.$store.commit('LOGOUT');
+          this.$router.push("/login");
         });
     },
-    //简历看板
-    resumeBoard() {
-      this.$http
-        .get("/business-core/dashboard/resume")
-        .then(res => {
-          // let response = res.data.data;
-          if (res.data.code == "200") {
-            this.incrementDailys = res.data.data.incrementDaily;
-            this.toProcessNums = res.data.data.toProcessNum;
-          } else {
-          }
-        })
-        .catch(error => {
-          if (error.response.status === 404) {
-            this.$notify.error({
-              title: "错误",
-              message: "页面丢失，请重新加载"
-            });
-          } else if (error.response.status === 403) {
-            this.$notify.error({
-              title: "错误",
-              message: "登陆超时，请重新登录"
-            });
-          } else {
-            this.$notify.error({
-              title: "错误",
-              message: error.response.data.message
-            });
-          }
-        });
+    //折叠导航栏
+    collapse: function() {
+      this.isCollapse = !this.isCollapse;
     },
-    //职位看板
-    positionBoard() {
-      this.$http
-        .get("/business-core/dashboard/position")
-        .then(res => {
-          // let responses = res.data.data;
-          if (res.data.code == "200") {
-            this.auditFailedNums = res.data.data.auditFailedNum;
-            this.auditingNums = res.data.data.auditingNum;
-            this.editingNums = res.data.data.editingNum;
-            this.offlineNums = res.data.data.offlineNum;
-            this.onlineNums = res.data.data.onlineNum;
-          } else {
-          }
-        })
-        .catch(error => {
-          if (error.response.status === 404) {
-            this.$notify.error({
-              title: "错误",
-              message: "页面丢失，请重新加载"
-            });
-          } else if (error.response.status === 403) {
-            this.$notify.error({
-              title: "错误",
-              message: "登陆超时，请重新登录"
-            });
-          } else {
-            this.$notify.error({
-              title: "错误",
-              message: error.response.data.message
-            });
-          }
-        });
-    },
-    //公司简历简讯
-    companyBrief() {
-      this.$http
-        .get("/business-core/companyes/brief")
-        .then(res => {
-          if (res.data.code == "200") {
-            this.companyID = res.data.data.id;
-            this.companyDetails = res.data.data;
-            this.squareUrl = res.data.data.logoUrl;
-          } else {
-          }
-        })
-        .catch(error => {
-          if (error.response.status === 404) {
-            this.$notify.error({
-              title: "错误",
-              message: "页面丢失，请重新加载"
-            });
-          } else if (error.response.status === 403) {
-            this.$notify.error({
-              title: "错误",
-              message: "登陆超时，请重新登录"
-            });
-          } else {
-            this.$notify.error({
-              title: "错误",
-              message: error.response.data.message
-            });
-          }
-        });
+    showMenu(i, status) {
+      this.$refs.menuCollapsed.getElementsByClassName(
+        "submenu-hook-" + i
+      )[0].style.display = status ? "block" : "none";
     }
-    // //公司详情
-    // companyDetail() {
-    //   this.$http
-    //     .get(`/business-core/company/${this.companyID}`)
-    //     .then(res => {
-    //       if (res.data.code == "200") {
-    //       } else {
-    //       }
-    //     })
-    //     .catch(error => {
-    //       console.log(error);
-    //     });
-    // },
   },
-  created() {
-    // this.signId = this.$route.query.id;
-    // this.tel = Cookies.get("tel");
-    // this.password = Cookies.get("password");
-    // console.log(this.signId,this.tel,this.password)
-    // if (this.signId == '1') {
-      
-    // }
-    let token = Cookies.get("Btoken");
-    console.log()
-    if (token === undefined) {
-      Cookies.set("Btoken", "");
-    } else if (token) {
-      this.companyBrief();
-      this.positionBoard();
-      this.resumeBoard();
-      this.state();
-    } else {
-      this.$router.push({ path: "/login" });
+  mounted() {
+    var user = sessionStorage.getItem("user");
+    if (user) {
+      user = JSON.parse(user);
+      this.sysUserName = user.name || "";
+      this.sysUserAvatar = user.avatar || "";
     }
   }
 };
 </script>
 
+<style scoped lang="scss">
+@import "~scss_vars";
 
-<style lang="stylus" scoped>
 .container {
-  display: flex;
-  width: 1200px;
-  height: 650px;
-  background-color: white;
-  padding: 20px;
-  margin: 56px auto 0;
-  flex-direction: column;
-
-  .breadcrumb {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  width: 100%;
+  height: 100%;
+  .header {
+    height: 60px;
+    line-height: 60px;
     width: 100%;
-  }
-
-  .content {
-    margin-top: 30px;
-    display: flex;
-    flex-direction: row;
-
-    .nav {
+    background: #ffffff;
+    color: #fff;
+    margin: 0 auto;
+    .header-nav {
+      width: 1440px;
       display: flex;
-      flex-direction: column;
-
-      .left:nth-child(2) {
-        margin: 20px 0 0 0;
-      }
-
-      .left {
-        background: #FFFFFF;
-        border: 1px solid rgba(244, 244, 244, 1);
-        box-shadow: 0px 2px 10px 0px rgba(245, 245, 245, 1);
-
-        .left-first {
-          width: 900px;
-          height: 50px;
-          background: #FAFAFA;
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-          line-height: 50px;
-
-          div {
-            margin: 0 20px 0 20px;
-            font-size: 16px;
-            color: #327cf3;
+      flex-direction: row;
+      justify-content: space-between;
+      margin: 0 auto;
+      .userinfo {
+        text-align: right;
+        padding-right: 35px;
+        background: #ffffff;
+        margin: 0 0 0 0;
+        .userinfo-inner {
+          cursor: pointer;
+          color: #fff;
+          img {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            margin: 10px 0px 10px 10px;
+            float: right;
           }
         }
+      }
+      .logo {
+        height: 60px;
+        font-size: 32px;
+        padding-left: 50px;
+        padding-right: 20px;
+        background: #20a0ff;
 
-        .left-second {
-          width: 900px;
-          height: 80px;
-          background: #ffffff;
-          text-align: center;
-
-          ul {
-            margin: 0;
-            list-style: none;
-            display: flex;
-            justify-content: space-around;
-            padding: 0;
-          }
-
-          li {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            margin: 10px 0 0 0;
-
-            span:first-child {
-              line-height: 27px;
-              color: #666;
-              font-size: 14px;
-            }
-
-            span:last-child {
-              line-height: 33px;
-              font-size: 24px !important;
-              color: #a3292e;
-            }
-          }
+        border-color: rgba(171, 172, 164, 0.3);
+        border-right-width: 1px;
+        border-right-style: solid;
+        // margin: 0 0 0 233px;
+        img {
+          width: 40px;
+          float: left;
+          margin: 10px 10px 10px 18px;
+        }
+        .txt {
+          color: #fff;
+        }
+      }
+      .logo-width {
+        width: 460px;
+      }
+      .logo-collapse-width {
+        width: 60px;
+      }
+      .tools {
+        padding: 0px 23px;
+        width: 14px;
+        height: 60px;
+        line-height: 60px;
+        cursor: pointer;
+        background: #ffffff;
+      }
+    }
+  }
+  .main {
+    display: flex;
+    // background: #324057;
+    // position: absolute;
+    top: 60px;
+    bottom: 0px;
+    overflow: hidden;
+    width: 1440px;
+    margin: 0 auto 0;
+    aside {
+      flex: 0 0 230px;
+      width: 230px;
+      // position: absolute;
+      // top: 0px;
+      // bottom: 0px;
+      .el-menu {
+        height: 100%;
+      }
+      .collapsed {
+        width: 60px;
+        .item {
+          position: relative;
+        }
+        .submenu {
+          position: absolute;
+          top: 0px;
+          left: 60px;
+          z-index: 99999;
+          height: auto;
+          display: none;
         }
       }
     }
-
-    .aside {
-      display: flex;
-      flex-direction: column;
-      margin: 0 0 0 20px;
-
-      .right:nth-child(2) {
-        margin: 20px 0 0 0;
-      }
-
-      .right {
-        background: #FFFFFF;
-        border: 1px solid rgba(244, 244, 244, 1);
-        box-shadow: 0px 2px 10px 0px rgba(245, 245, 245, 1);
-
-        .right-first {
-          width: 280px;
-          height: 50px;
-          background: #FAFAFA;
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-          line-height: 50px;
-
-          div {
-            margin: 0 20px 0 20px;
-            font-size: 16px;
-            color: #373737;
-          }
+    .menu-collapsed {
+      flex: 0 0 60px;
+      width: 60px;
+    }
+    .menu-expanded {
+      flex: 0 0 230px;
+      width: 230px;
+    }
+    .content-container {
+      // background: #f1f2f7;
+      flex: 1;
+      // position: absolute;
+      // right: 0px;
+      // top: 0px;
+      // bottom: 0px;
+      // left: 230px;
+      overflow-y: hidden;
+      padding: 20px;
+      background: #f8f8f8;
+      .breadcrumb-container {
+        //margin-bottom: 15px;
+        .title {
+          width: 200px;
+          float: left;
+          color: #475669;
+        }
+        .breadcrumb-inner {
+          float: left;
+          margin: 20px 0 0 20px;
         }
       }
-
-      .right-second {
-        width: 280px;
-        height: auto;
-        border: 1px solid red;
-        background: #ffffff;
-        border: 1px solid rgba(244, 244, 244, 1);
-        box-shadow: 0px 2px 10px 0px rgba(245, 245, 245, 1);
-
-        .notification {
-          padding: 0 20px 0 20px;
-          cursor: pointer;
-
-          &:first-child {
-            border-bottom: solid 1px #eee;
-          }
-
-          .noti-head {
-            display: flex;
-            font-size: 16px;
-            justify-content: space-between;
-            align-items: center;
-          }
-
-          .noti-content {
-            color: #666;
-            font-size: 12px;
-            text-align: left;
-            margin: 0 0 15px 0;
-          }
-
-          .more {
-            color: #ff7152;
-          }
-        }
-
-        .enterprise {
-          margin: 10px;
-
-          .enter-head {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 0 0 10px;
-
-            img {
-              width: 50px;
-              height: 50px;
-            }
-
-            div {
-              margin-left: 20px;
-              text-align: left;
-              font-size: 12px;
-              color: #999;
-              flex: 1;
-
-              span {
-                margin-left: 20px;
-              }
-            }
-          }
-        }
-
-        .enter-content {
-          font-size: 12px;
-          color: #333333;
-          text-align: left;
-          margin-top: 5px;
-          margin: 0 0 0 10px;
-        }
+      .content-wrapper {
+        background-color: #fff;
+        box-sizing: border-box;
       }
     }
   }
 }
 </style>
 <style>
-.el-table th {
-  background: #f1f1f1;
-}
-.pagination {
-  margin: 20px 0 20px 0;
-  text-align: center;
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 230px;
+  min-height: 400px;
 }
 </style>
