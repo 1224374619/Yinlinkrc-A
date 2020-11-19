@@ -60,6 +60,9 @@ import enrollVerify from './views/appraise/enrollVerify.vue'
 import BenrollVerify from './views/appraise/BenrollVerify.vue'
 import HenrollVerify from './views/appraise/HenrollVerify.vue'
 import issueappraise from './views/appraise/issueappraise.vue'
+import appraiseAudit from './views/appraise/appraiseAudit.vue'
+import appraiseEdit from './views/appraise/appraiseEdit.vue'
+import BappraiseEdit from './views/appraise/BappraiseEdit.vue'
 let routes = [{
         path: '/login',
         component: Login,
@@ -195,7 +198,27 @@ let routes = [{
                 name: '发布活动',
                 hidden: true
             },
-            
+            {
+                path: '/appraiseAudit',
+                iconCls: 'fa fa-id-card-o',
+                component: appraiseAudit,
+                name: '活动审核',
+                hidden: true
+            },
+            {
+                path: '/appraiseEdit',
+                iconCls: 'fa fa-id-card-o',
+                component: appraiseEdit,
+                name: '活动编辑',
+                hidden: true
+            }, {
+                path: '/BappraiseEdit',
+                iconCls: 'fa fa-id-card-o',
+                component: BappraiseEdit,
+                name: 'B端活动编辑',
+                hidden: true
+            },
+
         ]
     },
 

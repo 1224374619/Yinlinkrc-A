@@ -3,7 +3,7 @@
     <div class="aspe-nav">后台活动列表</div>
     <div class="aspe-content">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="关键字">
+        <el-form-item label="关键字" style="margin:0 0 0 110px">
           <el-input v-model="formInline.keyword" placeholder="请输入活动名称/ID"></el-input>
         </el-form-item>
         <el-form-item label="活动方式">
@@ -18,9 +18,15 @@
             <el-option label="审核不通过" value="1"></el-option>
           </el-select>
         </el-form-item>
-        <br />
+        <el-form-item label="活动状态" style="margin:0 0 0 100px">
+          <el-select v-model="formInline.apprasieState" placeholder="请选择活动状态">
+            <el-option label="未开始" value="0"></el-option>
+            <el-option label="进行中" value="1"></el-option>
+            <el-option label="已结束" value="2"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item>
-          <el-button style="margin:0 0 0 700px" plian @click="onSubmit">重置</el-button>
+          <el-button style="margin:0 0 0 815px" plian @click="onSubmit">重置</el-button>
           <el-button type="primary" @click="onSubmit">查询</el-button>
         </el-form-item>
       </el-form>
@@ -47,7 +53,7 @@
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-              <el-button type="text" size="small">编辑</el-button>
+              <el-button type="text" @click="appraiseEdit(scope.row)" size="small">编辑</el-button>
               <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
               <el-button type="text" @click="verify()" size="small">报名审核</el-button>
             </template>
@@ -82,7 +88,8 @@ export default {
       formInline: {
         keyword: "",
         state: "",
-        street: ""
+        street: "",
+        apprasieState: ""
       },
       tableData: [
         {
@@ -109,6 +116,10 @@ export default {
     };
   },
   methods: {
+    //活动编辑
+    appraiseEdit() {
+      this.$router.push({ path: "/appraiseEdit" });
+    },
     //发布活动
     issue() {
       this.$router.push({ path: "/issueappraise" });
@@ -151,11 +162,11 @@ export default {
   .aspe-content {
     width: 1130px;
     margin: 30px 0 20px 20px;
-    height: 182px;
+    height: 232px;
     background: #ffffff;
     .demo-form-inline {
-      text-align: center;
-      padding: 30px 0 0 0;
+      text-align: left;
+      padding: 30px 0 0 0
     }
   }
   .footer {

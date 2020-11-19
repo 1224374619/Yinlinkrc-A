@@ -42,14 +42,14 @@
           </el-table-column>
           <el-table-column prop="address" label="活动审核状态"></el-table-column>
           <el-table-column prop="date" sortable width="120" label="发布时间"></el-table-column>
-          <el-table-column prop="name" sortable width="130"  label="活动开始时间"></el-table-column>
+          <el-table-column prop="name" sortable width="130" label="活动开始时间"></el-table-column>
           <el-table-column prop="address" sortable width="130" label="活动结束时间"></el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-              <el-button type="text" size="small">编辑</el-button>
+              <el-button type="text" @click="BappraiseEdit()" size="small">编辑</el-button>
               <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
-              <el-button type="text" size="small">活动审核</el-button>
+              <el-button type="text" @click="appraiseAudit(scope.row)" size="small">活动审核</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -109,10 +109,18 @@ export default {
     };
   },
   methods: {
+    //编辑
+    BappraiseEdit() {
+      this.$router.push({ path: "/BappraiseEdit" });
+    },
+    //活动审核
+    appraiseAudit(res) {
+      this.$router.push({ path: "/appraiseAudit" });
+    },
     //人数点击
     handlenumber(res) {
-        console.log(res)
-        this.$router.push({ path: "/BenrollVerify" });
+      console.log(res);
+      this.$router.push({ path: "/BenrollVerify" });
     },
     onSubmit() {
       console.log("submit!");
