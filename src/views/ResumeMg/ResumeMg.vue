@@ -464,7 +464,7 @@ export default {
     },
     //查询
     submitForms() {
-      console.log(this.formInline.valueTime.length);
+      console.log(this.formInline.valueTime);
       if (this.formInline.valueTime.length !== 0) {
         this.offlineStartTime = this.formInline.valueTime[0].getTime();
         this.offlineEndTime = this.formInline.valueTime[1].getTime();

@@ -109,6 +109,30 @@ export default {
     };
   },
   methods: {
+    //获取活动列表
+    appraiseList() {
+      let params = {
+        activityName: this.formInline.keyword ? this.formInline.keyword : null,
+        activityProceedState: "HAVE_NOT_STARTED",
+        activityRegistrationState: "REGISTRATION_NOT_STARTED",
+        activityState: "NOT_KNOWN",
+        pageNum: this.page.current,
+        pageSize: this.page.pageSize,
+        sortBy: null,
+        sortOrder: null
+      };
+      this.$http
+        .put(`/consumer-core/activity/registration`, params)
+        .then(res => {
+          if (res.data.code == 200) {
+            this.dialogVisibles = false;
+            this.textarea = "";
+            this.enroll();
+          } else {
+          }
+        })
+        .catch(error => {});
+    },
     //编辑
     BappraiseEdit() {
       this.$router.push({ path: "/BappraiseEdit" });
@@ -133,7 +157,9 @@ export default {
       console.log(`当前页: ${val}`);
     }
   },
-  created() {}
+  created() {
+    // this.appraiseList();
+  }
 };
 </script>
 <style lang="scss" >

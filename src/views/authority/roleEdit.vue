@@ -154,10 +154,10 @@ export default {
   background: #ffffff;
   margin: 10px 0 0 1%;
 }
-.el-pagination {
+/* .el-pagination {
   margin: 20px 0 0 150px;
   padding: 0 0 20px 0;
-}
+} */
 .el-checkbox__label {
   font-size: 10px;
 }

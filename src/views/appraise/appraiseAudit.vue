@@ -7,9 +7,9 @@
           <el-form-item label="活动ID" prop="unsteadyID">
             <el-input style="width: 240px;" :disabled="true" v-model="unsteadyForm.unsteadyID"></el-input>
           </el-form-item>
-          <el-form-item label="规则ID" prop="ruleID">
+          <!-- <el-form-item label="规则ID" prop="ruleID">
             <el-input style="width: 240px;" :disabled="true" v-model="unsteadyForm.ruleID"></el-input>
-          </el-form-item>
+          </el-form-item> -->
         </div>
         <div class="unsteadyNav">
           <el-form-item label="活动有效性" prop="unsteadyName">
@@ -48,7 +48,15 @@
             <el-input style="width: 240px;" :disabled="true" v-model="unsteadyForm.unsteadyName"></el-input>
           </el-form-item>
           <el-form-item label="活动方式" prop="unsteadyName">
-            <el-input style="width: 240px;" :disabled="true" v-model="unsteadyForm.unsteadyWay"></el-input>
+            <el-select
+              v-model="unsteadyForm.unsteadyWay"
+              :disabled="true"
+              style="width: 240px;"
+              placeholder="请选择"
+            >
+              <el-option label="线上" value="0"></el-option>
+              <el-option label="线下" value="1"></el-option>
+            </el-select>
           </el-form-item>
         </div>
         <el-form-item label="上传封面">
@@ -190,6 +198,7 @@ import city from "../../assets/citys.json";
 export default {
   data() {
     return {
+      id: "",
       cityList: [],
       props: {
         value: "code",
@@ -264,7 +273,7 @@ export default {
         }
       ],
       unsteadyForm: {
-        pattern: ["0", "1"],
+        pattern: [],
         unsteadyID: "",
         ruleID: "",
         unsteadyValid: "",
@@ -283,6 +292,36 @@ export default {
     };
   },
   methods: {
+    //获取活动详情
+    appraiseDetail() {
+      this.$http
+        .get(`/backend-manager/activity/${this.id}`)
+        .then(res => {
+          if (res.data.code == 200) {
+            let formlist = res.data.data;
+            let unsteadyDirectly = formlist.activityMode.toString()
+            this.unsteadyForm = {
+              pattern: [],
+              unsteadyID: formlist.id,
+              ruleID: "",
+              unsteadyValid: formlist.activityPriority?'1':'0',
+              unsteadyDirectly:formlist.activityPriority ,
+              unsteadyName: formlist.activityName,
+              unsteadyWay: unsteadyDirectly,
+              unsteadyTime: "",
+              reportTime: "",
+              unsteadyNum: "",
+              unsteadyAddress: "",
+              unsteadyAddressDetail: "",
+              unsteadyTextarea: "",
+              unsteadyTextareas: "",
+              unsteadyArea: ""
+            };
+          } else {
+          }
+        })
+        .catch(error => {});
+    },
     //提交
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
@@ -299,6 +338,8 @@ export default {
   },
   created() {
     this.cityList = city.data;
+    this.id = this.$route.query.id;
+    this.appraiseDetail();
   }
 };
 </script>

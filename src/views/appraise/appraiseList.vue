@@ -2,7 +2,7 @@
   <div class="aspe">
     <div class="aspe-nav">后台活动列表</div>
     <div class="aspe-content">
-      <el-form :inline="true" :model="formInline" class="demo-form-inline">
+      <el-form :inline="true" :model="formInline" ref="formInline" class="demo-form-inline">
         <el-form-item label="关键字" style="margin:0 0 0 110px">
           <el-input v-model="formInline.keyword" placeholder="请输入活动名称/ID"></el-input>
         </el-form-item>
@@ -14,19 +14,20 @@
         </el-form-item>
         <el-form-item label="审核状态">
           <el-select v-model="formInline.state" placeholder="请选择审核状态">
-            <el-option label="审核通过" value="0"></el-option>
-            <el-option label="审核不通过" value="1"></el-option>
+            <el-option label="待审核" value="PROCESSING"></el-option>
+            <el-option label="审核通过" value="HAVE_PUBLISHED"></el-option>
+            <el-option label="审核不通过" value="NOT_PASSED"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="活动状态" style="margin:0 0 0 100px">
           <el-select v-model="formInline.apprasieState" placeholder="请选择活动状态">
-            <el-option label="未开始" value="0"></el-option>
-            <el-option label="进行中" value="1"></el-option>
-            <el-option label="已结束" value="2"></el-option>
+            <el-option label="未开始" value="HAVE_NOT_STARTED"></el-option>
+            <el-option label="进行中" value="UNDERWAY"></el-option>
+            <el-option label="已结束" value="FINISHED"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button style="margin:0 0 0 815px" plian @click="onSubmit">重置</el-button>
+          <el-button style="margin:0 0 0 815px" plian @click="resetForm()">重置</el-button>
           <el-button type="primary" @click="onSubmit">查询</el-button>
         </el-form-item>
       </el-form>
@@ -37,19 +38,36 @@
       </div>
       <div class="table">
         <el-table :data="tableData" style="width: 1070px">
-          <el-table-column prop="date" label="ID" width="70"></el-table-column>
-          <el-table-column prop="name" label="活动封面"></el-table-column>
-          <el-table-column prop="address" label="活动名称"></el-table-column>
-          <el-table-column prop="date" label="活动方式"></el-table-column>
-          <el-table-column label="报名人数">
+          <el-table-column prop="id" label="ID" width="70"></el-table-column>
+          <el-table-column label="活动封面">
             <template slot-scope="scope">
-              <span @click="handlenumber(scope.row)" size="small">5/100</span>
+              <img :src="scope.row.activityPosterUrl" width="60" height="60" class="head_pic" />
             </template>
           </el-table-column>
-          <el-table-column prop="address" label="审核状态"></el-table-column>
-          <el-table-column prop="date" sortable width="120" label="发布时间"></el-table-column>
-          <el-table-column prop="name" width="130" sortable label="活动开始时间"></el-table-column>
-          <el-table-column prop="address" width="130" sortable label="活动结束时间"></el-table-column>
+          <el-table-column prop="activityName" label="活动名称"></el-table-column>
+          <el-table-column label="活动方式">
+            <template slot-scope="scope">{{scope.row.activityMode|levels}}</template>
+          </el-table-column>
+          <el-table-column label="报名人数">
+            <template slot-scope="scope">
+              <span
+                @click="handlenumber(scope.row)"
+                size="small"
+              >{{scope.row.registeredNum}}/{{scope.row.registrationNum}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="审核状态">
+            <template slot-scope="scope">{{scope.row.activityState|level}}</template>
+          </el-table-column>
+          <el-table-column sortable width="120" label="发布时间">
+            <template slot-scope="scope">{{scope.row.createdTime|formatDateOne}}</template>
+          </el-table-column>
+          <el-table-column width="130" sortable label="活动开始时间">
+            <template slot-scope="scope">{{scope.row.activityStartTime|formatDateOne}}</template>
+          </el-table-column>
+          <el-table-column width="130" sortable label="活动结束时间">
+            <template slot-scope="scope">{{scope.row.activityEndTime|formatDateOne}}</template>
+          </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
@@ -91,34 +109,39 @@ export default {
         street: "",
         apprasieState: ""
       },
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄"
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄"
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄"
-        }
-      ]
+      tableData: []
     };
   },
   methods: {
+    //获取活动列表
+    appraiseList() {
+      let params = {
+        activityName: this.formInline.keyword ? this.formInline.keyword : null,
+        activityProceedState: this.formInline.apprasieState
+          ? this.formInline.apprasieState
+          : null,
+        activityRegistrationState: null,
+        activityState: this.formInline.state ? this.formInline.state : null,
+        pageNum: this.page.current,
+        pageSize: this.page.pageSize,
+        activityMode: this.formInline.street ? this.formInline.street : null,
+        sortBy: null,
+        sortOrder: null
+      };
+      this.$http
+        .post(`/backend-manager/activity/list`, params)
+        .then(res => {
+          if (res.data.code == 200) {
+            this.tableData = res.data.data.list;
+            this.page.total = res.data.data.total;
+          } else {
+          }
+        })
+        .catch(error => {});
+    },
     //活动编辑
     appraiseEdit() {
-      this.$router.push({ path: "/appraiseEdit" });
+      this.$router.push({ path: "/appraiseEdit"});
     },
     //发布活动
     issue() {
@@ -132,10 +155,23 @@ export default {
     verify() {
       this.$router.push({ path: "/enrollVerify" });
     },
+    //查询
     onSubmit() {
-      console.log("submit!");
+      this.appraiseList();
     },
-    handleClick() {},
+    //重置
+    resetForm() {
+      this.formInline = {
+        keyword: "",
+        state: "",
+        street: "",
+        apprasieState: ""
+      };
+    },
+    //查看
+    handleClick(res) {
+      this.$router.push({ path: "/appraiseAudit",query:{id:res.id}});
+    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
     },
@@ -143,7 +179,44 @@ export default {
       console.log(`当前页: ${val}`);
     }
   },
-  created() {}
+  created() {
+    this.appraiseList();
+  },
+  filters: {
+    level(level) {
+      var a;
+      switch (level) {
+        case "NOT_KNOWN":
+          a = "未知";
+          break;
+        case "PROCESSING":
+          a = "待审核";
+          break;
+        case "HAVE_PUBLISHED":
+          a = "已发布";
+          break;
+        case "NOT_PASSED":
+          a = "未通过";
+          break;
+        default:
+          a = "已下线";
+          break;
+      }
+      return a;
+    },
+    levels(levels) {
+      var a;
+      switch (levels) {
+        case 0:
+          a = "线上活动";
+          break;
+        case 1:
+          a = "线下活动";
+          break;
+      }
+      return a;
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -166,7 +239,7 @@ export default {
     background: #ffffff;
     .demo-form-inline {
       text-align: left;
-      padding: 30px 0 0 0
+      padding: 30px 0 0 0;
     }
   }
   .footer {
@@ -196,6 +269,14 @@ export default {
         background: #f0f0f0;
       }
     }
+    .el-pagination {
+      margin: 20px 0 0 0;
+      padding: 0 0 20px 0;
+      text-align: center;
+    }
+    // .el-pagination .btn-prev {
+    //   margin:0 0 0 -90px
+    // }
   }
 }
 </style>
