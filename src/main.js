@@ -29,6 +29,7 @@
      Vue.use(VueRouter)
      Vue.use(VueRouter)
      Vue.use(Vuex)
+     Vue.prototype.$moment = Moment;
      Vue.prototype.$CodeToTag = {
        CodeToTag
      }
@@ -76,17 +77,42 @@
      /* 响应拦截器 */
      _axios.interceptors.response.use(function (response) { // ①10010 token过期（30天） ②10011 token无效
        Cookies.set("Atoken", response.headers['auth-token']);
+      //  Notification({
+      //    title: '成功',
+      //    message: response.data.message,
+      //    type: 'success'
+      //  });
        return response
 
      }, function (error) {
-       if (error.response.data === "Access Denied") {
+       if (error.response.status === 404) {
+         Notification.error({
+           title: "错误",
+           message: "页面丢失，请重新加载"
+         });
+       } else if (error.response.status === 403) {
          Cookies.set("Atoken", '');
-         // Notification.error({
-         //   title: '错误',
-         //   message: '登录超时，请登录'
-         // });
+         Notification.error({
+           title: "错误",
+           message: "登陆超时，请重新登录"
+         });
          router.replace('/login');
+
+       } else {
+         Notification.error({
+           title: "错误",
+           message: error.response.data.message
+         });
        }
+
+       //  if (error.response.data === "Access Denied") {
+       //    Cookies.set("Atoken", '');
+       //    // Notification.error({
+       //    //   title: '错误',
+       //    //   message: '登录超时，请登录'
+       //    // });
+       //    router.replace('/login');
+       //  }
        return Promise.reject(error)
      })
      // /api/v1/consumer-user
@@ -117,23 +143,23 @@
        return Promise.reject(error);
      });
      _axioes.interceptors.request.use(
-      function (config) {
-        if (config.method === 'get') {
-          config.paramsSerializer = function (params) {
-            return queryString.stringify(params, {
-              arrayFormat: 'repeat'
-            })
-          }
-        }
-        let token = Cookies.get('Atoken')
-        if (token) {
-          config.headers['Auth-Token'] = token;
-        }
-        return config
-      },
-      function (error) {
-        Promise.reject(error)
-      })
+       function (config) {
+         if (config.method === 'get') {
+           config.paramsSerializer = function (params) {
+             return queryString.stringify(params, {
+               arrayFormat: 'repeat'
+             })
+           }
+         }
+         let token = Cookies.get('Atoken')
+         if (token) {
+           config.headers['Auth-Token'] = token;
+         }
+         return config
+       },
+       function (error) {
+         Promise.reject(error)
+       })
      Plugin.install = function (Vue, options) {
        Vue.axios = _axios;
        window.axios = _axios;

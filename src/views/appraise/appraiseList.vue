@@ -72,8 +72,8 @@
             <template slot-scope="scope">
               <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
               <el-button type="text" @click="appraiseEdit(scope.row)" size="small">编辑</el-button>
-              <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
-              <el-button type="text" @click="verify()" size="small">报名审核</el-button>
+              <el-button @click="handleDelete(scope.row)" type="text" size="small">删除</el-button>
+              <el-button type="text" @click="verify(scope.row)" size="small">报名审核</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -113,6 +113,18 @@ export default {
     };
   },
   methods: {
+    //删除
+    handleDelete(res) {
+      this.$http
+        .delete(`/backend-manager/activity/${res.id}`)
+        .then(res => {
+          if (res.data.code == 200) {
+            this.appraiseList();
+          } else {
+          }
+        })
+        .catch(error => {});
+    },
     //获取活动列表
     appraiseList() {
       let params = {
@@ -140,8 +152,8 @@ export default {
         .catch(error => {});
     },
     //活动编辑
-    appraiseEdit() {
-      this.$router.push({ path: "/appraiseEdit"});
+    appraiseEdit(res) {
+      this.$router.push({ path: "/appraiseEdit", query: { id: res.id } });
     },
     //发布活动
     issue() {
@@ -152,8 +164,8 @@ export default {
       this.$router.push({ path: "/HenrollVerify" });
     },
     //报名审核
-    verify() {
-      this.$router.push({ path: "/enrollVerify" });
+    verify(res) {
+      this.$router.push({ path: "/enrollVerify", query: { id: res.id } });
     },
     //查询
     onSubmit() {
@@ -170,13 +182,16 @@ export default {
     },
     //查看
     handleClick(res) {
-      this.$router.push({ path: "/appraiseAudit",query:{id:res.id}});
+      this.$router.push({ path: "/appraiseEdit", query: { id: res.id } });
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      this.page.pageSize = val;
+      this.page.current = 1;
+      this.appraiseList()
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.page.current = val;
+      this.appraiseList()
     }
   },
   created() {

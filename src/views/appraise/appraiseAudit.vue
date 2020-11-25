@@ -9,7 +9,7 @@
           </el-form-item>
           <!-- <el-form-item label="规则ID" prop="ruleID">
             <el-input style="width: 240px;" :disabled="true" v-model="unsteadyForm.ruleID"></el-input>
-          </el-form-item> -->
+          </el-form-item>-->
         </div>
         <div class="unsteadyNav">
           <el-form-item label="活动有效性" prop="unsteadyName">
@@ -60,7 +60,8 @@
           </el-form-item>
         </div>
         <el-form-item label="上传封面">
-          <el-upload
+          <img :src="this.imgUrl" style="height:230px;width:auto" />
+          <!-- <el-upload
             class="upload-demo"
             drag
             action="https://jsonplaceholder.typicode.com/posts/"
@@ -76,7 +77,7 @@
               jpg或png格式，且小于4M。
               2、精美封面有助于增加报名量，并有机会获得强力推荐！
             </div>
-          </el-upload>
+          </el-upload>-->
         </el-form-item>
         <el-form-item label="活动时间" prop="unsteadyTime">
           <el-date-picker
@@ -103,17 +104,17 @@
         </el-form-item>
         <el-form-item label="活动表单" prop="pattern">
           <el-checkbox-group :disabled="true" v-model="unsteadyForm.pattern" class="pattern">
-            <el-checkbox style="margin:0 0 0 0" label="0">姓名</el-checkbox>
-            <el-checkbox style="margin:0 0 0 50px" label="1">手机</el-checkbox>
-            <el-checkbox style="margin:0 0 0 50px" label="2">邮箱</el-checkbox>
+            <el-checkbox style="margin:0 0 0 0" label="surname">姓名</el-checkbox>
+            <el-checkbox style="margin:0 0 0 50px" label="phone">手机</el-checkbox>
+            <el-checkbox style="margin:0 0 0 50px" label="email">邮箱</el-checkbox>
             <br />
-            <el-checkbox style="margin:0 0 0 0" label="3">性别</el-checkbox>
-            <el-checkbox style="margin:0 0 0 50px" label="4">年龄</el-checkbox>
-            <el-checkbox style="margin:0 0 0 50px" label="5">职位</el-checkbox>
+            <el-checkbox style="margin:0 0 0 0" label="sex">性别</el-checkbox>
+            <el-checkbox style="margin:0 0 0 50px" label="age">年龄</el-checkbox>
+            <el-checkbox style="margin:0 0 0 50px" label="position">职位</el-checkbox>
             <br />
-            <el-checkbox style="margin:0 0 0 0" label="6">学历</el-checkbox>
-            <el-checkbox style="margin:0 0 0 50px" label="7">学校</el-checkbox>
-            <el-checkbox style="margin:0 0 0 50px" label="8">专业</el-checkbox>
+            <el-checkbox style="margin:0 0 0 0" label="record">学历</el-checkbox>
+            <el-checkbox style="margin:0 0 0 50px" label="school">学校</el-checkbox>
+            <el-checkbox style="margin:0 0 0 50px" label="major">专业</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="活动地址" prop="unsteadyAddress" class="unsteadyAddress">
@@ -143,7 +144,7 @@
             type="textarea"
             placeholder="请输入内容"
             :disabled="true"
-            v-model="unsteadyTextarea"
+            v-model="unsteadyForm.unsteadyTextarea"
             maxlength="2000"
             style="width:759px"
             show-word-limit
@@ -154,7 +155,7 @@
             :disabled="true"
             type="textarea"
             placeholder="请输入内容"
-            v-model="unsteadyTextareas"
+            v-model="unsteadyForm.unsteadyTextareas"
             style="width:759px"
           ></el-input>
         </el-form-item>
@@ -178,7 +179,7 @@
           <el-input
             type="textarea"
             placeholder="请输入审核未通过原因"
-            v-model="unsteadyArea"
+            v-model="unsteadyForm.unsteadyArea"
             maxlength="2000"
             style="width:759px"
             show-word-limit
@@ -280,10 +281,10 @@ export default {
         unsteadyDirectly: "",
         unsteadyName: "",
         unsteadyWay: "",
-        unsteadyTime: "",
-        reportTime: "",
+        unsteadyTime: [],
+        reportTime: [],
         unsteadyNum: "",
-        unsteadyAddress: "",
+        unsteadyAddress: [],
         unsteadyAddressDetail: "",
         unsteadyTextarea: "",
         unsteadyTextareas: "",
@@ -299,23 +300,49 @@ export default {
         .then(res => {
           if (res.data.code == 200) {
             let formlist = res.data.data;
-            let unsteadyDirectly = formlist.activityMode.toString()
+            let address = formlist.activityAddress;
+            let unsteadyDirectly = formlist.activityMode.toString();
+            formlist.formAttributes.forEach((item, index, array) => {
+              //执行代码
+              console.log(item)
+              this.unsteadyForm.pattern.push(item.englishName)
+            });
+            console.log(this.unsteadyForm.pattern)
+            this.imgUrl = formlist.activityPosterUrl;
             this.unsteadyForm = {
-              pattern: [],
+              pattern: this.unsteadyForm.pattern,
               unsteadyID: formlist.id,
               ruleID: "",
-              unsteadyValid: formlist.activityPriority?'1':'0',
-              unsteadyDirectly:formlist.activityPriority ,
+              unsteadyValid: formlist.activityPriority ? "1" : "0",
+              unsteadyDirectly: formlist.activityPriority,
               unsteadyName: formlist.activityName,
               unsteadyWay: unsteadyDirectly,
-              unsteadyTime: "",
-              reportTime: "",
-              unsteadyNum: "",
-              unsteadyAddress: "",
-              unsteadyAddressDetail: "",
-              unsteadyTextarea: "",
-              unsteadyTextareas: "",
-              unsteadyArea: ""
+              unsteadyTime: [
+                this.$moment(formlist.activityStartTime).format(
+                  "YYYY-MM-DD HH:mm"
+                ),
+                this.$moment(formlist.activityEndTime).format(
+                  "YYYY-MM-DD HH:mm"
+                )
+              ],
+              reportTime: [
+                this.$moment(formlist.registrationStartTime).format(
+                  "YYYY-MM-DD HH:mm"
+                ),
+                this.$moment(formlist.registrationEndTime).format(
+                  "YYYY-MM-DD HH:mm"
+                )
+              ],
+              unsteadyNum: formlist.registeredNum,
+              unsteadyAddress: [
+                address.provinceCode,
+                address.cityCode,
+                address.districtCode
+              ],
+              unsteadyAddressDetail: address.detail,
+              unsteadyTextarea: formlist.activityContent,
+              unsteadyTextareas: formlist.activityContent,
+              unsteadyArea: formlist.activityContent
             };
           } else {
           }

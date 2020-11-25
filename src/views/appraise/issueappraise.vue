@@ -6,17 +6,17 @@
         :model="unsteadyForm"
         :rules="rules"
         ref="unsteadyForm"
-        label-width="100px"
+        label-width="120px"
         class="demo-ruleForm"
       >
-        <div class="unsteadyNav">
+        <!-- <div class="unsteadyNav">
           <el-form-item label="活动ID" prop="unsteadyID">
             <el-input style="width: 240px;" v-model="unsteadyForm.unsteadyID"></el-input>
           </el-form-item>
           <el-form-item label="规则ID" prop="ruleID">
             <el-input style="width: 240px;" v-model="unsteadyForm.ruleID"></el-input>
           </el-form-item>
-        </div>
+        </div>-->
         <div class="unsteadyNav">
           <el-form-item label="活动有效性" prop="unsteadyName">
             <el-select v-model="unsteadyForm.unsteadyValid" style="width: 240px;" placeholder="请选择">
@@ -48,14 +48,24 @@
             <el-input style="width: 240px;" v-model="unsteadyForm.unsteadyName"></el-input>
           </el-form-item>
           <el-form-item label="活动方式" prop="unsteadyName">
-            <el-input style="width: 240px;" v-model="unsteadyForm.unsteadyWay"></el-input>
+            <el-select v-model="unsteadyForm.unsteadyWay" style="width: 240px;" placeholder="请选择">
+              <el-option
+                v-for="item in optionsWay"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
           </el-form-item>
         </div>
         <el-form-item label="上传封面">
           <el-upload
             class="upload-demo"
+            :action="uploadUrl"
+            :on-success="dealWithUploadLicense"
+            :data="uploadData"
+            :headers="myHeaders"
             drag
-            action="https://jsonplaceholder.typicode.com/posts/"
             multiple
           >
             <i class="el-icon-upload"></i>
@@ -73,6 +83,7 @@
         <el-form-item label="活动时间" prop="unsteadyTime">
           <el-date-picker
             v-model="unsteadyForm.unsteadyTime"
+            :picker-options="expireTimeOption"
             type="datetimerange"
             range-separator="至"
             start-placeholder="开始日期"
@@ -82,6 +93,7 @@
         <el-form-item label="报名时间" prop="reportTime">
           <el-date-picker
             v-model="unsteadyForm.reportTime"
+            :picker-options="expireTimeOption"
             type="datetimerange"
             range-separator="至"
             start-placeholder="开始日期"
@@ -106,7 +118,12 @@
             <el-checkbox style="margin:0 0 0 50px" label="8">专业</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="活动地址" prop="unsteadyAddress" class="unsteadyAddress">
+        <el-form-item
+          label="活动地址"
+          prop="unsteadyAddress"
+          class="unsteadyAddress"
+          v-if="this.unsteadyForm.unsteadyWay === '1'"
+        >
           <el-cascader
             v-model="unsteadyForm.unsteadyAddress"
             :props="props"
@@ -130,17 +147,28 @@
           <el-input
             type="textarea"
             placeholder="请输入内容"
-            v-model="unsteadyTextarea"
+            v-model="unsteadyForm.unsteadyTextarea"
             maxlength="2000"
             style="width:759px"
             show-word-limit
           ></el-input>
         </el-form-item>
+        <div class="demo-ruleForms">
+          <el-form-item label="主办方联系信息" prop="unsteadyNames">
+            <el-input placeholder="联系人姓名" style="width:160px" v-model="unsteadyForm.unsteadyNames"></el-input>
+          </el-form-item>
+          <el-form-item label prop="unsteadyPhone">
+            <el-input placeholder="联系人电话" style="width:160px" v-model="unsteadyForm.unsteadyPhone"></el-input>
+          </el-form-item>
+          <el-form-item label prop="unsteadyEmail">
+            <el-input placeholder="联系人邮箱" style="width:160px" v-model="unsteadyForm.unsteadyEmail"></el-input>
+          </el-form-item>
+        </div>
         <el-form-item label="备注" prop="unsteadyTextareas" class="unsteadyDetail">
           <el-input
             type="textarea"
             placeholder="请输入内容"
-            v-model="unsteadyTextareas"
+            v-model="unsteadyForm.unsteadyTextareas"
             style="width:759px"
           ></el-input>
         </el-form-item>
@@ -155,84 +183,121 @@
 
 <script>
 import city from "../../assets/citys.json";
+import Cookies from "js-cookie";
+import { CodeToTag } from "../../cookie.js";
+let token = Cookies.get("Atoken");
 export default {
   data() {
     return {
+      expireTimeOption: {
+        disabledDate(date) {
+          //disabledDate 文档上：设置禁用状态，参数为当前日期，要求返回 Boolean
+          return date.getTime() < Date.now() - 24 * 60 * 60 * 1000;
+        }
+      },
+      imageUrl: "",
+      file: "",
+      myHeaders: { "Auth-Token": token },
+      uploadData: {
+        label: "activity-poster"
+      },
       cityList: [],
       props: {
         value: "code",
         label: "tag",
         children: "children",
-        emitPath: false
       },
       optionsValid: [
         {
-          value: "0",
+          value: "false",
           label: "无效"
         },
         {
-          value: "1",
+          value: "true",
           label: "有效"
         }
       ],
       optionsDirectly: [
         {
-          value: "0",
+          value: "1",
           label: "1"
         },
         {
-          value: "1",
+          value: "2",
           label: "2"
         },
         {
-          value: "2",
+          value: "3",
           label: "3"
         },
         {
-          value: "3",
+          value: "4",
           label: "4"
         },
         {
-          value: "4",
+          value: "5",
           label: "5"
         },
         {
-          value: "5",
+          value: "6",
           label: "6"
         },
         {
-          value: "6",
+          value: "7",
           label: "7"
         },
         {
-          value: "7",
+          value: "8",
           label: "8"
         },
         {
-          value: "8",
+          value: "9",
           label: "9"
         },
         {
-          value: "9",
+          value: "10",
           label: "10"
         }
       ],
+      optionsWay: [
+        {
+          value: "0",
+          label: "线上"
+        },
+        {
+          value: "1",
+          label: "线下"
+        }
+      ],
       unsteadyForm: {
-        pattern: [],
+        unsteadyNames: "",
+        unsteadyPhone: "",
+        unsteadyEmail: "",
+        pattern: ["0", "1", "2"],
         unsteadyID: "",
         ruleID: "",
         unsteadyValid: "",
         unsteadyDirectly: "",
         unsteadyName: "",
         unsteadyWay: "",
-        unsteadyTime: "",
-        reportTime: "",
+        unsteadyTime: [],
+        reportTime: [],
         unsteadyNum: "",
-        unsteadyAddress: "",
+        unsteadyAddress: [],
         unsteadyAddressDetail: "",
         unsteadyTextarea: "",
         unsteadyTextareas: ""
       },
+      formAttributeBodies: [
+        {
+          chineseName: "",
+          groupId: 0,
+          englishName: "",
+          isNumeric: true,
+          unit: null
+        }
+      ],
+      checkList: ["0", "1", "2"],
       rules: {
         unsteadyID: [
           { required: true, message: "请输入活动ID", trigger: "blur" }
@@ -257,6 +322,9 @@ export default {
         reportTime: [
           { required: true, message: "请选择报名时间", trigger: "blur" }
         ],
+        pattern: [
+          { required: true, message: "请选择报名表单", trigger: "blur" }
+        ],
         unsteadyNum: [
           { required: true, message: "请填写报名人数", trigger: "blur" }
         ],
@@ -268,16 +336,211 @@ export default {
         ],
         unsteadyTextareas: [
           { required: true, message: "请填写备注信息", trigger: "blur" }
+        ],
+        unsteadyNames: [
+          { required: true, message: "请输入联系人姓名", trigger: "blur" }
+        ],
+        unsteadyPhone: [
+          { required: true, message: "请输入联系人手机号", trigger: "blur" },
+          {
+            pattern: /^[1][356789][0-9]{9}$/,
+            message: "请输入正确的手机号",
+            trigger: ["change", "blur"]
+          }
+        ],
+        unsteadyEmail: [
+          { required: true, message: "请输入联系人邮箱", trigger: "blur" },
+          {
+            pattern: /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+\.)+(com|cn|net|com.cn|com.tw|com.hk)$/,
+            message: "邮箱格式错误",
+            trigger: ["change", "blur"]
+          }
         ]
       }
     };
   },
   methods: {
+    //图片上传
+    dealWithUploadLicense(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw);
+      this.file = res.data;
+      this.$notify({
+        title: "成功",
+        message: "图片上传成功",
+        type: "success"
+      });
+    },
+    //form
+    form() {
+      this.unsteadyForm.pattern.forEach((item, index, array) => {
+        //执行代码
+        switch (item) {
+          case "0":
+            this.formAttributeBodies[index] = {
+              chineseName: "姓名",
+              groupId: 0,
+              englishName: "surname",
+              isNumeric: false,
+              unit: null,
+              index: 0
+            };
+            break;
+          case "1":
+            this.formAttributeBodies[index] = {
+              chineseName: "手机",
+              groupId: 0,
+              englishName: "phone",
+              isNumeric: true,
+              unit: null,
+              index: 1
+            };
+            break;
+          case "2":
+            this.formAttributeBodies[index] = {
+              chineseName: "邮箱",
+              groupId: 0,
+              englishName: "email",
+              isNumeric: false,
+              unit: null,
+              index: 2
+            };
+            break;
+          case "3":
+            this.formAttributeBodies[index] = {
+              chineseName: "性别",
+              groupId: 0,
+              englishName: "sex",
+              isNumeric: false,
+              unit: null,
+              index: 3
+            };
+            break;
+          case "4":
+            this.formAttributeBodies[index] = {
+              chineseName: "年龄",
+              groupId: 0,
+              englishName: "age",
+              isNumeric: true,
+              unit: null,
+              index: 4
+            };
+            break;
+          case "5":
+            this.formAttributeBodies[index] = {
+              chineseName: "职位",
+              groupId: 0,
+              englishName: "position",
+              isNumeric: false,
+              unit: null,
+              index: 5
+            };
+            break;
+          case "6":
+            this.formAttributeBodies[index] = {
+              chineseName: "学历",
+              groupId: 0,
+              englishName: "record",
+              isNumeric: false,
+              unit: null,
+              index: 6
+            };
+            break;
+          case "7":
+            this.formAttributeBodies[index] = {
+              chineseName: "学校",
+              groupId: 0,
+              englishName: "school",
+              isNumeric: false,
+              unit: null,
+              index: 7
+            };
+            break;
+          case "8":
+            this.formAttributeBodies[index] = {
+              chineseName: "专业",
+              groupId: 0,
+              englishName: "major",
+              isNumeric: false,
+              unit: null,
+              index: 8
+            };
+            break;
+        }
+        console.log(this.formAttributeBodies);
+      });
+    },
     //提交
     submitForm(formName) {
+      console.log(this.unsteadyForm.unsteadyAddress)
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("submit!");
+          this.form();
+          let activityStartTime = this.unsteadyForm.unsteadyTime[0].getTime();
+          let activityEndTime = this.unsteadyForm.unsteadyTime[1].getTime();
+          let registrationStartTime = this.unsteadyForm.reportTime[0].getTime();
+          let registrationEndTime = this.unsteadyForm.reportTime[1].getTime();
+          let CodeTo = CodeToTag(
+            [
+              this.unsteadyForm.unsteadyAddress[0],
+              this.unsteadyForm.unsteadyAddress[1],
+              this.unsteadyForm.unsteadyAddress[2]
+            ],
+            this.cityList
+          );
+          
+          let params = {
+            activityAddressId: null,
+            activityContent: this.unsteadyForm.unsteadyTextarea,
+            activityEndTime: activityEndTime,
+            activityFormBody: {
+              formAttributeBodies: this.formAttributeBodies,
+              groupName: null
+            },
+
+            activityMode: this.unsteadyForm.unsteadyWay,
+            activityName: this.unsteadyForm.unsteadyName,
+            activityPoster: this.file,
+
+            activityPriority: null,
+            activityStartTime: activityStartTime,
+
+            addressBody: {
+              city: CodeTo[1]?CodeTo[1]:null,
+              cityCode: this.unsteadyForm.unsteadyAddress[1]?this.unsteadyForm.unsteadyAddress[1]:null,
+              detail: this.unsteadyForm.unsteadyAddressDetail
+                ? this.unsteadyForm.unsteadyAddressDetail
+                : null,
+              district: CodeTo[2]?CodeTo[2]:null,
+              districtCode: this.unsteadyForm.unsteadyAddress[2]?this.unsteadyForm.unsteadyAddress[2]:null,
+              latitude: null,
+              longitude: null,
+              province: CodeTo[0]?CodeTo[0]:null,
+              provinceCode: this.unsteadyForm.unsteadyAddress[0]?this.unsteadyForm.unsteadyAddress[0]:null
+            },
+
+            contactEmail: this.unsteadyForm.unsteadyEmail,
+            contactName: this.unsteadyForm.unsteadyNames,
+            contactPhone: this.unsteadyForm.unsteadyPhone,
+            isValid: this.unsteadyForm.unsteadyValid,
+            registrationEndTime: registrationEndTime,
+            registrationNum: this.unsteadyForm.unsteadyNum,
+            registrationStartTime: registrationStartTime,
+            remark: this.unsteadyForm.unsteadyTextareas
+          };
+          this.$http
+            .post("/backend-manager/activity", params)
+            .then(res => {
+              if (res.data.code == "200") {
+                this.$notify({
+                  title: "成功",
+                  message: "活动发布成功",
+                  type: "success"
+                });
+                this.$router.go(-1);
+              } else {
+              }
+            })
+            .catch(error => {});
         } else {
           console.log("error submit!!");
           return false;
@@ -285,12 +548,15 @@ export default {
       });
     },
     //保存
-    keep() {
-      
-    }
+    keep() {}
   },
   created() {
     this.cityList = city.data;
+  },
+  computed: {
+    uploadUrl() {
+      return "/api/file-service-dev/files/upload";
+    }
   }
 };
 </script>
@@ -319,7 +585,11 @@ export default {
         display: flex;
         flex-direction: row;
       }
-
+      .demo-ruleForms {
+        display: flex;
+        flex-direction: row;
+        margin: 20px 0 0 0;
+      }
       .upload-demo {
         display: flex;
         flex-direction: row;
@@ -331,6 +601,12 @@ export default {
           color: #848484;
           font-size: 12px;
           margin: 0 0 0 25px;
+        }
+        .el-upload-list {
+          margin: 0;
+          padding: 0;
+          list-style: none;
+          display: none;
         }
       }
 

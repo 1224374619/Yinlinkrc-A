@@ -14,42 +14,65 @@
         </el-form-item>
         <el-form-item label="审核状态">
           <el-select v-model="formInline.state" placeholder="请选择审核状态">
-            <el-option label="审核通过" value="0"></el-option>
-            <el-option label="审核不通过" value="1"></el-option>
+            <el-option label="待审核" value="PROCESSING"></el-option>
+            <el-option label="审核通过" value="HAVE_PUBLISHED"></el-option>
+            <el-option label="审核不通过" value="NOT_PASSED"></el-option>
           </el-select>
         </el-form-item>
         <br />
         <el-form-item>
-          <el-button style="margin:0 0 0 700px" plian @click="onSubmit">重置</el-button>
+          <el-button style="margin:0 0 0 700px" plian @click="result">重置</el-button>
           <el-button type="primary" @click="onSubmit">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
     <div class="footer">
-      <div class="button">
+      <!-- <div class="button">
         <button>发布活动</button>
-      </div>
+      </div>-->
       <div class="table">
         <el-table :data="tableData" style="width: 1070px">
-          <el-table-column prop="date" width="70" label="ID"></el-table-column>
-          <el-table-column prop="name" label="活动封面"></el-table-column>
-          <el-table-column prop="address" label="活动名称"></el-table-column>
-          <el-table-column prop="date" label="活动方式"></el-table-column>
-          <el-table-column prop="name" label="报名人数">
+          <el-table-column prop="id" label="ID" width="70"></el-table-column>
+          <el-table-column label="活动封面">
             <template slot-scope="scope">
-              <span @click="handlenumber(scope.row)" size="small">5/100</span>
+              <img :src="scope.row.activityPosterUrl" width="60" height="60" class="head_pic" />
             </template>
           </el-table-column>
-          <el-table-column prop="address" label="活动审核状态"></el-table-column>
-          <el-table-column prop="date" sortable width="120" label="发布时间"></el-table-column>
-          <el-table-column prop="name" sortable width="130" label="活动开始时间"></el-table-column>
-          <el-table-column prop="address" sortable width="130" label="活动结束时间"></el-table-column>
+          <el-table-column prop="activityName" label="活动名称"></el-table-column>
+          <el-table-column label="活动方式">
+            <template slot-scope="scope">{{scope.row.activityMode|levels}}</template>
+          </el-table-column>
+          <el-table-column label="报名人数">
+            <template slot-scope="scope">
+              <span
+                @click="handlenumber(scope.row)"
+                size="small"
+              >{{scope.row.registeredNum}}/{{scope.row.registrationNum}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="审核状态">
+            <template slot-scope="scope">{{scope.row.activityState|level}}</template>
+          </el-table-column>
+          <el-table-column sortable width="120" label="发布时间">
+            <template slot-scope="scope">{{scope.row.createdTime|formatDateOne}}</template>
+          </el-table-column>
+          <el-table-column width="130" sortable label="活动开始时间">
+            <template slot-scope="scope">{{scope.row.activityStartTime|formatDateOne}}</template>
+          </el-table-column>
+          <el-table-column width="130" sortable label="活动结束时间">
+            <template slot-scope="scope">{{scope.row.activityEndTime|formatDateOne}}</template>
+          </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-              <el-button type="text" @click="BappraiseEdit()" size="small">编辑</el-button>
-              <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
-              <el-button type="text" @click="appraiseAudit(scope.row)" size="small">活动审核</el-button>
+              <el-button type="text" @click="appraiseEdit(scope.row)" size="small">编辑</el-button>
+              <el-button @click="handleDelete(scope.row)" type="text" size="small">删除</el-button>
+              <el-button
+                v-if="scope.row.activityState === 'PROCESSING'"
+                type="text"
+                @click="appraiseAudit(scope.row)"
+                size="small"
+              >活动审核</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -84,81 +107,147 @@ export default {
         state: "",
         street: ""
       },
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄"
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄"
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄"
-        }
-      ]
+      tableData: []
     };
   },
   methods: {
+    //重置
+    result() {
+      this.formInline = {
+        keyword: "",
+        state: "",
+        street: ""
+      };
+    },
+    //删除
+    handleDelete(res) {
+      this.$http
+        .delete(`/review-center/activity/${res.id}/${res.activityId}`)
+        .then(res => {
+          if (res.data.code == 200) {
+            this.appraiseList();
+          } else {
+          }
+        })
+        .catch(error => {});
+    },
     //获取活动列表
     appraiseList() {
       let params = {
         activityName: this.formInline.keyword ? this.formInline.keyword : null,
-        activityProceedState: "HAVE_NOT_STARTED",
-        activityRegistrationState: "REGISTRATION_NOT_STARTED",
-        activityState: "NOT_KNOWN",
+        activityMode: this.formInline.street ? this.formInline.street : null,
+        activityRegistrationState: null,
+        activityState: this.formInline.state ? this.formInline.state : null,
         pageNum: this.page.current,
         pageSize: this.page.pageSize,
         sortBy: null,
         sortOrder: null
       };
       this.$http
-        .put(`/consumer-core/activity/registration`, params)
+        .post(`/review-center/activity/list`, params)
         .then(res => {
           if (res.data.code == 200) {
-            this.dialogVisibles = false;
-            this.textarea = "";
-            this.enroll();
+            this.tableData = res.data.data.list;
+            this.page.total = res.data.data.total;
           } else {
           }
         })
         .catch(error => {});
     },
+    //查看
+    handleClick(res) {
+      this.$router.push({
+        path: "/BappraiseEdit",
+        query: {
+          id: res.id,
+          activityId: res.activityId,
+          activityState: res.activityState
+        }
+      });
+    },
     //编辑
-    BappraiseEdit() {
-      this.$router.push({ path: "/BappraiseEdit" });
+    appraiseEdit(res) {
+      this.$router.push({
+        path: "/BappraiseEdit",
+        query: {
+          id: res.id,
+          activityId: res.activityId,
+          activityState: res.activityState
+        }
+      });
     },
     //活动审核
     appraiseAudit(res) {
-      this.$router.push({ path: "/appraiseAudit" });
+      this.$router.push({
+        path: "/BappraiseEdit",
+        query: {
+          id: res.id,
+          activityId: res.activityId,
+          activityState: res.activityState
+        }
+      });
     },
     //人数点击
     handlenumber(res) {
       console.log(res);
-      this.$router.push({ path: "/BenrollVerify" });
+      this.$router.push({
+        path: "/BenrollVerify",
+        query: {
+          activityId: res.activityId
+        }
+      });
     },
     onSubmit() {
-      console.log("submit!");
+      this.appraiseList();
     },
-    handleClick() {},
+    //分页
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      this.page.pageSize = val;
+      this.page.current = 1;
+      this.appraiseList();
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.page.current = val;
+      this.appraiseList();
     }
   },
   created() {
-    // this.appraiseList();
+    this.appraiseList();
+  },
+  filters: {
+    level(level) {
+      var a;
+      switch (level) {
+        case "NOT_KNOWN":
+          a = "未知";
+          break;
+        case "PROCESSING":
+          a = "待审核";
+          break;
+        case "HAVE_PUBLISHED":
+          a = "已发布";
+          break;
+        case "NOT_PASSED":
+          a = "未通过";
+          break;
+        default:
+          a = "已下线";
+          break;
+      }
+      return a;
+    },
+    levels(levels) {
+      var a;
+      switch (levels) {
+        case 0:
+          a = "线上活动";
+          break;
+        case 1:
+          a = "线下活动";
+          break;
+      }
+      return a;
+    }
   }
 };
 </script>
@@ -204,7 +293,8 @@ export default {
       }
     }
     .table {
-      margin: 30px 0 0 30px;
+      margin: 0 0 0 30px;
+      padding: 30px 0 0 0;
       .el-table th {
         white-space: nowrap;
         overflow: hidden;
