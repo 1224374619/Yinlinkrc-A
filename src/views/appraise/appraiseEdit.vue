@@ -363,7 +363,7 @@ export default {
                   "YYYY-MM-DD HH:mm"
                 )
               ],
-              unsteadyNum: formlist.registeredNum,
+              unsteadyNum: formlist.registrationNum,
               unsteadyAddress: address !== null?[
                 address.provinceCode,
                 address.cityCode,

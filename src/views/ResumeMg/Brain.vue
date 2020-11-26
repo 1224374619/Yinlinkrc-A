@@ -581,6 +581,8 @@ export default {
           }
         })
         .catch(error => {
+          this.dialogVisiblels = false;
+          console.log(error.response.data.message)
           if (error.response.status === 404) {
             this.$notify.error({
               message: "页面丢失，请重新加载",

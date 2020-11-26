@@ -68,10 +68,13 @@
             drag
             multiple
           >
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">
-              将文件拖到此处，或
-              <em>点击上传</em>
+            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <div v-else>
+              <i class="el-icon-upload"></i>
+              <div class="el-upload__text">
+                将文件拖到此处，或
+                <em>点击上传</em>
+              </div>
             </div>
             <div class="el-upload__tip" slot="tip">
               1、仅支持图片尺寸364*210
@@ -153,7 +156,7 @@
             show-word-limit
           ></el-input>
         </el-form-item>
-        <div class="demo-ruleForms">
+        <!-- <div class="demo-ruleForms">
           <el-form-item label="主办方联系信息" prop="unsteadyNames">
             <el-input placeholder="联系人姓名" style="width:160px" v-model="unsteadyForm.unsteadyNames"></el-input>
           </el-form-item>
@@ -163,7 +166,7 @@
           <el-form-item label prop="unsteadyEmail">
             <el-input placeholder="联系人邮箱" style="width:160px" v-model="unsteadyForm.unsteadyEmail"></el-input>
           </el-form-item>
-        </div>
+        </div> -->
         <el-form-item label="备注" prop="unsteadyTextareas" class="unsteadyDetail">
           <el-input
             type="textarea"
@@ -205,7 +208,7 @@ export default {
       props: {
         value: "code",
         label: "tag",
-        children: "children",
+        children: "children"
       },
       optionsValid: [
         {
@@ -471,7 +474,7 @@ export default {
     },
     //提交
     submitForm(formName) {
-      console.log(this.unsteadyForm.unsteadyAddress)
+      console.log(this.unsteadyForm.unsteadyAddress);
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.form();
@@ -487,7 +490,7 @@ export default {
             ],
             this.cityList
           );
-          
+
           let params = {
             activityAddressId: null,
             activityContent: this.unsteadyForm.unsteadyTextarea,
@@ -505,22 +508,28 @@ export default {
             activityStartTime: activityStartTime,
 
             addressBody: {
-              city: CodeTo[1]?CodeTo[1]:null,
-              cityCode: this.unsteadyForm.unsteadyAddress[1]?this.unsteadyForm.unsteadyAddress[1]:null,
+              city: CodeTo[1] ? CodeTo[1] : null,
+              cityCode: this.unsteadyForm.unsteadyAddress[1]
+                ? this.unsteadyForm.unsteadyAddress[1]
+                : null,
               detail: this.unsteadyForm.unsteadyAddressDetail
                 ? this.unsteadyForm.unsteadyAddressDetail
                 : null,
-              district: CodeTo[2]?CodeTo[2]:null,
-              districtCode: this.unsteadyForm.unsteadyAddress[2]?this.unsteadyForm.unsteadyAddress[2]:null,
+              district: CodeTo[2] ? CodeTo[2] : null,
+              districtCode: this.unsteadyForm.unsteadyAddress[2]
+                ? this.unsteadyForm.unsteadyAddress[2]
+                : null,
               latitude: null,
               longitude: null,
-              province: CodeTo[0]?CodeTo[0]:null,
-              provinceCode: this.unsteadyForm.unsteadyAddress[0]?this.unsteadyForm.unsteadyAddress[0]:null
+              province: CodeTo[0] ? CodeTo[0] : null,
+              provinceCode: this.unsteadyForm.unsteadyAddress[0]
+                ? this.unsteadyForm.unsteadyAddress[0]
+                : null
             },
 
-            contactEmail: this.unsteadyForm.unsteadyEmail,
-            contactName: this.unsteadyForm.unsteadyNames,
-            contactPhone: this.unsteadyForm.unsteadyPhone,
+            contactEmail: null,
+            contactName: null,
+            contactPhone: null,
             isValid: this.unsteadyForm.unsteadyValid,
             registrationEndTime: registrationEndTime,
             registrationNum: this.unsteadyForm.unsteadyNum,
@@ -555,7 +564,7 @@ export default {
   },
   computed: {
     uploadUrl() {
-      return "/api/file-service-dev/files/upload";
+      return "/api/v2/file-service-dev/files/upload";
     }
   }
 };
@@ -594,6 +603,10 @@ export default {
         display: flex;
         flex-direction: row;
 
+        .avatar {
+          width: 100%;
+          height: auto;
+        }
         .el-upload__tip {
           width: 165px;
           height: auto;

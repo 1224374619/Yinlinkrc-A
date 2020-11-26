@@ -2,7 +2,7 @@
   <div class="aspes">
     <div class="aspes-nav">B端活动详情</div>
     <div class="aspes-content">
-      <el-form :model="unsteadyForm" ref="unsteadyForm" label-width="100px" class="demo-ruleForm">
+      <el-form :model="unsteadyForm" ref="unsteadyForm" label-width="110px" class="demo-ruleForm">
         <div class="unsteadyNav">
           <el-form-item label="活动ID" prop="unsteadyID">
             <el-input style="width: 240px;" :disabled="true" v-model="unsteadyForm.unsteadyID"></el-input>
@@ -117,7 +117,12 @@
             <el-checkbox style="margin:0 0 0 50px" label="major">专业</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="活动地址" prop="unsteadyAddress" class="unsteadyAddress">
+        <el-form-item
+          label="活动地址"
+          prop="unsteadyAddress"
+          class="unsteadyAddress"
+          v-if="this.directly !== 0"
+        >
           <el-cascader
             :disabled="true"
             v-model="unsteadyForm.unsteadyAddress"
@@ -144,18 +149,46 @@
             type="textarea"
             placeholder="请输入内容"
             :disabled="true"
-            v-model="unsteadyForm.unsteadyTextarea"
+            v-html="unsteadyForm.unsteadyTextarea"
             maxlength="2000"
-            style="width:759px"
+            style="width:759px;margin:-13px 0 0 0"
             show-word-limit
           ></el-input>
         </el-form-item>
+        <el-form-item label="举办方联系方式" class="unsteadyContact">
+          <el-input
+            placeholder="请输入内容"
+            :disabled="true"
+            v-model="unsteadyForm.contactName"
+            maxlength="2000"
+            style="width:209px;margin:-13px 0 0 0"
+            show-word-limit
+          ></el-input>
+          <el-input
+            placeholder="请输入内容"
+            :disabled="true"
+            v-model="unsteadyForm.contactPhone"
+            maxlength="2000"
+            style="width:209px;margin:-13px 0 0 20px"
+            show-word-limit
+          ></el-input>
+          <el-input
+            placeholder="请输入内容"
+            :disabled="true"
+            v-model="unsteadyForm.contactEmail"
+            maxlength="2000"
+            style="width:209px;margin:-13px 0 0 20px"
+            show-word-limit
+          ></el-input>
+        </el-form-item>
+
         <div class="line"></div>
         <el-form-item
           label="活动审核"
           prop="unsteadyAudit"
           class="unsteadyAudit"
           style="margin:20px 0 0 0"
+          v-if="this.activityState=== 'PROCESSING'"
         >
           <el-select v-model="unsteadyForm.state" style="width: 240px;" placeholder="请选择">
             <el-option
@@ -166,7 +199,12 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label prop="unsteadyAudit" class="unsteadyAudit">
+        <el-form-item
+          label
+          prop="unsteadyAudit"
+          class="unsteadyAudit"
+          v-if="this.activityState=== 'PROCESSING'"
+        >
           <el-input
             type="textarea"
             placeholder="请输入审核原因"
@@ -187,6 +225,7 @@
 
 <script>
 import city from "../../assets/citys.json";
+import { Notification } from "element-ui";
 export default {
   data() {
     return {
@@ -278,7 +317,10 @@ export default {
         unsteadyTextarea: "",
         unsteadyTextareas: "",
         unsteadyArea: "",
-        state: ""
+        state: "",
+        contactEmail: "",
+        contactName: "",
+        contactPhone: ""
       }
     };
   },
@@ -318,7 +360,7 @@ export default {
     //获取活动详情
     appraiseDetail() {
       this.$http
-        .get(`/review-center/activity/${this.id}`)
+        .get(`/review-center/activity/${this.activityId}`)
         .then(res => {
           if (res.data.code == 200) {
             let formlist = res.data.data;
@@ -335,6 +377,9 @@ export default {
             console.log(this.unsteadyForm.pattern);
             this.imgUrl = formlist.activityPosterUrl;
             this.unsteadyForm = {
+              contactName: formlist.contactName,
+              contactEmail: formlist.contactEmail,
+              contactPhone: formlist.contactPhone,
               pattern: this.unsteadyForm.pattern,
               unsteadyID: formlist.id,
               // ruleID: "",
@@ -358,7 +403,7 @@ export default {
                   "YYYY-MM-DD HH:mm"
                 )
               ],
-              unsteadyNum: formlist.registeredNum,
+              unsteadyNum: formlist.registrationNum,
               unsteadyAddress:
                 address !== null
                   ? [
@@ -381,17 +426,20 @@ export default {
         activityId: this.activityId,
         id: this.id,
         reason: this.unsteadyForm.unsteadyArea
+          ? this.unsteadyForm.unsteadyArea
+          : null
       };
       if (this.unsteadyForm.state === "HAVE_PUBLISHED") {
         this.$http
           .put(`/review-center/activity/pass`, params)
           .then(res => {
-            if (res.data.code == 200) {
-              this.$notify({
-                title: "成功",
-                message: response.data.message,
-                type: "success"
-              });
+            if (res.data.code === "200") {
+              // console.log('11311111')
+              // this.$notify({
+              //   title: "成功",
+              //   message: res.data.message,
+              //   type: "success"
+              // });
               this.$router.go(-1);
             } else {
             }
@@ -401,12 +449,13 @@ export default {
         this.$http
           .put(`/review-center/activity/noPass`, params)
           .then(res => {
-            if (res.data.code == 200) {
-              this.$notify({
-                title: "成功",
-                message: response.data.message,
-                type: "success"
-              });
+            if (res.data.code === "200") {
+              // console.log('555555555')
+              // this.$notify({
+              //   title: "成功",
+              //   message: response.data.message,
+              //   type: "success"
+              // });
               this.$router.go(-1);
             } else {
             }
