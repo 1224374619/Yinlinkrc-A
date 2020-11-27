@@ -105,6 +105,7 @@ export default {
                 console.log(res.headers["auth-token"])
                 let token = res.headers["auth-token"];
                 Cookies.set("Atoken",token);
+                window.sessionStorage.setItem('Atoken', token)
                 this.$router.push({ path: "/jobAuait" });
               } else {
                 return false;

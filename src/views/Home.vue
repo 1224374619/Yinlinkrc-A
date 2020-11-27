@@ -36,7 +36,6 @@
           v-if="!isCollapse"
           router
           :collapse="isCollapse"
-          
         >
           <template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">
             <el-submenu :index="index+''" v-if="!item.leaf">
@@ -179,18 +178,19 @@ export default {
     handleselect: function(a, b) {},
     //退出登录
     logout: function() {
-      this.$http
-        .get("/logout")
-        .then(res => {
-          if (res.data.code == 200) {
-            this.$router.push("/login");
-          } else {
-          }
-        })
-        .catch(error => {
-          this.$store.commit('LOGOUT');
-          this.$router.push("/login");
-        });
+      this.$store.commit("LOGOUT");
+      this.$router.push("/login");
+      // this.$http
+      //   .get("/logout")
+      //   .then(res => {
+      //     if (res.data.code == 200) {
+      //       this.$router.push("/login");
+      //     } else {
+      //     }
+      //   })
+      //   .catch(error => {
+
+      //   });
     },
     //折叠导航栏
     collapse: function() {
