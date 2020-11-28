@@ -35,7 +35,7 @@
           <el-table-column prop="id" label="ID" width="70"></el-table-column>
           <el-table-column label="活动封面">
             <template slot-scope="scope">
-              <img :src="scope.row.activityPosterUrl" width="60" height="60" class="head_pic" />
+              <img :src="scope.row.activityPosterUrl" style="height:52px;width:91px" class="head_pic" />
             </template>
           </el-table-column>
           <el-table-column prop="activityName" label="活动名称"></el-table-column>

@@ -371,7 +371,7 @@ export default {
               ]:null,
               unsteadyAddressDetail: address !== null?address.detail:null,
               unsteadyTextarea: formlist.activityContent,
-              unsteadyTextareas: formlist.activityContent,
+              unsteadyTextareas: formlist.remark,
               unsteadyArea: formlist.activityContent
             };
           } else {
