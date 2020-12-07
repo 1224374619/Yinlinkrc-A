@@ -102,21 +102,21 @@ export default {
             })
             .catch(error => {
           if (error.response.status === 404) {
-            this.$message({
-              message: "页面丢失，请重新加载",
-              type: "error"
-            });
-          } else if (error.response.status === 403) {
-            this.$message({
-              message: "登陆超时，请重新登录",
-              type: "error"
-            });
-          } else {
-            this.$message({
-              message: error.response.data.message,
-              type: "error"
-            });
-          }
+                this.$notify.info({
+                  title: "消息",
+                  message: "页面丢失，请重新加载"
+                });
+              } else if (error.response.status === 403) {
+                this.$notify.info({
+                  title: "消息",
+                  message: "登陆超时，请重新登录"
+                });
+              } else {
+                this.$notify.info({
+                  title: "消息",
+                  message: error.response.data.message
+                });
+              }
         });
         //   this.logining = true;
         //   //NProgress.start();

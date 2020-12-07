@@ -228,22 +228,7 @@ export default {
           }
         })
         .catch(error => {
-          if (error.response.status === 404) {
-            this.$message({
-              message: "页面丢失，请重新加载",
-              type: "error"
-            });
-          } else if (error.response.status === 403) {
-            this.$message({
-              message: "登陆超时，请重新登录",
-              type: "error"
-            });
-          } else {
-            this.$message({
-              message: error.response.data.message,
-              type: "error"
-            });
-          }
+          
         });
     },
     //未审核通过
@@ -256,22 +241,7 @@ export default {
           }
         })
         .catch(error => {
-          if (error.response.status === 404) {
-            this.$message({
-              message: "页面丢失，请重新加载",
-              type: "error"
-            });
-          } else if (error.response.status === 403) {
-            this.$message({
-              message: "登陆超时，请重新登录",
-              type: "error"
-            });
-          } else {
-            this.$message({
-              message: error.response.data.message,
-              type: "error"
-            });
-          }
+          
         });
     },
     //企业基本信息审核
@@ -292,22 +262,7 @@ export default {
           }
         })
         .catch(error => {
-          if (error.response.status === 404) {
-            this.$message({
-              message: "页面丢失，请重新加载",
-              type: "error"
-            });
-          } else if (error.response.status === 403) {
-            this.$message({
-              message: "登陆超时，请重新登录",
-              type: "error"
-            });
-          } else {
-            this.$message({
-              message: error.response.data.message,
-              type: "error"
-            });
-          }
+          
         });
     },
     //获取所有企业行业
@@ -364,43 +319,13 @@ export default {
                 }
               })
               .catch(error => {
-          if (error.response.status === 404) {
-            this.$message({
-              message: "页面丢失，请重新加载",
-              type: "error"
-            });
-          } else if (error.response.status === 403) {
-            this.$message({
-              message: "登陆超时，请重新登录",
-              type: "error"
-            });
-          } else {
-            this.$message({
-              message: error.response.data.message,
-              type: "error"
-            });
-          }
+          
         });
           } else {
           }
         })
         .catch(error => {
-          if (error.response.status === 404) {
-            this.$message({
-              message: "页面丢失，请重新加载",
-              type: "error"
-            });
-          } else if (error.response.status === 403) {
-            this.$message({
-              message: "登陆超时，请重新登录",
-              type: "error"
-            });
-          } else {
-            this.$message({
-              message: error.response.data.message,
-              type: "error"
-            });
-          }
+          
         });
     },
     keep(tab, event) {

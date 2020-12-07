@@ -86,21 +86,21 @@
 
      }, function (error) {
        if (error.response.status === 404) {
-         Notification.error({
-           title: "错误",
+         Notification.info({
+           title: "消息",
            message: "页面丢失，请重新加载"
          });
        } else if (error.response.status === 403) {
          Cookies.set("Atoken", '');
-         Notification.error({
-           title: "错误",
+         Notification.info({
+           title: "消息",
            message: "登陆超时，请重新登录"
          });
          router.replace('/login');
 
        } else {
-         Notification.error({
-           title: "错误",
+         Notification.info({
+           title: "消息",
            message: error.response.data.message
          });
        }

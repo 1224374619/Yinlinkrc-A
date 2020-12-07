@@ -252,22 +252,7 @@ export default {
           }
         })
         .catch(error => {
-          if (error.response.status === 404) {
-            this.$notify.error({
-              title: "错误",
-              message: "页面丢失，请重新加载"
-            });
-          } else if (error.response.status === 403) {
-            this.$notify.error({
-              title: "错误",
-              message: "登陆超时，请重新登录"
-            });
-          } else {
-            this.$notify.error({
-              title: "错误",
-              message: error.response.data.message
-            });
-          }
+          
         });
     },
     //未审核通过
@@ -282,22 +267,7 @@ export default {
           }
         })
         .catch(error => {
-          if (error.response.status === 404) {
-            this.$notify.error({
-              title: "错误",
-              message: "页面丢失，请重新加载"
-            });
-          } else if (error.response.status === 403) {
-            this.$notify.error({
-              title: "错误",
-              message: "登陆超时，请重新登录"
-            });
-          } else {
-            this.$notify.error({
-              title: "错误",
-              message: error.response.data.message
-            });
-          }
+          
         });
     },
     //tabs 查看
@@ -339,22 +309,7 @@ export default {
           }
         })
         .catch(error => {
-          if (error.response.status === 404) {
-            this.$notify.error({
-              message: "页面丢失，请重新加载",
-              type: "error"
-            });
-          } else if (error.response.status === 403) {
-            this.$notify.error({
-              message: "登陆超时，请重新登录",
-              type: "error"
-            });
-          } else {
-            this.$notify.error({
-              message: error.response.data.message,
-              type: "error"
-            });
-          }
+          
         });
     },
     //弹框确认
@@ -376,43 +331,13 @@ export default {
                 }
               })
               .catch(error => {
-                if (error.response.status === 404) {
-                  this.$notify.error({
-                    title: "错误",
-                    message: "页面丢失，请重新加载"
-                  });
-                } else if (error.response.status === 403) {
-                  this.$notify.error({
-                    title: "错误",
-                    message: "登陆超时，请重新登录"
-                  });
-                } else {
-                  this.$notify.error({
-                    title: "错误",
-                    message: error.response.data.message
-                  });
-                }
+                
               });
           } else {
           }
         })
         .catch(error => {
-          if (error.response.status === 404) {
-            this.$notify.error({
-              message: "页面丢失，请重新加载",
-              type: "error"
-            });
-          } else if (error.response.status === 403) {
-            this.$notify.error({
-              message: "登陆超时，请重新登录",
-              type: "error"
-            });
-          } else {
-            this.$notify.error({
-              message: error.response.data.message,
-              type: "error"
-            });
-          }
+          
         });
     },
     handleClick(tab, event) {
