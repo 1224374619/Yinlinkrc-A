@@ -8,7 +8,7 @@
         :append-to-body="true"
         :visible.sync="dialogVisible"
         width="25%"
-        :before-close="handleClose"
+        
       >
         <div>
           <div class="loading">
@@ -23,7 +23,7 @@
         :append-to-body="true"
         :visible.sync="dialogVisibleOut"
         width="25%"
-        :before-close="handleClose"
+        
       >
         <div>
           <div class="loading">
@@ -45,7 +45,7 @@
         :append-to-body="true"
         :visible.sync="dialogVisibleSuccess"
         width="25%"
-        :before-close="handleClose"
+        
       >
         <div>
           <div class="loading">
@@ -67,7 +67,7 @@
         :append-to-body="true"
         :visible.sync="dialogVisibles"
         width="25%"
-        :before-close="handleClose"
+        
       >
         <div>
           <div>
@@ -91,7 +91,7 @@
         :append-to-body="true"
         :visible.sync="dialogVisibleDelete"
         width="25%"
-        :before-close="handleClose"
+        
       >
         <div>
           <div style="margin:-30px 0 0 0" class="loading-text">是否删除该职位？</div>
@@ -163,7 +163,6 @@
               action="#"
               style="margin-left:0px"
               :show-file-list="false"
-              :on-success="handleAvatarSuccess"
               :http-request="uploadFile"
               accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
             >
@@ -236,6 +235,7 @@
   </div>
 </template>
 <script>
+import Cookies from "js-cookie";
 export default {
   data() {
     return {
