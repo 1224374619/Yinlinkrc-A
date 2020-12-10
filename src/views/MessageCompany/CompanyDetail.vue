@@ -652,7 +652,7 @@ export default {
   },
   computed: {
     uploadUrl() {
-      return "/api/v3/file-service/files/upload";
+      return "/api/v2/file-service/files/upload";
     }
   },
   mounted: function() {
