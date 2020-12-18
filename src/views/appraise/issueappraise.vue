@@ -289,9 +289,9 @@ export default {
           "微软雅黑=Microsoft YaHei,Helvetica Neue,PingFang SC,sans-serif;苹果苹方=PingFang SC,Microsoft YaHei,sans-serif;宋体=simsun,serif",
         fontsize_formats:
           "12px 14px 16px 18px 20px 22px 24px 26px 28px 30px 32px 34px 36px 38px 40px 50px 60px 70px 80px 90px 100px 120px 140px 160px 180px 200px",
-        language_url: "/static/tinymce/langs/zh_CN.js",
+        language_url: "./static/tinymce/langs/zh_CN.js",
         language: "zh_CN",
-        skin_url: "/static/tinymce/skins/ui/oxide",
+        skin_url: "./static/tinymce/skins/ui/oxide",
         plugins:
           "link lists code table colorpicker image textcolor wordcount contextmenu",
         // toolbar:
