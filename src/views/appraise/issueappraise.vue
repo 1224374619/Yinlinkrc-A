@@ -1,6 +1,38 @@
 <template>
   <div class="aspes">
     <div class="aspes-nav">后台发布活动</div>
+    <el-dialog title width="23%" :visible.sync="dialogDrag" style="border-radius:5px;">
+      <div>
+        <el-upload
+          class="upload-demo"
+          :action="uploadUrl"
+          style="margin:-15px 0 20px 20px"
+          drag
+          :data="uploadfile"
+          :headers="myHeaders"
+          :show-file-list="false"
+          :on-success="handleVideoSuccess"
+        >
+          <div>
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">
+              将文件拖到此处，或
+              <em>点击上传</em>
+              <div class="el-upload__tip" slot="tip">支持DOC、DOCX、PDF、JPG、PNG格式，文件大小需小于10M。</div>
+            </div>
+          </div>
+        </el-upload>
+        <div class="dialogResume" v-if="videoFlag == true">
+          <div>
+            <i class="el-icon-paperclip"></i>
+            <span style="margin:0 0 0 5px">123</span>
+          </div>
+          <div>
+            <i class="el-icon-delete"></i>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
     <div class="aspes-content">
       <el-form
         :model="unsteadyForm"
@@ -139,22 +171,26 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="活动详情" prop="unsteadyTextarea" class="unsteadyDetail">
-          <!-- <quill-editor
-            v-model="unsteadyForm.unsteadyDetail"
-            ref="myQuillEditor"
-            :options="editorOption"
-            @blur="onEditorBlur($event)"
-            @focus="onEditorFocus($event)"
-            @change="onEditorChange($event)"
-          ></quill-editor>-->
-          <el-input
+          <div
+            @click="previews()"
+            style="width:42px;position:absolute;top:40px;z-index:400;left:57px;"
+          >
+            <img style="width:20px;margin:9px 0 0 12px" src="../../assets/appraise-chuan.png" />
+          </div>
+          <editor
+            style="border:1px solid red"
+            id="tinymce"
+            v-model="unsteadyForm.unsteadyTextarea"
+            :init="init"
+          ></editor>
+          <!-- <el-input
             type="textarea"
             placeholder="请输入内容"
             v-model="unsteadyForm.unsteadyTextarea"
             maxlength="2000"
             style="width:759px"
             show-word-limit
-          ></el-input>
+          ></el-input>-->
         </el-form-item>
         <!-- <div class="demo-ruleForms">
           <el-form-item label="主办方联系信息" prop="unsteadyNames">
@@ -166,7 +202,7 @@
           <el-form-item label prop="unsteadyEmail">
             <el-input placeholder="联系人邮箱" style="width:160px" v-model="unsteadyForm.unsteadyEmail"></el-input>
           </el-form-item>
-        </div> -->
+        </div>-->
         <el-form-item label="备注" prop="unsteadyTextareas" class="unsteadyDetail">
           <el-input
             type="textarea"
@@ -189,7 +225,50 @@ import city from "../../assets/citys.json";
 import Cookies from "js-cookie";
 import { CodeToTag } from "../../cookie.js";
 let token = Cookies.get("Atoken");
+
+import tinymce from "tinymce";
+import Editor from "@tinymce/tinymce-vue";
+import "tinymce/icons/default/icons.min.js";
+import "tinymce/themes/silver/theme";
+import "tinymce/plugins/textcolor";
+import "tinymce/plugins/advlist";
+import "tinymce/plugins/table";
+import "tinymce/plugins/lists";
+import "tinymce/plugins/paste";
+import "tinymce/plugins/preview";
+import "tinymce/plugins/fullscreen";
+import "tinymce/plugins/anchor";
+import "tinymce/plugins/autolink";
+import "tinymce/plugins/autosave";
+import "tinymce/plugins/code";
+import "tinymce/plugins/codesample";
+import "tinymce/plugins/colorpicker";
+import "tinymce/plugins/contextmenu";
+import "tinymce/plugins/directionality";
+import "tinymce/plugins/emoticons";
+import "tinymce/plugins/emoticons/js/emojis.min";
+import "tinymce/plugins/image";
+import "tinymce/plugins/hr";
+import "tinymce/plugins/imagetools";
+import "tinymce/plugins/insertdatetime";
+import "tinymce/plugins/link";
+import "tinymce/plugins/media";
+import "tinymce/plugins/nonbreaking";
+import "tinymce/plugins/noneditable";
+import "tinymce/plugins/pagebreak";
+import "tinymce/plugins/print";
+import "tinymce/plugins/save";
+import "tinymce/plugins/searchreplace";
+import "tinymce/plugins/spellchecker";
+import "tinymce/plugins/tabfocus";
+import "tinymce/plugins/template";
+import "tinymce/plugins/textpattern";
+import "tinymce/plugins/visualblocks";
+import "tinymce/plugins/visualchars";
+import "tinymce/plugins/wordcount";
+
 export default {
+  components: { Editor },
   data() {
     return {
       expireTimeOption: {
@@ -198,9 +277,45 @@ export default {
           return date.getTime() < Date.now() - 24 * 60 * 60 * 1000;
         }
       },
+      dialogDrag: false,
+      init: {
+        init_instance_callback: function(editor) {},
+
+        menubar: false, // 禁用菜单栏
+        branding: false, // 隐藏右下角技术支持
+        elementpath: false, // 隐藏底栏的元素路径
+        paste_data_images: true, // 允许粘贴图像
+        font_formats:
+          "微软雅黑=Microsoft YaHei,Helvetica Neue,PingFang SC,sans-serif;苹果苹方=PingFang SC,Microsoft YaHei,sans-serif;宋体=simsun,serif",
+        fontsize_formats:
+          "12px 14px 16px 18px 20px 22px 24px 26px 28px 30px 32px 34px 36px 38px 40px 50px 60px 70px 80px 90px 100px 120px 140px 160px 180px 200px",
+        language_url: "/static/tinymce/langs/zh_CN.js",
+        language: "zh_CN",
+        skin_url: "/static/tinymce/skins/ui/oxide",
+        plugins:
+          "link lists code table colorpicker image textcolor wordcount contextmenu",
+        // toolbar:
+        //     `bold italic underline strikethrough | fontsizeselect | forecolor backcolor |
+        //     alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote |
+        //     undo redo | link unlink image code | removeformat`,
+        // toolbar: 'bold italic underline strikethrough subscript superscript removeformat | fontselect | fontsizeselect | styleselect | forecolor backcolor | table | image |alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote |undo redo | ',
+
+        // 工具栏1
+        toolbar1:
+          "bold italic underline strikethrough subscript superscript removeformat | fontselect | fontsizeselect | styleselect | forecolor backcolor | ",
+        // 工具栏2
+        toolbar2:
+          " table | image | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote |undo redo",
+        contextmenu: false, // 禁用富文本的右键菜单，使用浏览器自带的右键菜单
+        height: 500,
+        ...this.option
+      },
       imageUrl: "",
       file: "",
-      myHeaders: { "Auth-Token": window.sessionStorage.getItem('Atoken') },
+      uploadfile: {
+        label: "activity-content-file"
+      },
+      myHeaders: { "Auth-Token": window.sessionStorage.getItem("Atoken") },
       uploadData: {
         label: "activity-poster"
       },
@@ -363,6 +478,20 @@ export default {
     };
   },
   methods: {
+    //图片上传
+    previews() {
+     this.dialogDrag = true
+    },
+    //上传附件简历
+    handleVideoSuccess(res, file) {
+      console.log(file.response.data.fileAccessVo.accessUrl);
+      this.dialogDrag = false;
+      tinyMCE.editors["tinymce"].insertContent(
+        '<img style="width:500px" src = "' +
+          file.response.data.fileAccessVo.accessUrl +
+          '">'
+      );
+    },
     //图片上传
     dealWithUploadLicense(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);

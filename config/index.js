@@ -31,8 +31,8 @@ module.exports = {
       '/api': {
         // 测试环境
         // target: 'http://47.102.145.186' + '/consumertest/', // target host
-        target: 'https://www.yinlinkrc.com/api/v3', // target host
-        // target: 'http://192.168.1.151:8081', // target host
+        // target: 'https://www.yinlinkrc.com/api/v3', // target host
+        target: 'http://192.168.1.151:8081', // target host
         changeOrigin: true,  //是否跨域
         pathRewrite: {
             '^/api': ''   //需要rewrite重写的,

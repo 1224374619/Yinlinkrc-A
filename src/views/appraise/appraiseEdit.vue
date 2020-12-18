@@ -144,7 +144,7 @@
             type="textarea"
             placeholder="请输入内容"
             :disabled="true"
-            v-model="unsteadyForm.unsteadyTextarea"
+            v-html="unsteadyForm.unsteadyTextarea"
             maxlength="2000"
             style="width:759px"
             show-word-limit
