@@ -180,8 +180,8 @@ export default {
         })
         .catch(error => {
           this.dialogVisibles = false;
-          this.$notify.error({
-            title: "错误",
+          this.$notify.info({
+            title: "消息",
             message: "数据导出失败"
           });
         });

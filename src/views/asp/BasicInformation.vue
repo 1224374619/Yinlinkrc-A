@@ -371,8 +371,8 @@ export default {
     if (token) {
       this.ReviewCompany();
     } else {
-      this.$notify.error({
-        title: "错误",
+      this.$notify.info({
+        title: "消息",
         message: "登陆超时，请重新登录"
       });
       this.$router.push({ path: "/login" });
