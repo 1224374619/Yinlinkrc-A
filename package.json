@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@tinymce/tinymce-vue": "^2.1.0",
-    "tinymce": "^5.4.1",
     "axios": "^0.19.0",
     "echarts": "^3.3.2",
     "el-tree-transfer": "^2.2.9",
@@ -21,7 +20,9 @@
     "moment": "^2.24.0",
     "nprogress": "^0.2.0",
     "qs": "^6.9.4",
+    "tinymce": "^5.4.1",
     "vue": "^2.6.6",
+    "vue-pdf": "^4.2.0",
     "vue-router": "^3.0.7",
     "vuex": "^3.1.1"
   },

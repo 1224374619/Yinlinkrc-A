@@ -178,7 +178,6 @@
             <img style="width:20px;margin:9px 0 0 12px" src="../../assets/appraise-chuan.png" />
           </div>
           <editor
-            style="border:1px solid red"
             id="tinymce"
             v-model="unsteadyForm.unsteadyTextarea"
             :init="init"

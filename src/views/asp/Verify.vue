@@ -41,7 +41,7 @@
           </div>
           <div class="flrx">
             证件原件照片：
-            <img :src="logoUrl" style="height:65px;width:65px;margin:0 0 0 0" />
+            <img :src="this.logoUrl" style="height:65px;width:65px;margin:0 0 0 0" />
           </div>
         </div>
         <el-divider content-position="left"></el-divider>

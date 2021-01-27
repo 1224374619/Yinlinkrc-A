@@ -2,6 +2,11 @@
   <div class="asp">
     <div class="asp-nav">人才库</div>
     <div class="asp-content">
+      <el-dialog title width="30%" :visible.sync="dialogetx" style="border-radius:5px;">
+        <div>
+          <pdf ref="pdf" :src="url"></pdf>
+        </div>
+      </el-dialog>
       <el-dialog
         title
         :show-close="false"
@@ -234,7 +239,13 @@
               </el-table-column>
               <el-table-column label="操作" width="180">
                 <template slot-scope="scope">
-                  <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                  <el-button
+                    v-if="scope.row.isResumeAttached"
+                    @click="fileUrl(scope.row)"
+                    type="text"
+                    size="small"
+                  >查看附件</el-button>
+                  <el-button v-else @click="examing(scope.row)" type="text" size="small">查看在线</el-button>
                   <el-button type="text" @click="upload(scope.row)" size="small">下载</el-button>
                 </template>
               </el-table-column>
@@ -411,9 +422,13 @@
 <script>
 import qs from "qs";
 import Cookies from "js-cookie";
+import pdf from "vue-pdf";
 export default {
+  components: { pdf },
   data() {
     return {
+      url: "",
+      dialogetx: false,
       dialogVisibleDialog: false,
       dialogVisibleDialogLead: false,
       dialogVisibles: false,
@@ -516,6 +531,35 @@ export default {
     };
   },
   methods: {
+    //查看附件
+    fileUrl(res) {
+      this.$http
+        .get(`/backend-manager/resumes/${res.id}/file/url`)
+        .then(res => {
+          if (res.data.code === "200") {
+            this.previewResume(res);
+          } else {
+          }
+        })
+        .catch(error => {});
+    },
+    //doc docx预览
+    previewResume(res) {
+      console.log(res.data.data.ext);
+      let format = res.data.data.ext;
+      if (format === "doc" || format === "docx") {
+        let label = "resume-file";
+        let params = res.data.data;
+        var arr = JSON.stringify(params);
+        let Logistics = this.$router.resolve(
+          "/preview?obj=" + encodeURIComponent(arr)
+        );
+        window.open(Logistics.href, "_blank");
+      } else {
+        this.dialogetx = true;
+        this.url = res.data.data.accessUrl;
+      }
+    },
     //下载简历
     handleSelectionChange(val) {
       this.arrResume = [];
@@ -694,7 +738,7 @@ export default {
     toggleSelection() {
       this.$refs.multipleTable.toggleAllSelection();
     },
-    handleClick(tab, event) {
+    examing(tab, event) {
       console.log(tab.id);
       this.dialogVisible = true;
       this.$http

@@ -1,4 +1,5 @@
 import Login from './views/Login.vue'
+import preview from './views/preview.vue'
 import cypher from './views/cypher.vue'
 import Register from './views/Register.vue'
 // import NotFound from './views/404.vue'
@@ -73,6 +74,12 @@ let routes = [{
         path: '/cypher',
         component: cypher,
         name: '',
+        hidden: true
+    },
+    {
+        path: '/preview',
+        name: 'preview',
+        component: preview,
         hidden: true
     },
     {

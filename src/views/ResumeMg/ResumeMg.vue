@@ -1,7 +1,12 @@
 <template>
-  <div class="asp">
+  <div class="asps">
     <div class="asp-nav">简历库</div>
     <div class="asp-content">
+      <el-dialog title width="30%" :visible.sync="dialogetx" style="border-radius:5px;">
+        <div>
+          <pdf ref="pdf" :src="url"></pdf>
+        </div>
+      </el-dialog>
       <el-dialog
         title
         :show-close="false"
@@ -75,13 +80,19 @@
           </el-form-item>
           <el-form-item style="margin:0 90px 0 0;display: flex;justify-content:flex-end">
             <el-button style="margin:0 0 30px 0" @click="resetForm()">重置</el-button>
-            <el-button type="primary" @click="submitForms()">查询</el-button>
+            <el-button type="primary" @click="submitForm()">查询</el-button>
           </el-form-item>
         </el-form>
         <div class="asp-table">
           <div style="margin:30px 0 30px 30px">
             <el-button @click="uploadFile">批量下载简历</el-button>
           </div>
+          <!-- <el-tabs style="margin:0 0 0 35px" v-model="activeName" @tab-click="handleClickResume">
+            <el-tab-pane label="在线简历" name="first">
+              
+            </el-tab-pane>
+            <el-tab-pane label="附件简历" name="second"></el-tab-pane>
+          </el-tabs>-->
           <div>
             <el-table
               :data="tableData"
@@ -102,7 +113,13 @@
               </el-table-column>
               <el-table-column label="操作" width="180">
                 <template slot-scope="scope">
-                  <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                  <el-button
+                    v-if="scope.row.isResumeAttached"
+                    @click="fileUrl(scope.row)"
+                    type="text"
+                    size="small"
+                  >查看附件</el-button>
+                  <el-button v-else @click="examing(scope.row)" type="text" size="small">查看在线</el-button>
                   <el-button type="text" @click="upload(scope.row)" size="small">下载</el-button>
                 </template>
               </el-table-column>
@@ -119,12 +136,7 @@
           </div>
         </div>
       </div>
-      <el-dialog
-        title="个人简历"
-        :visible.sync="dialogVisible"
-        style="margin-top:-2%"
-        width="45%"
-      >
+      <el-dialog title="个人简历" :visible.sync="dialogVisible" style="margin-top:-2%" width="45%">
         <div class="lines"></div>
         <div class="test-1" style="height:620px;overflow-y:scroll;overflow-x:hidden">
           <div class="resume" v-if="this.resumeDeta.base !== underfined">
@@ -279,7 +291,9 @@
 import qs from "qs";
 const timeUtil = require("../../timeUtil.js");
 import Cookies from "js-cookie";
+import pdf from "vue-pdf";
 export default {
+  components: { pdf },
   data() {
     return {
       formInline: {
@@ -288,6 +302,9 @@ export default {
         position: "",
         company: ""
       },
+      url: "",
+      dialogetx: false,
+      activeName: "first",
       dialogVisiblels: false,
       page: {
         total: 0,
@@ -323,6 +340,35 @@ export default {
     };
   },
   methods: {
+    //查看附件
+    fileUrl(res) {
+      this.$http
+        .get(`/backend-manager/resumes/${res.resumeId}/file/url`)
+        .then(res => {
+          if (res.data.code === "200") {
+            this.previewResume(res);
+          } else {
+          }
+        })
+        .catch(error => {});
+    },
+    //doc docx预览
+    previewResume(res) {
+      console.log(res.data.data.ext);
+      let format = res.data.data.ext;
+      if (format === "doc" || format === "docx") {
+        let label = "resume-file";
+        let params = res.data.data;
+        var arr = JSON.stringify(params);
+        let Logistics = this.$router.resolve(
+          "/preview?obj=" + encodeURIComponent(arr)
+        );
+        window.open(Logistics.href, "_blank");
+      } else {
+        this.dialogetx = true;
+        this.url = res.data.data.accessUrl;
+      }
+    },
     //下载简历
     handleSelectionChange(val) {
       this.arrResume = [];
@@ -359,9 +405,13 @@ export default {
       };
       this.dialogVisiblels = true;
       this.$localo
-        .post(`/backend-manager/resumes/databases/batchPackageDownloadLong`,resumeList, {
-          responseType: "blob"
-        })
+        .post(
+          `/backend-manager/resumes/databases/batchPackageDownloadLong`,
+          resumeList,
+          {
+            responseType: "blob"
+          }
+        )
         .then(res => {
           this.dialogVisiblels = false;
           const disposition = res.headers["content-disposition"];
@@ -393,21 +443,21 @@ export default {
         })
         .catch(error => {
           if (error.response.status === 404) {
-                this.$notify.info({
-                  title: "消息",
-                  message: "页面丢失，请重新加载"
-                });
-              } else if (error.response.status === 403) {
-                this.$notify.info({
-                  title: "消息",
-                  message: "登陆超时，请重新登录"
-                });
-              } else {
-                this.$notify.info({
-                  title: "消息",
-                  message: error.response.data.message
-                });
-              }
+            this.$notify.info({
+              title: "消息",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.info({
+              title: "消息",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.info({
+              title: "消息",
+              message: error.response.data.message
+            });
+          }
         });
     },
     //重置
@@ -421,35 +471,6 @@ export default {
     },
     //查询
     submitForm() {
-      let params = {
-        companyFullName: null,
-        downloadState: null,
-        endTime: null,
-        pageNum: 1,
-        pageSize: 10,
-        positionName: null,
-        sortBy: null,
-        sortOrder: null,
-        startTime: null,
-        userFullName: null
-      };
-      this.$http
-        .post("/backend-manager/resumes/databases/search", params)
-        .then(res => {
-          if (res.data.code == 200) {
-            console.log(res);
-            this.tableData = res.data.data.list;
-            this.page.total = res.data.data.total;
-          } else {
-          }
-        })
-        .catch(error => {
-         
-        });
-    },
-    //查询
-    submitForms() {
-      console.log(this.formInline.valueTime);
       if (this.formInline.valueTime.length !== 0) {
         this.offlineStartTime = this.formInline.valueTime[0].getTime();
         this.offlineEndTime = this.formInline.valueTime[1].getTime();
@@ -483,14 +504,12 @@ export default {
           } else {
           }
         })
-        .catch(error => {
-          
-        });
+        .catch(error => {});
     },
     toggleSelection() {
       this.$refs.multipleTable.toggleAllSelection();
     },
-    handleClick(tab, event) {
+    examing(tab, event) {
       this.$http
         .get(`/backend-manager/resumes/databases/${tab.resumeId}`)
         .then(res => {
@@ -513,9 +532,7 @@ export default {
           } else {
           }
         })
-        .catch(error => {
-          
-        });
+        .catch(error => {});
     },
     handleSizeChange(val) {
       this.page.pageSize = val;
@@ -540,9 +557,7 @@ export default {
           } else {
           }
         })
-        .catch(error => {
-          
-        });
+        .catch(error => {});
     },
     handleCurrentChange(val) {
       this.page.current = val;
@@ -566,9 +581,7 @@ export default {
           } else {
           }
         })
-        .catch(error => {
-          
-        });
+        .catch(error => {});
     }
   },
   mounted: function() {},
@@ -577,14 +590,13 @@ export default {
     let token = Cookies.get("Atoken");
     if (token) {
       this.submitForm();
-    }else {
+    } else {
       this.$notify.info({
         title: "消息",
         message: "登陆超时，请重新登录"
       });
       this.$router.push({ path: "/login" });
     }
-    
   },
   filters: {
     level(level) {
@@ -603,7 +615,7 @@ export default {
 };
 </script>
 <style lang="scss">
-.asp {
+.asps {
   width: 100%;
   background: #f8f8f8;
   border: 1px solid #f8f8f8;
