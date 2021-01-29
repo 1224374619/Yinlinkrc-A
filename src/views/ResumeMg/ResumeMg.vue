@@ -381,9 +381,44 @@ export default {
     },
     //下载
     upload(tab) {
-      this.arrResume = [];
-      this.arrResume.push(tab.resumeId);
-      this.uploadFile();
+      this.dialogVisiblels = true;
+      this.$localo
+        .get(
+          `/backend-manager/resumes/databases/download/${tab.positionId}/${tab.resumeId}`,
+          {
+            responseType: "blob"
+          }
+        )
+        .then(res => {
+          this.dialogVisiblels = false;
+          const disposition = res.headers["content-disposition"];
+          let fileName = disposition.substring(
+            disposition.indexOf("filename=") + 9,
+            disposition.length
+          );
+          // iso8859-1的字符转换成中文
+          fileName = decodeURI(escape(fileName));
+          // 去掉双引号
+          fileName = fileName.replace(/\"/g, "");
+          const content = res.data;
+          let blob = new Blob([res.data], {
+            type: "application/vnd.ms-excel"
+          });
+          console.log(blob);
+          if (window.navigator.msSaveOrOpenBlob) {
+            // console.log(2)
+            navigator.msSaveBlob(blob, fileName);
+          } else {
+            // console.log(3)
+            var link = document.createElement("a");
+            link.href = window.URL.createObjectURL(blob);
+            link.download = fileName;
+            link.click();
+            //释放内存
+            window.URL.revokeObjectURL(link.href);
+          }
+        })
+        .catch(error => {});
     },
     //下载
     uploadFile() {

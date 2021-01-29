@@ -486,7 +486,7 @@ export default {
       console.log(file.response.data.fileAccessVo.accessUrl);
       this.dialogDrag = false;
       tinyMCE.editors["tinymce"].insertContent(
-        '<img style="width:500px" src = "' +
+        '<img style="width:500px;height:auto" src = "' +
           file.response.data.fileAccessVo.accessUrl +
           '">'
       );
