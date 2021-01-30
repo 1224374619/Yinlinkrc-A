@@ -1,5 +1,6 @@
 <template>
-    <p class="page-container">404 page not found</p>
+    <!-- <p class="page-container">404 page not found</p> -->
+    <div>404</div>
 </template>
 
 <style lang="scss" scoped>
