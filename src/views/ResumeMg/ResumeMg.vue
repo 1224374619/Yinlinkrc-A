@@ -65,8 +65,8 @@
           </el-form-item>
           <el-form-item label="状态">
             <el-select v-model="formInline.state" placeholder="状态">
-              <el-option label="未下载" value="0"></el-option>
-              <el-option label="已下载" value="1"></el-option>
+              <el-option label="未下载" value="NOTDownloaded"></el-option>
+              <el-option label="已下载" value="Downloaded"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="时间">
@@ -418,7 +418,25 @@ export default {
             window.URL.revokeObjectURL(link.href);
           }
         })
-        .catch(error => {});
+        .catch(error => {
+          if (error.response.status === 404) {
+            this.$notify.info({
+              title: "消息",
+              message: "页面丢失，请重新加载"
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.info({
+              title: "消息",
+              message: "登陆超时，请重新登录"
+            });
+          } else {
+            this.$notify.info({
+              title: "消息",
+              message: '简历附件不存在'
+            });
+            this.dialogVisiblels = false;
+          }
+        });
     },
     //下载
     uploadFile() {
@@ -487,12 +505,19 @@ export default {
               title: "消息",
               message: "登陆超时，请重新登录"
             });
+          }
+          else if (error.response.status === 500) {
+            this.$notify.info({
+              title: "消息",
+              message: "服务器内部错误"
+            });
           } else {
             this.$notify.info({
               title: "消息",
               message: error.response.data.message
             });
           }
+          this.dialogVisiblels = false;
         });
     },
     //重置

@@ -125,7 +125,7 @@
           </el-form-item>
           <el-form-item label="职位状态">
             <el-select v-model="formInline.state" placeholder="职位状态">
-              <el-option label="已上线" value="0" class="option">
+              <el-option label="已下线" value="0" class="option">
                 <!-- <span style="float: left">已上线</span>
                 <span class="span-hover" style="float: right; color: #8492a6; font-size: 13px">编辑</span>-->
               </el-option>
