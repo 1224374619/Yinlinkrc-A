@@ -15,8 +15,8 @@
         <el-form-item label="审核状态">
           <el-select v-model="formInline.state" placeholder="请选择审核状态">
             <el-option label="待审核" value="PROCESSING"></el-option>
-            <el-option label="审核通过" value="HAVE_PUBLISHED"></el-option>
-            <el-option label="审核不通过" value="NOT_PASSED"></el-option>
+            <el-option label="已发布" value="HAVE_PUBLISHED"></el-option>
+            <el-option label="未通过" value="NOT_PASSED"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="活动状态" style="margin:0 0 0 100px">

@@ -2,7 +2,12 @@
   <div class="asp">
     <div class="asp-nav">人才库</div>
     <div class="asp-content">
-      <el-dialog title width="30%" :visible.sync="dialogetx" style="border-radius:5px;">
+      <el-dialog
+        title
+        width="30%"
+        :visible.sync="dialogetx"
+        style="border-radius: 5px"
+      >
         <div>
           <pdf ref="pdf" :src="url"></pdf>
         </div>
@@ -16,7 +21,10 @@
       >
         <div>
           <div class="loading">
-            <i style="font-size:60px;color:#20A0ff;" class="el-icon-loading"></i>
+            <i
+              style="font-size: 60px; color: #20a0ff"
+              class="el-icon-loading"
+            ></i>
           </div>
           <div class="loading-text">正在导入中...</div>
         </div>
@@ -30,15 +38,19 @@
       >
         <div>
           <div class="loading">
-            <i style="font-size:60px;color:#00C243;" class="el-icon-success"></i>
+            <i
+              style="font-size: 60px; color: #00c243"
+              class="el-icon-success"
+            ></i>
           </div>
           <div class="loading-text">简历导入成功</div>
-          <div style="text-align:center">
+          <div style="text-align: center">
             <el-button
-              style="width:93px;height:33px;line-height:0px"
+              style="width: 93px; height: 33px; line-height: 0px"
               type="primary"
               @click="dialogVisibleSuccess = false"
-            >确定</el-button>
+              >确定</el-button
+            >
           </div>
         </div>
       </el-dialog>
@@ -49,18 +61,36 @@
         :visible.sync="dialogVisibleFailed"
         width="25%"
       >
-        <div style="height:230px">
+        <div style="height: 230px">
           <div class="loading">
-            <i style="font-size:60px;color:#ff503b;" class="el-icon-error"></i>
+            <i
+              style="font-size: 60px; color: #ff503b"
+              class="el-icon-error"
+            ></i>
           </div>
           <div class="loading-text">简历导出失败</div>
-          <div style="font-size:16px;color:#666666;text-align:center;margin:-20px 0 0 0">请删除文件后，重新导出</div>
-          <div style="text-align:center">
+          <div
+            style="
+              font-size: 16px;
+              color: #666666;
+              text-align: center;
+              margin: -20px 0 0 0;
+            "
+          >
+            请删除文件后，重新导出
+          </div>
+          <div style="text-align: center">
             <el-button
-              style="width:93px;height:33px;line-height:0px;margin:30px 0 0 0"
+              style="
+                width: 93px;
+                height: 33px;
+                line-height: 0px;
+                margin: 30px 0 0 0;
+              "
               type="primary"
               @click="dialogVisibleFailed = false"
-            >确定</el-button>
+              >确定</el-button
+            >
           </div>
         </div>
       </el-dialog>
@@ -73,18 +103,30 @@
       >
         <div>
           <div>
-            <i style="font-size:19px;color:#ff503b" class="el-icon-circle-close"></i>
-            <span style="color:#373737;font-size:16px;margin:0 0 0 6px">以下简历导入失败：</span>
+            <i
+              style="font-size: 19px; color: #ff503b"
+              class="el-icon-circle-close"
+            ></i>
+            <span style="color: #373737; font-size: 16px; margin: 0 0 0 6px"
+              >以下简历导入失败：</span
+            >
           </div>
           <div class="outcompany">
-            <div style="font-size:16px" v-for="(item,key) of details" :key="key">{{key}}</div>
+            <div
+              style="font-size: 16px"
+              v-for="(item, key) of details"
+              :key="key"
+            >
+              {{ key }}
+            </div>
           </div>
-          <div style="text-align:center;margin:30px 0 0 0">
+          <div style="text-align: center; margin: 30px 0 0 0">
             <el-button
-              style="width:93px;height:33px;line-height:0px"
+              style="width: 93px; height: 33px; line-height: 0px"
               @click="dialogVisibles = false"
               type="primary"
-            >确定</el-button>
+              >确定</el-button
+            >
           </div>
         </div>
       </el-dialog>
@@ -98,31 +140,47 @@
       >
         <div>
           <div>
-            <el-form :inline="true" label-width="80px" :model="formInline" class="demo-form-inline">
+            <el-form
+              :inline="true"
+              label-width="80px"
+              :model="formInline"
+              class="demo-form-inline"
+            >
               <el-form-item label="来源">
-                <el-select v-model="formInline.state" style="width:300px" placeholder="请选择">
+                <el-select
+                  v-model="formInline.state"
+                  style="width: 300px"
+                  placeholder="请选择"
+                >
                   <el-option label="银领平台" value="0"></el-option>
                   <el-option label="平台自有库" value="1"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="文件">
-                <el-input placeholder style="width:300px" v-model="input2">
+                <el-input placeholder style="width: 300px" v-model="input2">
                   <template slot="append">添加</template>
                 </el-input>
               </el-form-item>
             </el-form>
           </div>
         </div>
-        <div style="text-align:center;margin:30px 0 20px 0">
+        <div style="text-align: center; margin: 30px 0 20px 0">
           <el-button
-            style="width:93px;height:33px;line-height:0px"
+            style="width: 93px; height: 33px; line-height: 0px"
             @click="dialogVisibleDialog = false"
-          >取 消</el-button>
+            >取 消</el-button
+          >
           <el-button
-            style="width:93px;height:33px;line-height:0px;margin:0 0 0 30px"
+            style="
+              width: 93px;
+              height: 33px;
+              line-height: 0px;
+              margin: 0 0 0 30px;
+            "
             type="primary"
             @click="dialogVisibleDialog = false"
-          >确 定</el-button>
+            >确 定</el-button
+          >
         </div>
       </el-dialog>
       <el-dialog
@@ -135,7 +193,10 @@
       >
         <div>
           <div class="loading">
-            <i style="font-size:60px;color:#20A0ff;" class="el-icon-loading"></i>
+            <i
+              style="font-size: 60px; color: #20a0ff"
+              class="el-icon-loading"
+            ></i>
           </div>
           <div class="loading-text">下载中...</div>
         </div>
@@ -150,21 +211,32 @@
       >
         <div>
           <div>
-            <el-radio style="margin:0 0 0 38%;" v-model="radio" label="1">已选简历(0)</el-radio>
+            <el-radio style="margin: 0 0 0 38%" v-model="radio" label="1"
+              >已选简历(0)</el-radio
+            >
             <br />
-            <el-radio style="margin:20px 0 0 38%;" v-model="radio" label="2">全部简历(100)</el-radio>
+            <el-radio style="margin: 20px 0 0 38%" v-model="radio" label="2"
+              >全部简历(100)</el-radio
+            >
           </div>
         </div>
-        <div style="text-align:center;margin:30px 0 20px 0">
+        <div style="text-align: center; margin: 30px 0 20px 0">
           <el-button
-            style="width:93px;height:33px;line-height:0px"
+            style="width: 93px; height: 33px; line-height: 0px"
             @click="dialogVisibleDialog = false"
-          >取 消</el-button>
+            >取 消</el-button
+          >
           <el-button
-            style="width:93px;height:33px;line-height:0px;margin:0 0 0 30px"
+            style="
+              width: 93px;
+              height: 33px;
+              line-height: 0px;
+              margin: 0 0 0 30px;
+            "
             type="primary"
             @click="dialogVisibleDialog = false"
-          >确 定</el-button>
+            >确 定</el-button
+          >
         </div>
       </el-dialog>
       <div class="asp-form">
@@ -174,14 +246,20 @@
           label-width="120px"
           ref="formInline"
           class="demo-form-inline"
-          style="background:#ffffff;"
+          style="background: #ffffff"
         >
-          <div style="height:20px"></div>
+          <div style="height: 20px"></div>
           <el-form-item label="姓名">
-            <el-input v-model="formInline.company" placeholder="企业"></el-input>
+            <el-input
+              v-model="formInline.company"
+              placeholder="企业"
+            ></el-input>
           </el-form-item>
           <el-form-item label="职位">
-            <el-input v-model="formInline.position" placeholder="职位"></el-input>
+            <el-input
+              v-model="formInline.position"
+              placeholder="职位"
+            ></el-input>
           </el-form-item>
           <el-form-item label="来源">
             <el-select v-model="formInline.state" placeholder="状态">
@@ -209,13 +287,17 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item style="margin:0 90px 0 0;display: flex;justify-content:flex-end">
-            <el-button style="margin:0 0 30px 0" @click="resetForm()">重置</el-button>
+          <el-form-item
+            style="margin: 0 90px 0 0; display: flex; justify-content: flex-end"
+          >
+            <el-button style="margin: 0 0 30px 0" @click="resetForm()"
+              >重置</el-button
+            >
             <el-button type="primary" @click="submitForm()">查询</el-button>
           </el-form-item>
         </el-form>
         <div class="asp-table">
-          <div style="margin:30px 0 30px 30px">
+          <div style="margin: 30px 0 30px 30px">
             <el-button type="primary" @click="uploadFile()">批量下载</el-button>
           </div>
           <div>
@@ -223,19 +305,35 @@
               ref="multipleTable"
               :data="tableData"
               tooltip-effect="dark"
-              style="width:1084px;margin:0 auto"
+              style="width: 1084px; margin: 0 auto"
               @selection-change="handleSelectionChange"
             >
               <el-table-column type="selection" width="60"></el-table-column>
               <el-table-column prop="id" label="简历ID"></el-table-column>
-              <el-table-column prop="fullName" label="姓名" show-overflow-tooltip></el-table-column>
-              <el-table-column prop="positionName" label="职位名称" show-overflow-tooltip></el-table-column>
+              <el-table-column
+                prop="fullName"
+                label="姓名"
+                show-overflow-tooltip
+              ></el-table-column>
+              <el-table-column
+                prop="positionName"
+                label="职位名称"
+                show-overflow-tooltip
+              ></el-table-column>
               <el-table-column label="工作经验" show-overflow-tooltip>
-                <template slot-scope="scope">{{ scope.row.workAge}}年</template>
+                <template slot-scope="scope"
+                  >{{ scope.row.workAge }}年</template
+                >
               </el-table-column>
-              <el-table-column prop="sourcePlatform" label="来源" show-overflow-tooltip></el-table-column>
+              <el-table-column
+                prop="sourcePlatform"
+                label="来源"
+                show-overflow-tooltip
+              ></el-table-column>
               <el-table-column label="提交时间" show-overflow-tooltip>
-                <template slot-scope="scope">{{ scope.row.createdTime | formatDate}}</template>
+                <template slot-scope="scope">{{
+                  scope.row.createdTime | formatDate
+                }}</template>
               </el-table-column>
               <el-table-column label="操作" width="180">
                 <template slot-scope="scope">
@@ -244,9 +342,18 @@
                     @click="fileUrl(scope.row)"
                     type="text"
                     size="small"
-                  >查看附件</el-button>
-                  <el-button v-else @click="examing(scope.row)" type="text" size="small">查看在线</el-button>
-                  <el-button type="text" @click="upload(scope.row)" size="small">下载</el-button>
+                    >查看附件</el-button
+                  >
+                  <el-button
+                    v-else
+                    @click="examing(scope.row)"
+                    type="text"
+                    size="small"
+                    >查看在线</el-button
+                  >
+                  <el-button type="text" @click="upload(scope.row)" size="small"
+                    >下载</el-button
+                  >
                 </template>
               </el-table-column>
             </el-table>
@@ -265,153 +372,198 @@
       <el-dialog
         title="个人简历"
         :visible.sync="dialogVisible"
-        style="margin-top:-2%"
+        style="margin-top: -2%"
         width="45%"
         :before-close="handleClose"
       >
         <div class="lines"></div>
-        <div class="test-1" style="height:620px;overflow-y:scroll;overflow-x:hidden">
+        <div
+          class="test-1"
+          style="height: 620px; overflow-y: scroll; overflow-x: hidden"
+        >
           <div class="resume" v-if="this.resumeDeta.base !== underfined">
             <div class="block">
               <el-avatar
-                style="border-radius:50px"
+                style="border-radius: 50px"
                 shape="square"
                 :size="100"
                 :src="resumeDeta.base.avatarUrl"
               ></el-avatar>
             </div>
             <div class="infor">
-              <div
-                style="font-size:20px;margin:0 0 0 10px;color:#373737"
-              >{{resumeDeta.base.fullName}}</div>
-              <div style="margin:15px 0 0 0">
-                <span>{{resumeDeta.base.city}}</span>
-                <span>|</span>
-                <span>{{resumeDeta.base.degree}}</span>
-                <span>|</span>
-                <span>{{resumeDeta.base.workAge}}年工作经验</span>
-                <span>|</span>
-                <span>{{resumeDeta.base.age}}岁</span>
-                <span>|</span>
-                <span>{{resumeDeta.base.politicalStatus}}</span>
+              <div style="font-size: 20px; margin: 0 0 0 10px; color: #373737">
+                {{ resumeDeta.base.fullName }}
               </div>
-              <div style="margin:5px 0 0 0">
+              <div style="margin: 15px 0 0 0">
+                <span>{{ resumeDeta.base.city }}</span>
+                <span>|</span>
+                <span>{{ resumeDeta.base.degree }}</span>
+                <span>|</span>
+                <span>{{ resumeDeta.base.workAge }}年工作经验</span>
+                <span>|</span>
+                <span>{{ resumeDeta.base.age }}岁</span>
+                <span>|</span>
+                <span>{{ resumeDeta.base.politicalStatus }}</span>
+              </div>
+              <div style="margin: 5px 0 0 0">
                 <span>
-                  <i class="el-icon-mobile-phone" style="margin:0 5px 0 0"></i>
-                  {{resumeDeta.base.phone}}
+                  <i class="el-icon-mobile-phone" style="margin: 0 5px 0 0"></i>
+                  {{ resumeDeta.base.phone }}
                 </span>
                 <span>|</span>
                 <span>
-                  <i class="el-icon-message" style="margin:0 5px 0 0"></i>
-                  {{resumeDeta.base.email}}
+                  <i class="el-icon-message" style="margin: 0 5px 0 0"></i>
+                  {{ resumeDeta.base.email }}
                 </span>
               </div>
             </div>
           </div>
           <div class="resume" v-else>
-            <div class="title" style="margin-bottom:10px">基本信息</div>
+            <div class="title" style="margin-bottom: 10px">基本信息</div>
           </div>
           <div class="jotension">
             <div class="title">求职意向</div>
             <div v-if="this.resumeDeta.target !== underfined">
               <div class="jotension-content">
-                <div>职位类型：{{resumeDeta.target.positionCatalogs[0].third}}</div>
-                <div>工作城市：{{resumeDeta.target.cities[0].province}}</div>
+                <div>
+                  职位类型：{{ resumeDeta.target.positionCatalogs[0].third }}
+                </div>
+                <div>工作城市：{{ resumeDeta.target.cities[0].province }}</div>
               </div>
               <div class="jotension-content">
-                <div>企业行业：{{resumeDeta.target.industries[0].secondary}}</div>
-                <div style>薪资范围：{{resumeDeta.target.salaryMin}}-{{resumeDeta.target.salaryMax}}k</div>
+                <div>
+                  企业行业：{{ resumeDeta.target.industries[0].secondary }}
+                </div>
+                <div style>
+                  薪资范围：{{ resumeDeta.target.salaryMin }}-{{
+                    resumeDeta.target.salaryMax
+                  }}k
+                </div>
               </div>
               <div class="jotension-content">
-                <div>求职状态：{{resumeDeta.target.jobSearchStatus}}</div>
-                <div style>工作类型：{{resumeDeta.target.jobType}}</div>
+                <div>求职状态：{{ resumeDeta.target.jobSearchStatus }}</div>
+                <div style>工作类型：{{ resumeDeta.target.jobType }}</div>
               </div>
             </div>
           </div>
           <div class="jotension">
             <div class="title">教育经历</div>
-            <div v-for="(item,index) in resumeDeta.eduXps" :key="index">
+            <div v-for="(item, index) in resumeDeta.eduXps" :key="index">
               <div class="jotension-content">
-                <div>{{item.school}}</div>
-                <div>{{item.beginTime|formatDate}}-{{item.endTime|formatDate}}</div>
+                <div>{{ item.school }}</div>
+                <div>
+                  {{ item.beginTime | formatDate }}-{{
+                    item.endTime | formatDate
+                  }}
+                </div>
               </div>
               <div class="jotension-content">
-                <div>{{item.major}} | {{item.degree}} | {{ item.isUnified ? '统招' : '非统招'}}</div>
+                <div>
+                  {{ item.major }} | {{ item.degree }} |
+                  {{ item.isUnified ? "统招" : "非统招" }}
+                </div>
               </div>
             </div>
           </div>
           <div class="jotension">
             <div class="title">工作经历</div>
-            <div v-for="(item,index) in resumeDeta.workXps" :key="index">
+            <div v-for="(item, index) in resumeDeta.workXps" :key="index">
               <div class="jotension-content">
-                <div>{{item.company}}</div>
-                <div>{{item.beginTime|formatDate}}-{{item.endTime|formatDate}}</div>
+                <div>{{ item.company }}</div>
+                <div>
+                  {{ item.beginTime | formatDate }}-{{
+                    item.endTime | formatDate
+                  }}
+                </div>
               </div>
               <div class="jotension-content">
-                <div>{{item.position}} | {{item.salaryBeforeTax}}k</div>
+                <div>{{ item.position }} | {{ item.salaryBeforeTax }}k</div>
               </div>
               <div class="jotension-content">
-                <div>工作内容：{{item.description}}</div>
+                <div>工作内容：{{ item.description }}</div>
               </div>
             </div>
           </div>
           <div class="jotension">
             <div class="title">项目经历</div>
-            <div v-for="(item,index) in resumeDeta.projects" :key="index">
+            <div v-for="(item, index) in resumeDeta.projects" :key="index">
               <div class="jotension-content">
-                <div>{{item.project}} | {{item.company}}</div>
-                <div>{{item.beginTime|formatDate}}-{{item.endTime|formatDate}}</div>
+                <div>{{ item.project }} | {{ item.company }}</div>
+                <div>
+                  {{ item.beginTime | formatDate }}-{{
+                    item.endTime | formatDate
+                  }}
+                </div>
               </div>
               <div class="jotension-content">
-                <div>个人职责：{{item.duty}}</div>
+                <div>个人职责：{{ item.duty }}</div>
               </div>
               <div class="jotension-content">
-                <div>项目介绍：{{item.description}}</div>
+                <div>项目介绍：{{ item.description }}</div>
               </div>
             </div>
           </div>
           <div class="jotension">
             <div class="title">培训经历</div>
-            <div class="train-content" v-for="(item,index) in resumeDeta.trainings" :key="index">
-              <div>{{item.lesson}}</div>
-              <div>{{item.institution}}</div>
-              <div
-                style="margin:0 0 0 300px"
-              >{{item.beginTime|formatDate}}-{{item.endTime|formatDate}}</div>
+            <div
+              class="train-content"
+              v-for="(item, index) in resumeDeta.trainings"
+              :key="index"
+            >
+              <div>{{ item.lesson }}</div>
+              <div>{{ item.institution }}</div>
+              <div style="margin: 0 0 0 300px">
+                {{ item.beginTime | formatDate }}-{{
+                  item.endTime | formatDate
+                }}
+              </div>
             </div>
           </div>
           <div class="jotension">
             <div class="title">职称等级</div>
             <div
               class="train-content"
-              v-for="(item,index) in resumeDeta.qualifications"
+              v-for="(item, index) in resumeDeta.qualifications"
               :key="index"
             >
-              <div>{{item.qual}}</div>
+              <div>{{ item.qual }}</div>
             </div>
           </div>
           <div class="jotension">
             <div class="title">专业技能</div>
-            <div class="train-content" v-for="(item,index) in resumeDeta.skills" :key="index">
-              <div>{{item.skill}}</div>
-              <div>{{item.level|level}}</div>
+            <div
+              class="train-content"
+              v-for="(item, index) in resumeDeta.skills"
+              :key="index"
+            >
+              <div>{{ item.skill }}</div>
+              <div>{{ item.level | level }}</div>
               <!-- <div>证书附件，点击查看大图</div> -->
               <!-- <div>{{item.beginTime|formatDate}}-{{item.endTime|formatDate}}</div> -->
             </div>
           </div>
           <div class="jotension">
             <div class="title">荣誉奖项</div>
-            <div class="jotension-content" v-for="(item,index) in resumeDeta.awards" :key="index">
-              <div>{{item.award}}</div>
+            <div
+              class="jotension-content"
+              v-for="(item, index) in resumeDeta.awards"
+              :key="index"
+            >
+              <div>{{ item.award }}</div>
               <!-- <div>{{item.}}</div>
               <div>证书附件，点击查看大图</div>-->
-              <div>{{item.acquiredTime|formatDate}}</div>
+              <div>{{ item.acquiredTime | formatDate }}</div>
             </div>
           </div>
           <div class="jotension">
             <div class="title">自我评价</div>
-            <div class="train-content" v-if="this.resumeDeta.evaluation !== underfined">
-              <div style="width:700px;">{{resumeDeta.evaluation.content}}</div>
+            <div
+              class="train-content"
+              v-if="this.resumeDeta.evaluation !== underfined"
+            >
+              <div style="width: 700px">
+                {{ resumeDeta.evaluation.content }}
+              </div>
             </div>
           </div>
         </div>
@@ -441,75 +593,75 @@ export default {
         workYear: "",
         position: "",
         company: "",
-        degree: ""
+        degree: "",
       },
       page: {
         total: 0,
         pageSize: 10,
         current: 1,
-        pageSizeOpts: [10, 20, 30]
+        pageSizeOpts: [10, 20, 30],
       },
       optionsWorkYear: [
         {
           code: 0,
           tag: "无",
           min: 0,
-          max: 0
+          max: 0,
         },
         {
           code: 1,
           tag: "1-3年",
           min: 1,
-          max: 3
+          max: 3,
         },
         {
           code: 2,
           tag: "3-5年",
           min: 3,
-          max: 5
+          max: 5,
         },
         {
           code: 3,
           tag: "5-10年",
           min: 5,
-          max: 10
+          max: 10,
         },
         {
           code: 4,
           tag: "10年以上",
           min: 10,
-          max: null
-        }
+          max: null,
+        },
       ],
       optionsDegree: [
         {
           code: 0,
-          tag: "初中及以下"
+          tag: "初中及以下",
         },
         {
           code: 1,
-          tag: "中专/中技"
+          tag: "中专/中技",
         },
         {
           code: 2,
-          tag: "高中"
+          tag: "高中",
         },
         {
           code: 3,
-          tag: "大专"
+          tag: "大专",
         },
         {
           code: 4,
-          tag: "本科"
+          tag: "本科",
         },
         {
           code: 5,
-          tag: "硕士"
+          tag: "硕士",
         },
         {
           code: 6,
-          tag: "博士"
-        }
+          tag: "博士",
+        },
       ],
       tableData: [],
       multipleSelection: [],
@@ -527,7 +679,7 @@ export default {
       targetIndustry: "",
       arrResume: [],
       resumeDeta: {},
-      arrPosition: []
+      arrPosition: [],
     };
   },
   methods: {
@@ -535,13 +687,13 @@ export default {
     fileUrl(res) {
       this.$http
         .get(`/backend-manager/resumes/${res.id}/file/url`)
-        .then(res => {
+        .then((res) => {
           if (res.data.code === "200") {
             this.previewResume(res);
           } else {
           }
         })
-        .catch(error => {});
+        .catch((error) => {});
     },
     //doc docx预览
     previewResume(res) {
@@ -574,13 +726,10 @@ export default {
     upload(tab) {
       this.dialogVisiblels = true;
       this.$localo
-        .get(
-          `/backend-manager/talentPool/databases/download/${tab.id}`,
-          {
-            responseType: "blob"
-          }
-        )
-        .then(res => {
+        .get(`/backend-manager/talentPool/databases/download/${tab.id}`, {
+          responseType: "blob",
+        })
+        .then((res) => {
           this.dialogVisiblels = false;
           const disposition = res.headers["content-disposition"];
           let fileName = disposition.substring(
@@ -593,7 +742,7 @@ export default {
           fileName = fileName.replace(/\"/g, "");
           const content = res.data;
           let blob = new Blob([res.data], {
-            type: "application/vnd.ms-excel"
+            type: "application/vnd.ms-excel",
           });
           console.log(blob);
           if (window.navigator.msSaveOrOpenBlob) {
@@ -609,13 +758,13 @@ export default {
             window.URL.revokeObjectURL(link.href);
           }
         })
-        .catch(error => {});
+        .catch((error) => {});
     },
     //下载
     uploadFile() {
       let resumeList = {
         resumeIds: this.arrResume,
-        positionIds: null
+        positionIds: null,
       };
       // let params = {
       //   resumeIds: this.arrResume,
@@ -627,10 +776,14 @@ export default {
       // );
       this.dialogVisiblels = true;
       this.$localo
-        .post("/backend-manager/talentPool/databases/batchPackageDownloadLong",resumeList, {
-          responseType: "blob"
-        })
-        .then(res => {
+        .post(
+          "/backend-manager/talentPool/databases/batchPackageDownloadLong",
+          resumeList,
+          {
+            responseType: "blob",
+          }
+        )
+        .then((res) => {
           this.dialogVisiblels = false;
           const disposition = res.headers["content-disposition"];
           let fileName = disposition.substring(
@@ -643,7 +796,7 @@ export default {
           fileName = fileName.replace(/\"/g, "");
           const content = res.data;
           let blob = new Blob([res.data], {
-            type: "application/vnd.ms-excel"
+            type: "application/vnd.ms-excel",
           });
           console.log(blob);
           if (window.navigator.msSaveOrOpenBlob) {
@@ -659,25 +812,25 @@ export default {
             window.URL.revokeObjectURL(link.href);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.dialogVisiblels = false;
-          console.log(error.response.data.message)
+          console.log(error.response.data.message);
           if (error.response.status === 404) {
-                this.$notify.info({
-                  title: "消息",
-                  message: "页面丢失，请重新加载"
-                });
-              } else if (error.response.status === 403) {
-                this.$notify.info({
-                  title: "消息",
-                  message: "登陆超时，请重新登录"
-                });
-              } else {
-                this.$notify.info({
-                  title: "消息",
-                  message: error.response.data.message
-                });
-              }
+            this.$notify.info({
+              title: "消息",
+              message: "页面丢失，请重新加载",
+            });
+          } else if (error.response.status === 403) {
+            this.$notify.info({
+              title: "消息",
+              message: "登陆超时，请重新登录",
+            });
+          } else {
+            this.$notify.info({
+              title: "消息",
+              message: error.response.data.message,
+            });
+          }
         });
     },
     //重置
@@ -726,11 +879,11 @@ export default {
         sortOrder: null,
         sourcePlatform: null,
         workAgeMax: workAgeMax,
-        workAgeMin: workAgeMin
+        workAgeMin: workAgeMin,
       };
       this.$http
         .post("/backend-manager/talentPool/databases/search", params)
-        .then(res => {
+        .then((res) => {
           if (res.data.code == 200) {
             console.log(res);
             this.tableData = res.data.data.list;
@@ -738,9 +891,7 @@ export default {
           } else {
           }
         })
-        .catch(error => {
-          
-        });
+        .catch((error) => {});
     },
     //查询
     submitForms() {
@@ -754,11 +905,11 @@ export default {
         sortOrder: null,
         sourcePlatform: null,
         workAgeMax: null,
-        workAgeMin: null
+        workAgeMin: null,
       };
       this.$http
         .post("/backend-manager/talentPool/databases/search", params)
-        .then(res => {
+        .then((res) => {
           if (res.data.code == 200) {
             console.log(res);
             this.tableData = res.data.data.list;
@@ -766,9 +917,7 @@ export default {
           } else {
           }
         })
-        .catch(error => {
-          
-        });
+        .catch((error) => {});
     },
     toggleSelection() {
       this.$refs.multipleTable.toggleAllSelection();
@@ -778,7 +927,7 @@ export default {
       this.dialogVisible = true;
       this.$http
         .get(`/backend-manager/resumes/databases/${tab.id}`)
-        .then(res => {
+        .then((res) => {
           let response = res.data.data;
           if (res.data.code == "200") {
             this.resumeDeta = response;
@@ -786,66 +935,121 @@ export default {
           } else {
           }
         })
-        .catch(error => {
-          
-        });
+        .catch((error) => {});
     },
     handleSizeChange(val) {
       this.page.pageSize = val;
       this.page.current = 1;
+      let workAgeMin;
+      let workAgeMax;
+      switch (this.formInline.workYear) {
+        case 0:
+          workAgeMin = 0;
+          workAgeMax = 0;
+          break;
+        case 1:
+          workAgeMin = 1;
+          workAgeMax = 3;
+          break;
+        case 2:
+          workAgeMin = 3;
+          workAgeMax = 5;
+          break;
+        case 3:
+          workAgeMin = 5;
+          workAgeMax = 10;
+          break;
+        case 4:
+          workAgeMin = 10;
+          workAgeMax = null;
+          break;
+        default:
+          workAgeMin = null;
+          workAgeMax = null;
+          break;
+      }
       let params = {
-        companyFullName: null,
-        endTTime: null,
+        degree: this.formInline.degree ? this.formInline.degree : null,
+        fullName: this.formInline.company ? this.formInline.company : null,
         pageNum: this.page.current,
         pageSize: this.page.pageSize,
-        positionName: null,
-        processedState: null,
+        positionName: this.formInline.position
+          ? this.formInline.position
+          : null,
         sortBy: null,
         sortOrder: null,
-        startTime: null,
-        userFullName: null
+        sourcePlatform: null,
+        workAgeMax: workAgeMax,
+        workAgeMin: workAgeMin,
       };
+
       this.$http
         .post("/backend-manager/talentPool/databases/search", params)
-        .then(res => {
+        .then((res) => {
           if (res.data.code == 200) {
             this.tableData = res.data.data.list;
           } else {
           }
         })
-        .catch(error => {
-          
-        });
+        .catch((error) => {});
     },
     handleCurrentChange(val) {
       this.page.current = val;
+      let workAgeMin;
+      let workAgeMax;
+      switch (this.formInline.workYear) {
+        case 0:
+          workAgeMin = 0;
+          workAgeMax = 0;
+          break;
+        case 1:
+          workAgeMin = 1;
+          workAgeMax = 3;
+          break;
+        case 2:
+          workAgeMin = 3;
+          workAgeMax = 5;
+          break;
+        case 3:
+          workAgeMin = 5;
+          workAgeMax = 10;
+          break;
+        case 4:
+          workAgeMin = 10;
+          workAgeMax = null;
+          break;
+        default:
+          workAgeMin = null;
+          workAgeMax = null;
+          break;
+      }
       let params = {
-        companyFullName: null,
-        endTTime: null,
+        degree: this.formInline.degree ? this.formInline.degree : null,
+        fullName: this.formInline.company ? this.formInline.company : null,
         pageNum: this.page.current,
         pageSize: this.page.pageSize,
-        positionName: null,
-        processedState: null,
+        positionName: this.formInline.position
+          ? this.formInline.position
+          : null,
         sortBy: null,
         sortOrder: null,
-        startTime: null,
-        userFullName: null
+        sourcePlatform: null,
+        workAgeMax: workAgeMax,
+        workAgeMin: workAgeMin,
       };
       this.$http
         .post("/backend-manager/talentPool/databases/search", params)
-        .then(res => {
+        .then((res) => {
           if (res.data.code == 200) {
             this.tableData = res.data.data.list;
           } else {
           }
         })
-        .catch(error => {
-          
-        });
-    }
+        .catch((error) => {});
+    },
   },
-  mounted: function() {},
-  updated: function() {},
+  mounted: function () {},
+  updated: function () {},
   created() {
     let token = Cookies.get("Atoken");
     if (token) {
@@ -853,7 +1057,7 @@ export default {
     } else {
       this.$notify.info({
         title: "消息",
-        message: "登陆超时，请重新登录"
+        message: "登陆超时，请重新登录",
       });
       this.$router.push({ path: "/login" });
     }
@@ -862,8 +1066,8 @@ export default {
     level(level) {
       const map = ["未下载", "已下载"];
       return map[level];
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss">
