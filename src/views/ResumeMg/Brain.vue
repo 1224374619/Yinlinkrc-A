@@ -326,10 +326,14 @@
                 >
               </el-table-column>
               <el-table-column
-                prop="sourcePlatform"
+               
                 label="来源"
                 show-overflow-tooltip
-              ></el-table-column>
+              >
+              <template slot-scope="scope"
+                  >{{ scope.row.sourcePlatform | levels }}</template
+                ></el-table-column>
+              
               <el-table-column label="提交时间" show-overflow-tooltip>
                 <template slot-scope="scope">{{
                   scope.row.createdTime | formatDate
@@ -1066,6 +1070,18 @@ export default {
     level(level) {
       const map = ["未下载", "已下载"];
       return map[level];
+    },
+    levels(levels) {
+      var a;
+      switch (levels) {
+        case "PLATFORM_OWNED_LIBRARY":
+          a = "平台自有库";
+          break;
+        case "SILVER_COLLAR_PLATFORM":
+          a = "银领平台";
+          break;
+      }
+      return a;
     },
   },
 };
